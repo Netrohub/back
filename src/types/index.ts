@@ -68,6 +68,7 @@ export interface ProductFiltersDto {
   maxPrice?: number;
   condition?: string;
   search?: string;
+  status?: string;
   page?: number;
   limit?: number;
   sortBy?: string;
