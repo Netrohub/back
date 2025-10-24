@@ -138,7 +138,7 @@ The included `nginx.conf` provides:
 ## 📚 API Documentation
 
 Once running, access Swagger documentation at:
-- **Development**: `http://localhost:3000/api/docs`
+- **Development**: `https://api.nxoland.com/api/docs`
 - **Production**: `https://api.nxoland.com/api/docs`
 
 ## 🔐 Authentication

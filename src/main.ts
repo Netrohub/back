@@ -64,8 +64,8 @@ async function bootstrap() {
   const port = configService.get('PORT', 3000);
   await app.listen(port);
   
-  console.log(`🚀 NXOLand API is running on: http://localhost:${port}`);
-  console.log(`📚 API Documentation: http://localhost:${port}/${configService.get('SWAGGER_PATH', 'api/docs')}`);
+  console.log(`🚀 NXOLand API is running on: https://api.nxoland.com/api`);
+  console.log(`📚 API Documentation: https://api.nxoland.com/api/${configService.get('SWAGGER_PATH', 'api/docs')}`);
 }
 
 bootstrap();
