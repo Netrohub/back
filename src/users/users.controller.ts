@@ -38,4 +38,5 @@ export class UsersController {
   ) {
     return this.usersService.updatePassword(user.id, updatePasswordDto);
   }
+
 }
