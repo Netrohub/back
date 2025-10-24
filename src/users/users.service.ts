@@ -67,7 +67,7 @@ export class UsersService {
     // Verify current password
     const bcrypt = require('bcrypt');
     const isCurrentPasswordValid = await bcrypt.compare(
-      updatePasswordDto.current_password,
+      updatePasswordDto.currentPassword,
       user.password,
     );
 
@@ -76,7 +76,7 @@ export class UsersService {
     }
 
     // Hash new password
-    const hashedPassword = await bcrypt.hash(updatePasswordDto.new_password, 12);
+    const hashedPassword = await bcrypt.hash(updatePasswordDto.newPassword, 12);
 
     await this.prisma.user.update({
       where: { id },

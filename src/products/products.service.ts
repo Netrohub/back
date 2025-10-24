@@ -8,14 +8,14 @@ export class ProductsService {
 
   async findAll(filters: ProductFiltersDto = {}) {
     const {
-      category,
+      categoryId: category,
       search,
-      min_price,
-      max_price,
+      minPrice: min_price,
+      maxPrice: max_price,
       status = 'active',
       page = 1,
-      per_page = 20,
-      sort = 'created_at',
+      limit: per_page = 20,
+      sortBy: sort = 'created_at',
     } = filters;
 
     const where: any = {
@@ -100,7 +100,11 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto, sellerId: number) {
     return this.prisma.product.create({
       data: {
-        ...createProductDto,
+        name: createProductDto.name,
+        description: createProductDto.description,
+        price: createProductDto.price,
+        category: createProductDto.categoryId,
+        images: createProductDto.images,
         seller_id: sellerId,
       },
       include: {

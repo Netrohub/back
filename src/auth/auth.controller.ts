@@ -33,7 +33,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'User data retrieved' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getCurrentUser(@CurrentUser() user: User) {
-    return this.authService.getCurrentUser(user.id);
+    return this.authService.getCurrentUser(Number(user.id));
   }
 
   @Post('logout')

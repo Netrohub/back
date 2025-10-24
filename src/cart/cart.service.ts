@@ -29,7 +29,7 @@ export class CartService {
     const existingItem = await this.prisma.cartItem.findFirst({
       where: {
         user_id: userId,
-        product_id: addToCartDto.product_id,
+        product_id: addToCartDto.productId,
         status: 'active',
       },
     });
@@ -44,7 +44,7 @@ export class CartService {
     return this.prisma.cartItem.create({
       data: {
         user_id: userId,
-        product_id: addToCartDto.product_id,
+        product_id: addToCartDto.productId,
         quantity: addToCartDto.quantity,
       },
     });
