@@ -115,4 +115,24 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
   }
+
+  async verifyPhone(userId: number, phone: string, code: string) {
+    // In a real implementation, you would verify the code with your SMS service
+    // For now, we'll just update the phone number
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Update phone number
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { phone },
+    });
+
+    return { message: 'Phone verified successfully' };
+  }
 }

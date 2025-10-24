@@ -44,4 +44,15 @@ export class AuthController {
   async logout() {
     return { message: 'Logout successful' };
   }
+
+  @Post('verify-phone')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Verify phone number' })
+  @ApiResponse({ status: 200, description: 'Phone verified successfully' })
+  async verifyPhone(@CurrentUser() user: any, @Body() verifyPhoneDto: { phone: string; code: string }) {
+    // In a real implementation, you would verify the code with your SMS service
+    // For now, we'll just update the phone number
+    return this.authService.verifyPhone(user.id, verifyPhoneDto.phone, verifyPhoneDto.code);
+  }
 }

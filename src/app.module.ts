@@ -10,6 +10,7 @@ import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { DisputesModule } from './disputes/disputes.module';
+import { KycModule } from './kyc/kyc.module';
 import { SellerModule } from './seller/seller.module';
 import { AdminModule } from './admin/admin.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -52,6 +53,7 @@ import { HealthModule } from './health/health.module';
     OrdersModule,
     WishlistModule,
     DisputesModule,
+    KycModule,
     SellerModule,
     AdminModule,
     CategoriesModule,
