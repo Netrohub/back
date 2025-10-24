@@ -24,9 +24,7 @@ export interface LoginDto {
 export interface RegisterDto {
   email: string;
   password: string;
-  username: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   phone?: string;
 }
 
