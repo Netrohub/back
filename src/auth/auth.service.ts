@@ -37,7 +37,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
-      roles: user.roles,
+      roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
     };
 
     return {
@@ -68,12 +68,12 @@ export class AuthService {
         email: registerDto.email,
         password: hashedPassword,
         phone: registerDto.phone,
-        roles: ['user'],
-        kyc_status: {
+        roles: JSON.stringify(['user']),
+        kyc_status: JSON.stringify({
           email: false,
           phone: false,
           identity: false,
-        },
+        }),
       },
     });
 
@@ -83,7 +83,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
-      roles: user.roles,
+      roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
     };
 
     return {
