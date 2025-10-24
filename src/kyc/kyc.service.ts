@@ -34,14 +34,16 @@ export class KycService {
     }
 
     // Update KYC status based on step
+    const currentStatus = user.kyc_status as any || {};
     const updatedStatus = {
-      ...user.kyc_status,
+      ...currentStatus,
       [step]: true,
     };
 
     // Update documents
+    const currentDocuments = user.kyc_documents as any || {};
     const updatedDocuments = {
-      ...user.kyc_documents,
+      ...currentDocuments,
       [step]: documentData,
     };
 
@@ -64,8 +66,8 @@ export class KycService {
     }
 
     // Check if all KYC steps are completed
-    const kycStatus = user.kyc_status;
-    const allStepsCompleted = kycStatus.email && kycStatus.phone && kycStatus.identity;
+    const kycStatus = user.kyc_status as any;
+    const allStepsCompleted = kycStatus?.email && kycStatus?.phone && kycStatus?.identity;
 
     if (!allStepsCompleted) {
       throw new Error('All KYC steps must be completed before final submission');
@@ -92,8 +94,9 @@ export class KycService {
     }
 
     // Update phone and mark as verified
+    const currentStatus = user.kyc_status as any || {};
     const updatedStatus = {
-      ...user.kyc_status,
+      ...currentStatus,
       phone: true,
     };
 

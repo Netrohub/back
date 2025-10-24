@@ -83,8 +83,8 @@ export class SellerService {
         category: true,
         _count: {
           select: {
-            cartItems: true,
-            wishlistItems: true,
+            cart_items: true,
+            wishlist_items: true,
           },
         },
       },
