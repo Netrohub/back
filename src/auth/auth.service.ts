@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { LoginDto, RegisterDto } from '@nxoland/shared';
+import { LoginDto, RegisterDto } from '../types';
 import { User } from '@prisma/client';
 
 @Injectable()

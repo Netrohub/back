@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AddToCartDto, UpdateCartItemDto } from '@nxoland/shared';
+import { AddToCartDto, UpdateCartItemDto } from '../types';
 
 @Injectable()
 export class CartService {
@@ -12,7 +12,7 @@ export class CartService {
       include: { product: true },
     });
 
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    const subtotal = cartItems.reduce((sum, item) => sum + (Number(item.product.price) * item.quantity), 0);
     const serviceFee = subtotal * 0.05; // 5% service fee
     const total = subtotal + serviceFee;
 

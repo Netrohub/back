@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { CartService } from './cart.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators';
-import { AddToCartDto, UpdateCartItemDto } from '@nxoland/shared';
+import { AddToCartDto, UpdateCartItemDto } from '../types';
 
 @ApiTags('cart')
 @Controller('cart')
