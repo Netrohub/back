@@ -80,7 +80,13 @@ export class SellerService {
     return this.prisma.product.findMany({
       where: { seller_id: sellerId },
       include: {
-        category: true,
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         _count: {
           select: {
             cart_items: true,
