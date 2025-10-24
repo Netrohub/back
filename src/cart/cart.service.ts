@@ -1,10 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddToCartDto, UpdateCartItemDto } from '../types';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CartService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  async getUserFromToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: { id: true, email: true, name: true }
+      });
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
 
   async getCart(userId: number) {
     const cartItems = await this.prisma.cartItem.findMany({

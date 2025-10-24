@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -7,16 +7,44 @@ import { AddToCartDto, UpdateCartItemDto } from '../types';
 
 @ApiTags('cart')
 @Controller('cart')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class CartController {
   constructor(private cartService: CartService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get user cart' })
   @ApiResponse({ status: 200, description: 'Cart retrieved successfully' })
-  async getCart(@CurrentUser() user: any) {
-    return this.cartService.getCart(user.id);
+  async getCart(@Req() req: any) {
+    // Check if user is authenticated
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      // Return empty cart for unauthenticated users
+      return {
+        items: [],
+        total: 0,
+        count: 0
+      };
+    }
+    
+    // Extract token and get user
+    const token = authHeader.substring(7);
+    try {
+      const user = await this.cartService.getUserFromToken(token);
+      if (!user) {
+        return {
+          items: [],
+          total: 0,
+          count: 0
+        };
+      }
+      return this.cartService.getCart(user.id);
+    } catch (error) {
+      // Return empty cart if token is invalid
+      return {
+        items: [],
+        total: 0,
+        count: 0
+      };
+    }
   }
 
   @Post()
