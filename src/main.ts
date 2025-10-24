@@ -16,7 +16,11 @@ async function bootstrap() {
 
   // CORS configuration
   app.enableCors({
-    origin: configService.get('CORS_ORIGIN', 'https://nxoland.com'),
+    origin: [
+      'https://nxoland.com',
+      'https://www.nxoland.com',
+      configService.get('CORS_ORIGIN', 'https://nxoland.com')
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
