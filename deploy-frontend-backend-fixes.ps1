@@ -39,3 +39,4 @@ Write-Host "2. Deploy to production server"
 Write-Host "3. Test user registration with username/name fields"
 Write-Host "4. Test admin panel functionality"
 Write-Host "5. Verify CORS headers in production"
+
