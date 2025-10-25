@@ -14,7 +14,7 @@ export class AdminController {
   constructor(private adminService: AdminService) {}
 
   // Users Management
-  @Get('api/users')
+  @Get('users')
   @ApiOperation({ summary: 'Get all users (Admin only)' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   async getUsers(
@@ -27,21 +27,21 @@ export class AdminController {
     return this.adminService.getUsers(page, perPage, search, role, status);
   }
 
-  @Get('api/users/:id')
+  @Get('users/:id')
   @ApiOperation({ summary: 'Get user by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   async getUser(@Param('id') id: number) {
     return this.adminService.getUser(id);
   }
 
-  @Put('api/users/:id')
+  @Put('users/:id')
   @ApiOperation({ summary: 'Update user (Admin only)' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   async updateUser(@Param('id') id: number, @Body() updateData: any) {
     return this.adminService.updateUser(id, updateData);
   }
 
-  @Delete('api/users/:id')
+  @Delete('users/:id')
   @ApiOperation({ summary: 'Delete user (Admin only)' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   async deleteUser(@Param('id') id: number) {
@@ -49,7 +49,7 @@ export class AdminController {
   }
 
   // Orders Management
-  @Get('api/orders')
+  @Get('orders')
   @ApiOperation({ summary: 'Get all orders (Admin only)' })
   @ApiResponse({ status: 200, description: 'Orders retrieved successfully' })
   async getOrders(
@@ -62,14 +62,14 @@ export class AdminController {
     return this.adminService.getOrders(page, perPage, status, dateFrom, dateTo);
   }
 
-  @Get('api/orders/:id')
+  @Get('orders/:id')
   @ApiOperation({ summary: 'Get order by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'Order retrieved successfully' })
   async getOrder(@Param('id') id: number) {
     return this.adminService.getOrder(id);
   }
 
-  @Put('api/orders/:id/status')
+  @Put('orders/:id/status')
   @ApiOperation({ summary: 'Update order status (Admin only)' })
   @ApiResponse({ status: 200, description: 'Order status updated successfully' })
   async updateOrderStatus(@Param('id') id: number, @Body() statusData: { status: string }) {
@@ -77,7 +77,7 @@ export class AdminController {
   }
 
   // Vendors Management
-  @Get('api/vendors')
+  @Get('vendors')
   @ApiOperation({ summary: 'Get all vendors (Admin only)' })
   @ApiResponse({ status: 200, description: 'Vendors retrieved successfully' })
   async getVendors(
@@ -89,14 +89,14 @@ export class AdminController {
     return this.adminService.getVendors(page, perPage, search, status);
   }
 
-  @Get('api/vendors/:id')
+  @Get('vendors/:id')
   @ApiOperation({ summary: 'Get vendor by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'Vendor retrieved successfully' })
   async getVendor(@Param('id') id: number) {
     return this.adminService.getVendor(id);
   }
 
-  @Put('api/vendors/:id/status')
+  @Put('vendors/:id/status')
   @ApiOperation({ summary: 'Update vendor status (Admin only)' })
   @ApiResponse({ status: 200, description: 'Vendor status updated successfully' })
   async updateVendorStatus(@Param('id') id: number, @Body() statusData: { status: string }) {
@@ -104,7 +104,7 @@ export class AdminController {
   }
 
   // Listings Management
-  @Get('api/listings')
+  @Get('listings')
   @ApiOperation({ summary: 'Get all listings (Admin only)' })
   @ApiResponse({ status: 200, description: 'Listings retrieved successfully' })
   async getListings(
@@ -116,14 +116,14 @@ export class AdminController {
     return this.adminService.getListings(page, perPage, status, category);
   }
 
-  @Get('api/listings/:id')
+  @Get('listings/:id')
   @ApiOperation({ summary: 'Get listing by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'Listing retrieved successfully' })
   async getListing(@Param('id') id: number) {
     return this.adminService.getListing(id);
   }
 
-  @Put('api/listings/:id/status')
+  @Put('listings/:id/status')
   @ApiOperation({ summary: 'Update listing status (Admin only)' })
   @ApiResponse({ status: 200, description: 'Listing status updated successfully' })
   async updateListingStatus(@Param('id') id: number, @Body() statusData: { status: string }) {
@@ -131,7 +131,7 @@ export class AdminController {
   }
 
   // Payouts Management
-  @Get('api/payouts')
+  @Get('payouts')
   @ApiOperation({ summary: 'Get all payouts (Admin only)' })
   @ApiResponse({ status: 200, description: 'Payouts retrieved successfully' })
   async getPayouts(
@@ -144,14 +144,14 @@ export class AdminController {
     return this.adminService.getPayouts(page, perPage, status, dateFrom, dateTo);
   }
 
-  @Get('api/payouts/:id')
+  @Get('payouts/:id')
   @ApiOperation({ summary: 'Get payout by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'Payout retrieved successfully' })
   async getPayout(@Param('id') id: number) {
     return this.adminService.getPayout(id);
   }
 
-  @Put('api/payouts/:id/status')
+  @Put('payouts/:id/status')
   @ApiOperation({ summary: 'Update payout status (Admin only)' })
   @ApiResponse({ status: 200, description: 'Payout status updated successfully' })
   async updatePayoutStatus(@Param('id') id: number, @Body() statusData: { status: string }) {
@@ -159,7 +159,7 @@ export class AdminController {
   }
 
   // Dashboard Stats
-  @Get('api/dashboard/stats')
+  @Get('dashboard/stats')
   @ApiOperation({ summary: 'Get admin dashboard statistics' })
   @ApiResponse({ status: 200, description: 'Dashboard stats retrieved successfully' })
   async getDashboardStats() {
