@@ -76,6 +76,7 @@ export interface ProductFiltersDto {
 
 // User DTOs
 export interface UpdateUserDto {
+  name?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
