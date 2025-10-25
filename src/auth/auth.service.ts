@@ -75,26 +75,48 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
+      username: user.username,
       name: user.name,
       roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
     };
 
     return {
-      user,
-      access_token: this.jwtService.sign(payload),
-      token_type: 'Bearer',
-      expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
+      data: {
+        user,
+        access_token: this.jwtService.sign(payload),
+        token_type: 'Bearer',
+        expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
+      },
+      message: 'Login successful',
+      status: 'success'
     };
   }
 
   async register(registerDto: RegisterDto) {
-    // Check if user already exists
-    const existingUser = await this.prisma.user.findUnique({
+    // Check if user already exists by email
+    const existingUserByEmail = await this.prisma.user.findUnique({
       where: { email: registerDto.email },
     });
 
-    if (existingUser) {
-      throw new ConflictException('User already exists');
+    if (existingUserByEmail) {
+      throw new ConflictException({
+        message: 'User with this email already exists',
+        status: 'error',
+        errors: { email: ['Email is already registered'] }
+      });
+    }
+
+    // Check if username already exists
+    const existingUserByUsername = await this.prisma.user.findUnique({
+      where: { username: registerDto.username },
+    });
+
+    if (existingUserByUsername) {
+      throw new ConflictException({
+        message: 'Username already taken',
+        status: 'error',
+        errors: { username: ['Username is already taken'] }
+      });
     }
 
     // Hash password
@@ -103,6 +125,7 @@ export class AuthService {
     // Create user
     const user = await this.prisma.user.create({
       data: {
+        username: registerDto.username,
         name: registerDto.name,
         email: registerDto.email,
         password: hashedPassword,
@@ -121,15 +144,20 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
+      username: user.username,
       name: user.name,
       roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
     };
 
     return {
-      user: userWithoutPassword,
-      access_token: this.jwtService.sign(payload),
-      token_type: 'Bearer',
-      expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
+      data: {
+        user: userWithoutPassword,
+        access_token: this.jwtService.sign(payload),
+        token_type: 'Bearer',
+        expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
+      },
+      message: 'Registration successful',
+      status: 'success'
     };
   }
 
