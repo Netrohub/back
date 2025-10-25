@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { ValidationService } from '../common/validation.service';
 import { UpdateUserDto, UpdatePasswordDto } from '../types';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private validationService: ValidationService,
+  ) {}
 
   async findById(id: number) {
     const user = await this.prisma.user.findUnique({
@@ -33,9 +37,36 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    // Validate input data
+    if (updateUserDto.name) {
+      this.validationService.validateName(updateUserDto.name);
+    }
+
+    if (updateUserDto.phone) {
+      this.validationService.validatePhone(updateUserDto.phone);
+    }
+
+    // Check if user exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Sanitize data
+    const sanitizedData: any = {};
+    if (updateUserDto.name) {
+      sanitizedData.name = this.validationService.sanitizeString(updateUserDto.name, 255);
+    }
+    if (updateUserDto.phone) {
+      sanitizedData.phone = this.validationService.sanitizeString(updateUserDto.phone, 20);
+    }
+
     const user = await this.prisma.user.update({
       where: { id },
-      data: updateUserDto,
+      data: sanitizedData,
       select: {
         id: true,
         name: true,
@@ -56,6 +87,9 @@ export class UsersService {
   }
 
   async updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
+    // Validate new password
+    this.validationService.validatePassword(updatePasswordDto.newPassword);
+
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -72,7 +106,17 @@ export class UsersService {
     );
 
     if (!isCurrentPasswordValid) {
-      throw new Error('Current password is incorrect');
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    // Check if new password is different from current
+    const isSamePassword = await bcrypt.compare(
+      updatePasswordDto.newPassword,
+      user.password,
+    );
+
+    if (isSamePassword) {
+      throw new BadRequestException('New password must be different from current password');
     }
 
     // Hash new password

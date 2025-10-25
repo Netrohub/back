@@ -86,6 +86,31 @@ export interface UpdatePasswordDto {
   newPassword: string;
 }
 
+// Admin DTOs
+export interface CreateAdminDto {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  role: 'admin' | 'moderator' | 'super_admin';
+}
+
+export interface AssignRoleDto {
+  role: 'admin' | 'moderator' | 'seller' | 'user';
+}
+
+export interface AdminStatsDto {
+  totalUsers: number;
+  activeUsers: number;
+  totalAdmins: number;
+  totalSellers: number;
+  totalProducts: number;
+  totalOrders: number;
+  totalDisputes: number;
+  pendingDisputes: number;
+  recentUsers: number;
+}
+
 // Order DTOs
 export interface CreateOrderDto {
   items: {

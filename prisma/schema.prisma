@@ -12,11 +12,11 @@ datasource db {
 
 model User {
   id                    Int       @id @default(autoincrement())
-  name                  String
-  email                 String    @unique
-  password              String
-  phone                 String?
-  avatar                String?
+  name                  String    @db.VarChar(255)
+  email                 String    @unique @db.VarChar(255)
+  password              String    @db.VarChar(255)
+  phone                 String?   @db.VarChar(20)
+  avatar                String?   @db.Text
   roles                 Json      @default("[\"user\"]")
   kyc_status            Json      @default("{\"email\": false, \"phone\": false, \"identity\": false}")
   kyc_documents         Json?
@@ -25,6 +25,10 @@ model User {
   email_verified_at     DateTime?
   phone_verified_at     DateTime?
   identity_verified_at  DateTime?
+  is_active             Boolean   @default(true)
+  last_login_at         DateTime?
+  login_attempts        Int       @default(0)
+  locked_until          DateTime?
   created_at            DateTime  @default(now())
   updated_at            DateTime  @updatedAt
 
@@ -35,8 +39,13 @@ model User {
   wishlist_items        WishlistItem[]
   disputes_as_user      Dispute[] @relation("UserDisputes")
   disputes_as_seller    Dispute[] @relation("SellerDisputes")
+  admin_actions         AdminAction[] @relation("AdminActions")
+  assigned_disputes     Dispute[] @relation("AssignedDisputes")
 
   @@map("users")
+  @@index([email])
+  @@index([roles])
+  @@index([is_active])
 }
 
 model Category {
@@ -143,12 +152,14 @@ model Dispute {
   order_id   Int
   user_id    Int
   seller_id  Int?
-  reason     String
-  description String?
-  status     String   @default("pending")
-  resolution String?
+  reason     String   @db.VarChar(255)
+  description String?  @db.Text
+  status     String   @default("pending") @db.VarChar(50)
+  resolution String?  @db.Text
   resolved_by Int?
   resolved_at DateTime?
+  assigned_to Int?
+  priority   String   @default("medium") @db.VarChar(20)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -156,6 +167,81 @@ model Dispute {
   order      Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
   user       User     @relation("UserDisputes", fields: [user_id], references: [id], onDelete: Cascade)
   seller     User?    @relation("SellerDisputes", fields: [seller_id], references: [id], onDelete: SetNull)
+  assigned_admin User? @relation("AssignedDisputes", fields: [assigned_to], references: [id], onDelete: SetNull)
 
   @@map("disputes")
+  @@index([status])
+  @@index([priority])
+  @@index([assigned_to])
+}
+
+// Admin Management Models
+model AdminAction {
+  id          Int      @id @default(autoincrement())
+  admin_id    Int
+  action_type String   @db.VarChar(100)
+  target_type String   @db.VarChar(50)
+  target_id   Int
+  description String?  @db.Text
+  metadata    Json?
+  created_at  DateTime @default(now())
+
+  // Relations
+  admin       User     @relation("AdminActions", fields: [admin_id], references: [id], onDelete: Cascade)
+
+  @@map("admin_actions")
+  @@index([admin_id])
+  @@index([action_type])
+  @@index([target_type])
+}
+
+model SystemLog {
+  id          Int      @id @default(autoincrement())
+  level       String   @db.VarChar(20) // info, warn, error, debug
+  message     String   @db.Text
+  context     Json?
+  user_id     Int?
+  ip_address  String?  @db.VarChar(45)
+  user_agent  String?  @db.Text
+  created_at  DateTime @default(now())
+
+  @@map("system_logs")
+  @@index([level])
+  @@index([user_id])
+  @@index([created_at])
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  user_id     Int?
+  action      String   @db.VarChar(100)
+  entity_type String   @db.VarChar(50)
+  entity_id   Int
+  old_values  Json?
+  new_values  Json?
+  ip_address  String?  @db.VarChar(45)
+  user_agent  String?  @db.Text
+  created_at  DateTime @default(now())
+
+  @@map("audit_logs")
+  @@index([user_id])
+  @@index([action])
+  @@index([entity_type])
+  @@index([created_at])
+}
+
+model AdminInvite {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique @db.VarChar(255)
+  invited_by  Int
+  role        String   @db.VarChar(50)
+  token       String   @unique @db.VarChar(255)
+  expires_at  DateTime
+  used_at     DateTime?
+  created_at  DateTime @default(now())
+
+  @@map("admin_invites")
+  @@index([email])
+  @@index([token])
+  @@index([expires_at])
 }

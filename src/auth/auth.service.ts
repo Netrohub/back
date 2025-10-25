@@ -19,11 +19,50 @@ export class AuthService {
       where: { email },
     });
 
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (!user) {
+      return null;
+    }
+
+    // Check if account is locked
+    if (user.locked_until && user.locked_until > new Date()) {
+      throw new UnauthorizedException('Account is temporarily locked due to too many failed login attempts');
+    }
+
+    // Check if account is active
+    if (!user.is_active) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (isPasswordValid) {
+      // Reset login attempts and unlock account
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          login_attempts: 0,
+          locked_until: null,
+          last_login_at: new Date(),
+        },
+      });
+
       const { password: _, ...result } = user;
       return result;
+    } else {
+      // Increment login attempts
+      const newAttempts = user.login_attempts + 1;
+      const lockUntil = newAttempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000) : null; // Lock for 15 minutes
+
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          login_attempts: newAttempts,
+          locked_until: lockUntil,
+        },
+      });
+
+      return null;
     }
-    return null;
   }
 
   async login(loginDto: LoginDto) {
