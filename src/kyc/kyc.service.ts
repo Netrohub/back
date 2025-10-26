@@ -255,15 +255,15 @@ export class KycService {
        // The URL should be: https://withpersona.com/verify-start?inquiry-template-id={template_id}&inquiry-id={inquiry_id}
        let verificationUrl;
        
-       if (isDynamicFlowTemplate) {
-         // Use the proper Dynamic Flow Template URL format
-         verificationUrl = `https://withpersona.com/verify-start?inquiry-template-id=${this.PERSONA_TEMPLATE_ID}&inquiry-id=${inquiryId}`;
-         console.log('🔗 Dynamic Flow Template verification URL:', verificationUrl);
-       } else {
-         // For regular templates, use the standard URL
-         verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
-         console.log('🔗 Regular template verification URL:', verificationUrl);
-       }
+               if (isDynamicFlowTemplate) {
+          // Use the inquiry ID directly for Dynamic Flow Templates
+          verificationUrl = `https://withpersona.com/verify/${inquiryId}`;
+          console.log('🔗 Dynamic Flow Template verification URL:', verificationUrl);
+        } else {
+          // For regular templates, use the standard URL
+          verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
+          console.log('🔗 Regular template verification URL:', verificationUrl);
+        }
        
        return {
          inquiryId,
