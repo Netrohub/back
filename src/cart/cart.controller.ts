@@ -48,15 +48,21 @@ export class CartController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Add item to cart' })
   @ApiResponse({ status: 201, description: 'Item added to cart' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async addToCart(@CurrentUser() user: any, @Body() addToCartDto: AddToCartDto) {
     return this.cartService.addToCart(user.id, addToCartDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update cart item quantity' })
   @ApiResponse({ status: 200, description: 'Cart item updated' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async updateCartItem(
     @CurrentUser() user: any,
     @Param('id') id: string,
@@ -66,15 +72,21 @@ export class CartController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove item from cart' })
   @ApiResponse({ status: 200, description: 'Item removed from cart' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async removeFromCart(@CurrentUser() user: any, @Param('id') id: string) {
     return this.cartService.removeFromCart(user.id, +id);
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Clear entire cart' })
   @ApiResponse({ status: 200, description: 'Cart cleared' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async clearCart(@CurrentUser() user: any) {
     return this.cartService.clearCart(user.id);
   }

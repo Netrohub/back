@@ -16,6 +16,7 @@ exports.CartController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const cart_service_1 = require("./cart.service");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const decorators_1 = require("../auth/decorators");
 let CartController = class CartController {
     cartService;
@@ -76,8 +77,11 @@ __decorate([
 ], CartController.prototype, "getCart", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Add item to cart' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Item added to cart' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     __param(0, (0, decorators_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -86,8 +90,11 @@ __decorate([
 ], CartController.prototype, "addToCart", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Update cart item quantity' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Cart item updated' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     __param(0, (0, decorators_1.CurrentUser)()),
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
@@ -97,8 +104,11 @@ __decorate([
 ], CartController.prototype, "updateCartItem", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Remove item from cart' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Item removed from cart' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     __param(0, (0, decorators_1.CurrentUser)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -107,8 +117,11 @@ __decorate([
 ], CartController.prototype, "removeFromCart", null);
 __decorate([
     (0, common_1.Delete)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Clear entire cart' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Cart cleared' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     __param(0, (0, decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
