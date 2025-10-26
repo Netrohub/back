@@ -187,8 +187,12 @@ export class KycService {
       let response;
       
       if (isDynamicFlowTemplate) {
-        // Dynamic Flow Templates use the same endpoint but with inquiry_template_id
+        // Dynamic Flow Templates - convert itmpl_ to tmpl_ for the API call
         console.log('📋 Using Dynamic Flow Template (itmpl_)');
+        
+        // Remove the 'i' prefix from itmpl_ to make it compatible with the API
+        const apiTemplateId = this.PERSONA_TEMPLATE_ID.replace(/^i/, '');
+        console.log('📋 Converted template ID:', apiTemplateId);
         
         response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
           method: 'POST',
@@ -200,7 +204,7 @@ export class KycService {
             data: {
               type: 'inquiry',
               attributes: {
-                inquiry_template_id: this.PERSONA_TEMPLATE_ID,
+                template_id: apiTemplateId,
                 reference_id: `user_${userId}_${Date.now()}`,
                 metadata: {
                   userId: userId,
