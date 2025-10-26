@@ -187,10 +187,10 @@ export class KycService {
       let response;
       
       if (isDynamicFlowTemplate) {
-        // Dynamic Flow Templates require different API endpoint and structure
+        // Dynamic Flow Templates use the same endpoint but with inquiry_template_id
         console.log('📋 Using Dynamic Flow Template (itmpl_)');
         
-        response = await fetch('https://api.withpersona.com/api/v1/dynamic-inquiries', {
+        response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
@@ -198,7 +198,7 @@ export class KycService {
           },
           body: JSON.stringify({
             data: {
-              type: 'dynamic-inquiry',
+              type: 'inquiry',
               attributes: {
                 inquiry_template_id: this.PERSONA_TEMPLATE_ID,
                 reference_id: `user_${userId}_${Date.now()}`,
