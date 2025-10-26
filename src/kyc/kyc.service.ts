@@ -253,26 +253,26 @@ export class KycService {
        const inquiryId = result.data.id;
        const accountId = result.data.relationships?.account?.data?.id;
        
-       // Get verification URL from Persona API response
-       // The URL is in attributes.redirect_url or attributes.url
-       let verificationUrl = result.data.attributes?.redirect_url || 
-                            result.data.attributes?.url || 
-                            result.data.attributes?.['verification-url'];
-       
-       // If no URL in response, construct it manually
-       if (!verificationUrl) {
-         if (isDynamicFlowTemplate) {
-           // Try the new Dynamic Flow URL format
-           verificationUrl = `https://withpersona.com/verify-start?inquiry-template-id=${this.PERSONA_TEMPLATE_ID}&inquiry-id=${inquiryId}&environment=sandbox`;
-         } else {
-           verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}?environment=sandbox`;
-         }
-       } else {
-         // Add environment if not present
-         if (!verificationUrl.includes('environment=')) {
-           verificationUrl += (verificationUrl.includes('?') ? '&' : '?') + 'environment=sandbox';
-         }
-       }
+               // Get verification URL from Persona API response
+        // The URL is in attributes.redirect_url or attributes.url
+        let verificationUrl = result.data.attributes?.redirect_url || 
+                             result.data.attributes?.url || 
+                             result.data.attributes?.['verification-url'];
+        
+        // If no URL in response, construct it manually
+        if (!verificationUrl) {
+          if (isDynamicFlowTemplate) {
+            // For Dynamic Flow Templates, use the withpersona.com domain
+            verificationUrl = `https://withpersona.com/verify/${inquiryId}?environment=sandbox`;
+          } else {
+            verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}?environment=sandbox`;
+          }
+        } else {
+          // Add environment if not present
+          if (!verificationUrl.includes('environment=')) {
+            verificationUrl += (verificationUrl.includes('?') ? '&' : '?') + 'environment=sandbox';
+          }
+        }
        
        console.log('🔗 Final verification URL:', verificationUrl);
        
