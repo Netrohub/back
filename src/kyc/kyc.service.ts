@@ -181,33 +181,58 @@ export class KycService {
       console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
       console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
       
-      // Convert itmpl_ prefix to tmpl_ if needed
-      let templateId = this.PERSONA_TEMPLATE_ID;
-      if (templateId.startsWith('itmpl_')) {
-        templateId = 'tmpl_' + templateId.substring(6); // Remove 'itmpl_' prefix
-        console.log('📋 Converted Template ID:', templateId);
-      }
+      // For Dynamic Flow Templates (itmpl_), we need to use a different approach
+      const isDynamicFlowTemplate = this.PERSONA_TEMPLATE_ID.startsWith('itmpl_');
       
-      // Create Persona inquiry via API
-      const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: {
-            type: 'inquiry',
-            attributes: {
-              template_id: templateId,
-              reference_id: `user_${userId}_${Date.now()}`,
-              metadata: {
-                userId: userId,
-              },
+      let response;
+      
+      if (isDynamicFlowTemplate) {
+        // Dynamic Flow Templates require different API endpoint and structure
+        console.log('📋 Using Dynamic Flow Template (itmpl_)');
+        
+        response = await fetch('https://api.withpersona.com/api/v1/dynamic-inquiries', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: {
+              type: 'dynamic-inquiry',
+              attributes: {
+                inquiry_template_id: this.PERSONA_TEMPLATE_ID,
+                reference_id: `user_${userId}_${Date.now()}`,
+                metadata: {
+                  userId: userId,
+                },
+              }
             }
-          }
-        }),
-      });
+          }),
+        });
+      } else {
+        // Regular template (tmpl_ or blu_)
+        console.log('📋 Using Regular Template');
+        
+        response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: {
+              type: 'inquiry',
+              attributes: {
+                template_id: this.PERSONA_TEMPLATE_ID,
+                reference_id: `user_${userId}_${Date.now()}`,
+                metadata: {
+                  userId: userId,
+                },
+              }
+            }
+          }),
+        });
+      }
 
       const responseText = await response.text();
       console.log('📥 Persona API response status:', response.status);
