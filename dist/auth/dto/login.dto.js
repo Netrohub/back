@@ -15,6 +15,7 @@ const swagger_1 = require("@nestjs/swagger");
 class LoginDto {
     email;
     password;
+    remember;
 }
 exports.LoginDto = LoginDto;
 __decorate([
@@ -30,4 +31,10 @@ __decorate([
     (0, class_validator_1.MinLength)(6, { message: 'Password must be at least 6 characters' }),
     __metadata("design:type", String)
 ], LoginDto.prototype, "password", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Remember me', example: false, required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], LoginDto.prototype, "remember", void 0);
 //# sourceMappingURL=login.dto.js.map
