@@ -15,6 +15,7 @@ export class UsersService {
       where: { id },
       select: {
         id: true,
+        username: true,
         name: true,
         email: true,
         phone: true,
@@ -26,6 +27,30 @@ export class UsersService {
         identity_verified_at: true,
         created_at: true,
         updated_at: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async findByUsername(username: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        avatar: true,
+        roles: true,
+        kyc_status: true,
+        email_verified_at: true,
+        phone_verified_at: true,
+        identity_verified_at: true,
+        created_at: true,
       },
     });
 

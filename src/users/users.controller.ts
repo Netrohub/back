@@ -1,18 +1,27 @@
-import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Param, SetMetadata } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators';
+import { CurrentUser, Public } from '../auth/decorators';
 import { UpdateUserDto, UpdatePasswordDto } from '../types';
 
 @ApiTags('users')
 @Controller('users')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Get(':username')
+  @Public()
+  @ApiOperation({ summary: 'Get user profile by username (public)' })
+  @ApiResponse({ status: 200, description: 'User profile retrieved' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserByUsername(@Param('username') username: string) {
+    return this.usersService.findByUsername(username);
+  }
+
   @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({ status: 200, description: 'User profile retrieved' })
   async getProfile(@CurrentUser() user: any) {
@@ -20,6 +29,8 @@ export class UsersController {
   }
 
   @Put('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update current user profile' })
   @ApiResponse({ status: 200, description: 'Profile updated successfully' })
   async updateProfile(
@@ -30,6 +41,8 @@ export class UsersController {
   }
 
   @Put('me/password')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update user password' })
   @ApiResponse({ status: 200, description: 'Password updated successfully' })
   async updatePassword(
