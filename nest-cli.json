@@ -4,10 +4,20 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
+    "watchAssets": true,
     "assets": [
       {
         "include": "**/*.html",
         "outDir": "dist"
+      }
+    ],
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": true,
+          "introspectComments": true
+        }
       }
     ]
   }

@@ -6,7 +6,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "nest build",
+    "build": "tsc && npm run copy-templates",
+    "copy-templates": "mkdir -p dist/email/templates && cp -r src/email/templates dist/email/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npx nest start",
     "start:dev": "npx nest start --watch",
