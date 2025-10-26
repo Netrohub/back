@@ -8,16 +8,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    const token = request?.headers?.authorization;
-    
-    console.log('🔐 JWT AuthGuard triggered:', {
-      url: request?.url,
-      method: request?.method,
-      hasToken: !!token,
-      tokenPreview: token ? token.substring(0, 30) + '...' : 'none'
-    });
+          canActivate(context: ExecutionContext) {
+          const request = context.switchToHttp().getRequest();
+          const token = request?.headers?.authorization;
+          
+          console.log('🔐 JWT AuthGuard triggered:', {
+            url: request?.url,
+            method: request?.method,
+            hasToken: !!token,
+            tokenPreview: token ? token.substring(0, 30) + '...' : 'none',
+            allHeaders: request?.headers,
+            rawHeaders: request?.rawHeaders
+          });
 
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
