@@ -3,9 +3,19 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class KycService {
-  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY?.startsWith('persona_sandbox_') 
-    ? 'sk_test_' + process.env.PERSONA_API_KEY.replace('persona_sandbox_', '')
-    : (process.env.PERSONA_API_KEY || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5');
+  private readonly PERSONA_API_KEY = (() => {
+    const envKey = process.env.PERSONA_API_KEY;
+    // If it starts with persona_sandbox_, extract the UUID part and add sk_test_ prefix
+    if (envKey?.startsWith('persona_sandbox_')) {
+      const uuid = envKey.replace('persona_sandbox_', '');
+      return `sk_test_${uuid}`;
+    }
+    // If it doesn't start with sk_test_ or sk_live_, add sk_test_ prefix
+    if (envKey && !envKey.startsWith('sk_test_') && !envKey.startsWith('sk_live_')) {
+      return `sk_test_${envKey}`;
+    }
+    return envKey || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5';
+  })();
   private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'itmpl_1bNZnx9mrbHZKKJsvJiN9BDDTuD6';
 
   constructor(private prisma: PrismaService) {}
