@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import * as compression from 'compression';
 import { AppModule } from './app.module';
+import { PrismaSerializeInterceptor } from './common/interceptors/prisma-serialize.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -104,6 +105,9 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Global interceptor to transform Prisma Decimal to Number
+  app.useGlobalInterceptors(new PrismaSerializeInterceptor());
 
   // API prefix
   app.setGlobalPrefix('api');
