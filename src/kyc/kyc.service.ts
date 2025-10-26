@@ -1,12 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import * as https from 'https';
-import { URL } from 'url';
 
 @Injectable()
 export class KycService {
-  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || 'sk_test_c7fca5cf-4d36-4466-a8a0-cc4657055617';
-  private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'vtmpl_gnPSyThsGJMjMqU3rpS1DoXQ69rr';
+  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5';
+  private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'itmpl_1tm64xReoX1dKGH5scrvonsMzAYV';
 
   constructor(private prisma: PrismaService) {}
 
@@ -178,6 +176,8 @@ export class KycService {
   async createPersonaInquiry(userId: number) {
     try {
       console.log('🔍 Creating Persona inquiry for user:', userId);
+      console.log('🔑 API Key preview:', this.PERSONA_API_KEY ? `${this.PERSONA_API_KEY.substring(0, 8)}...` : 'NOT SET');
+      console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
       
       // Create Persona inquiry via API
       const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
