@@ -5,6 +5,67 @@ import { PrismaService } from '../prisma/prisma.service';
 export class KycService {
   constructor(private prisma: PrismaService) {}
 
+  async handlePersonaCallback(data: any) {
+    console.log('🔍 Processing Persona callback:', data);
+    
+    try {
+      // Extract inquiry information
+      const inquiryId = data?.inquiry?.id;
+      const status = data?.inquiry?.status;
+      const userId = data?.metadata?.userId; // You should pass userId in metadata when creating inquiry
+      
+      console.log(`📋 Inquiry ${inquiryId} status: ${status}`);
+      
+      // Find user by inquiry ID or other identifier
+      // For now, we'll need to store the mapping between inquiry and user
+      // This should be done when the inquiry is created
+      
+      // Example: Find user by stored inquiry ID
+      const user = await this.prisma.user.findFirst({
+        where: {
+          kyc_documents: {
+            path: ['persona_inquiry_id'],
+            equals: inquiryId,
+          },
+        },
+      });
+      
+      if (!user) {
+        console.warn('⚠️ User not found for inquiry:', inquiryId);
+        return;
+      }
+      
+      // Update KYC status based on Persona result
+      if (status === 'passed') {
+        const currentStatus = user.kyc_status as any || {};
+        const updatedStatus = {
+          ...currentStatus,
+          identity: true,
+          persona_inquiry_id: inquiryId,
+          persona_verified_at: new Date().toISOString(),
+        };
+        
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            kyc_status: updatedStatus,
+            kyc_verified: true,
+          },
+        });
+        
+        console.log(`✅ User ${user.id} KYC verified via Persona`);
+      } else if (status === 'failed') {
+        console.log(`❌ User ${user.id} KYC failed verification`);
+        // Handle failure case
+      }
+      
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error handling Persona callback:', error);
+      throw error;
+    }
+  }
+
   async getKycStatus(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
