@@ -21,14 +21,11 @@ export class KycService {
       // This should be done when the inquiry is created
       
       // Example: Find user by stored inquiry ID
-      const user = await this.prisma.user.findFirst({
-        where: {
-          kyc_documents: {
-            path: ['persona_inquiry_id'],
-            equals: inquiryId,
-          },
-        },
-      });
+      // Note: This assumes we store the inquiry ID in the user's metadata or create a separate mapping
+      // For now, we'll skip finding the user by inquiry ID and use metadata instead
+      const user = userId ? await this.prisma.user.findUnique({
+        where: { id: userId },
+      }) : null;
       
       if (!user) {
         console.warn('⚠️ User not found for inquiry:', inquiryId);
