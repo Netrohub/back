@@ -244,21 +244,25 @@ export class KycService {
         throw new Error(error.error?.message || 'Failed to create Persona inquiry');
       }
 
-      const result = JSON.parse(responseText);
-      console.log('✅ Persona inquiry created:', result.data);
-      
-             // Extract the inquiry ID and URL
-       const inquiryId = result.data.id;
-       let verificationUrl = result.data.attributes?.url;
+             const result = JSON.parse(responseText);
+       console.log('✅ Persona inquiry created:', result.data);
        
-       console.log('🔗 Verification URL from API:', verificationUrl);
-
-       // For Dynamic Flow Templates, construct the URL using the inquiry ID
-       if (!verificationUrl || isDynamicFlowTemplate) {
-         // Use the inquiry ID directly to construct the verification URL
-         const constructedUrl = `https://withpersona.com/verify/${inquiryId}`;
-         console.log('🔗 Constructed verification URL:', constructedUrl);
-         verificationUrl = constructedUrl;
+       // Extract the inquiry ID
+       const inquiryId = result.data.id;
+       const accountId = result.data.relationships?.account?.data?.id;
+       
+       // For Dynamic Flow Templates, use the session-based URL
+       // The URL should be: https://withpersona.com/verify-start?inquiry-template-id={template_id}&inquiry-id={inquiry_id}
+       let verificationUrl;
+       
+       if (isDynamicFlowTemplate) {
+         // Use the proper Dynamic Flow Template URL format
+         verificationUrl = `https://withpersona.com/verify-start?inquiry-template-id=${this.PERSONA_TEMPLATE_ID}&inquiry-id=${inquiryId}`;
+         console.log('🔗 Dynamic Flow Template verification URL:', verificationUrl);
+       } else {
+         // For regular templates, use the standard URL
+         verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
+         console.log('🔗 Regular template verification URL:', verificationUrl);
        }
        
        return {
