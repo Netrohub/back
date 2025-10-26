@@ -249,34 +249,36 @@ export class KycService {
              const result = JSON.parse(responseText);
        console.log('✅ Persona inquiry created:', JSON.stringify(result.data, null, 2));
        
-       // Extract the inquiry ID
-       const inquiryId = result.data.id;
-       
-       // Get the inquiry session ID for generating a one-time link
-       const inquirySessionId = result.data.relationships?.sessions?.data?.[0]?.id;
-       
-       let verificationUrl;
-       
-       if (inquirySessionId) {
-         // Generate a one-time verification link using the inquiry session
-         console.log('📋 Generating one-time link for session:', inquirySessionId);
+               // Extract the inquiry ID
+        const inquiryId = result.data.id;
+        
+        // Get the inquiry session ID for generating a one-time link
+        const inquirySessionId = result.data.relationships?.sessions?.data?.[0]?.id;
+        
+        console.log('🔍 Sessions relationship:', JSON.stringify(result.data.relationships?.sessions, null, 2));
+        console.log('🔍 Session ID found:', inquirySessionId);
+        
+        let verificationUrl;
+        
+        if (inquirySessionId) {
+          // Generate a one-time verification link using the inquiry session
+          console.log('📋 Generating one-time link for session:', inquirySessionId);
          
-         const linkResponse = await fetch(
-           `https://api.withpersona.com/api/v1/inquiry-sessions/${inquirySessionId}/generate-one-time-link`,
-           {
-             method: 'POST',
-             headers: {
-               'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
-               'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({
-               data: {
-                 type: 'session',
-                 attributes: {}
-               }
-             })
-           }
-         );
+                   const linkResponse = await fetch(
+            `https://api.withpersona.com/api/v1/inquiry-sessions/${inquirySessionId}/generate-one-time-link`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                data: {
+                  type: 'inquiry-session'
+                }
+              })
+            }
+          );
          
          const linkResult = JSON.parse(await linkResponse.text());
          
