@@ -7,11 +7,11 @@ export declare class DisputesController {
             items: ({
                 product: {
                     category: string;
-                    id: number;
                     name: string;
+                    description: string | null;
+                    id: number;
                     created_at: Date;
                     updated_at: Date;
-                    description: string | null;
                     status: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -37,10 +37,10 @@ export declare class DisputesController {
             payment_method: string | null;
         };
     } & {
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         user_id: number;
         status: string;
         seller_id: number | null;
@@ -57,11 +57,11 @@ export declare class DisputesController {
             items: ({
                 product: {
                     category: string;
-                    id: number;
                     name: string;
+                    description: string | null;
+                    id: number;
                     created_at: Date;
                     updated_at: Date;
-                    description: string | null;
                     status: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -87,10 +87,10 @@ export declare class DisputesController {
             payment_method: string | null;
         };
     } & {
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         user_id: number;
         status: string;
         seller_id: number | null;
@@ -107,10 +107,10 @@ export declare class DisputesController {
         reason: string;
         description: string;
     }): Promise<{
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         user_id: number;
         status: string;
         seller_id: number | null;
@@ -124,19 +124,19 @@ export declare class DisputesController {
     }>;
     getAdminDisputes(): Promise<({
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         order: {
             items: ({
                 product: {
                     category: string;
-                    id: number;
                     name: string;
+                    description: string | null;
+                    id: number;
                     created_at: Date;
                     updated_at: Date;
-                    description: string | null;
                     status: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -162,10 +162,10 @@ export declare class DisputesController {
             payment_method: string | null;
         };
     } & {
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         user_id: number;
         status: string;
         seller_id: number | null;
@@ -180,10 +180,10 @@ export declare class DisputesController {
     updateDisputeStatus(user: any, id: string, updateStatusDto: {
         status: string;
     }): Promise<{
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         user_id: number;
         status: string;
         seller_id: number | null;

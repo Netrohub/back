@@ -6,9 +6,9 @@ export declare class AuditLogsService {
     findAll(query: QueryAuditLogsDto): Promise<{
         data: ({
             user: {
-                id: number;
-                email: string;
                 name: string;
+                email: string;
+                id: number;
             };
         } & {
             id: number;
@@ -31,9 +31,9 @@ export declare class AuditLogsService {
     }>;
     findOne(id: string): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         id: number;
@@ -49,9 +49,9 @@ export declare class AuditLogsService {
     }>;
     export(query: QueryAuditLogsDto): Promise<({
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         id: number;

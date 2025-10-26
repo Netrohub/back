@@ -5,11 +5,11 @@ export declare class CouponsController {
     private readonly couponsService;
     constructor(couponsService: CouponsService);
     create(createCouponDto: CreateCouponDto): Promise<{
+        type: string;
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
-        type: string;
         status: string;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -20,11 +20,11 @@ export declare class CouponsController {
         expires_at: Date | null;
     }>;
     findAll(): Promise<{
+        type: string;
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
-        type: string;
         status: string;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -35,11 +35,11 @@ export declare class CouponsController {
         expires_at: Date | null;
     }[]>;
     findOne(id: string): Promise<{
+        type: string;
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
-        type: string;
         status: string;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -50,11 +50,11 @@ export declare class CouponsController {
         expires_at: Date | null;
     }>;
     update(id: string, updateCouponDto: UpdateCouponDto): Promise<{
+        type: string;
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
-        type: string;
         status: string;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -65,11 +65,11 @@ export declare class CouponsController {
         expires_at: Date | null;
     }>;
     remove(id: string): Promise<{
+        type: string;
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
-        type: string;
         status: string;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;

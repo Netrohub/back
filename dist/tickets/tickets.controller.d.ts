@@ -6,9 +6,9 @@ export declare class TicketsController {
     constructor(ticketsService: TicketsService);
     create(createTicketDto: CreateTicketDto, req: any): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -25,14 +25,14 @@ export declare class TicketsController {
     }>;
     findAll(userId?: number, status?: string, priority?: string, assignedTo?: number): Promise<({
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -49,14 +49,14 @@ export declare class TicketsController {
     })[]>;
     findOne(id: string): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -73,14 +73,14 @@ export declare class TicketsController {
     }>;
     update(id: string, updateTicketDto: UpdateTicketDto): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;

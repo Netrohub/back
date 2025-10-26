@@ -1,24 +1,25 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { AddToCartDto, UpdateCartItemDto } from '../types';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { JwtService } from '@nestjs/jwt';
 export declare class CartService {
     private prisma;
     private jwtService;
     constructor(prisma: PrismaService, jwtService: JwtService);
     getUserFromToken(token: string): Promise<{
-        id: number;
-        email: string;
         name: string;
+        email: string;
+        id: number;
     }>;
     getCart(userId: number): Promise<{
         items: ({
             product: {
                 category: string;
-                id: number;
                 name: string;
+                description: string | null;
+                id: number;
                 created_at: Date;
                 updated_at: Date;
-                description: string | null;
                 status: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 images: import("@prisma/client/runtime/library").JsonValue | null;

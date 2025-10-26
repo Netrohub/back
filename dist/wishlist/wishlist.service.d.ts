@@ -4,11 +4,11 @@ export declare class WishlistService {
     constructor(prisma: PrismaService);
     getWishlist(userId: number): Promise<{
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -17,11 +17,11 @@ export declare class WishlistService {
     addToWishlist(userId: number, productId: number): Promise<({
         product: {
             category: string;
-            id: number;
             name: string;
+            description: string | null;
+            id: number;
             created_at: Date;
             updated_at: Date;
-            description: string | null;
             status: string;
             price: import("@prisma/client/runtime/library").Decimal;
             images: import("@prisma/client/runtime/library").JsonValue | null;

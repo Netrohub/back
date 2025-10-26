@@ -6,9 +6,9 @@ export declare class TicketsService {
     constructor(prisma: PrismaService);
     create(createTicketDto: CreateTicketDto, userId: number): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -30,14 +30,14 @@ export declare class TicketsService {
         assigned_to?: number;
     }): Promise<({
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -54,14 +54,14 @@ export declare class TicketsService {
     })[]>;
     findOne(id: string): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;
@@ -78,14 +78,14 @@ export declare class TicketsService {
     }>;
     update(id: string, updateTicketDto: UpdateTicketDto): Promise<{
         user: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         assigned_admin: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
         category: string | null;

@@ -1,5 +1,7 @@
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, User } from '../types';
+import { User } from '../types';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
@@ -16,11 +18,11 @@ export declare class AuthController {
     register(registerDto: RegisterDto): Promise<{
         data: {
             user: {
-                id: number;
-                username: string;
-                email: string;
                 name: string;
+                email: string;
+                username: string;
                 phone: string | null;
+                id: number;
                 avatar: string | null;
                 roles: import("@prisma/client/runtime/library").JsonValue;
                 kyc_status: import("@prisma/client/runtime/library").JsonValue;

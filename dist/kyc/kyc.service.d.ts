@@ -14,12 +14,12 @@ export declare class KycService {
         documents: import("@prisma/client/runtime/library").JsonValue;
     }>;
     submitKycDocument(userId: number, step: string, documentData: any): Promise<{
-        id: number;
-        username: string;
-        email: string;
         name: string;
+        email: string;
         password: string;
+        username: string;
         phone: string | null;
+        id: number;
         avatar: string | null;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -37,12 +37,12 @@ export declare class KycService {
         updated_at: Date;
     }>;
     completeKyc(userId: number): Promise<{
-        id: number;
-        username: string;
-        email: string;
         name: string;
+        email: string;
         password: string;
+        username: string;
         phone: string | null;
+        id: number;
         avatar: string | null;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -60,12 +60,12 @@ export declare class KycService {
         updated_at: Date;
     }>;
     verifyPhone(userId: number, phone: string, code: string): Promise<{
-        id: number;
-        username: string;
-        email: string;
         name: string;
+        email: string;
         password: string;
+        username: string;
         phone: string | null;
+        id: number;
         avatar: string | null;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;

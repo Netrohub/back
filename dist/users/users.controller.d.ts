@@ -4,9 +4,9 @@ export declare class UsersController {
     private usersService;
     constructor(usersService: UsersService);
     getUserByUsername(username: string): Promise<{
-        id: number;
-        username: string;
         name: string;
+        username: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -16,11 +16,11 @@ export declare class UsersController {
         created_at: Date;
     }>;
     getProfile(user: any): Promise<{
-        id: number;
-        username: string;
-        email: string;
         name: string;
+        email: string;
+        username: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -31,10 +31,10 @@ export declare class UsersController {
         updated_at: Date;
     }>;
     updateProfile(user: any, updateUserDto: UpdateUserDto): Promise<{
-        id: number;
-        email: string;
         name: string;
+        email: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;

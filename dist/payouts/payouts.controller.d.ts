@@ -5,10 +5,10 @@ export declare class PayoutsController {
     private readonly payoutsService;
     constructor(payoutsService: PayoutsService);
     create(createPayoutDto: CreatePayoutDto): Promise<{
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         seller_id: number;
         method: string | null;
@@ -21,15 +21,15 @@ export declare class PayoutsController {
     }>;
     findAll(sellerId?: number, status?: string): Promise<({
         seller: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         seller_id: number;
         method: string | null;
@@ -42,15 +42,15 @@ export declare class PayoutsController {
     })[]>;
     findOne(id: string): Promise<{
         seller: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
     } & {
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         seller_id: number;
         method: string | null;
@@ -62,10 +62,10 @@ export declare class PayoutsController {
         completed_date: Date | null;
     }>;
     update(id: string, updatePayoutDto: UpdatePayoutDto): Promise<{
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         seller_id: number;
         method: string | null;
@@ -77,10 +77,10 @@ export declare class PayoutsController {
         completed_date: Date | null;
     }>;
     remove(id: string): Promise<{
+        description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         seller_id: number;
         method: string | null;

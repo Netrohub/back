@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const cart_service_1 = require("./cart.service");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const decorators_1 = require("../auth/decorators");
+const add_to_cart_dto_1 = require("./dto/add-to-cart.dto");
+const update_cart_item_dto_1 = require("./dto/update-cart-item.dto");
 let CartController = class CartController {
     cartService;
     constructor(cartService) {
@@ -85,7 +87,7 @@ __decorate([
     __param(0, (0, decorators_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, add_to_cart_dto_1.AddToCartDto]),
     __metadata("design:returntype", Promise)
 ], CartController.prototype, "addToCart", null);
 __decorate([
@@ -99,7 +101,7 @@ __decorate([
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Object]),
+    __metadata("design:paramtypes", [Object, String, update_cart_item_dto_1.UpdateCartItemDto]),
     __metadata("design:returntype", Promise)
 ], CartController.prototype, "updateCartItem", null);
 __decorate([

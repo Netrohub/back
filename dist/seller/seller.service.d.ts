@@ -10,17 +10,17 @@ export declare class SellerService {
         };
         recentOrders: ({
             user: {
-                email: string;
                 name: string;
+                email: string;
             };
             items: ({
                 product: {
                     category: string;
-                    id: number;
                     name: string;
+                    description: string | null;
+                    id: number;
                     created_at: Date;
                     updated_at: Date;
-                    description: string | null;
                     status: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -48,9 +48,9 @@ export declare class SellerService {
     }>;
     getSellerProducts(sellerId: number): Promise<({
         seller: {
-            id: number;
-            email: string;
             name: string;
+            email: string;
+            id: number;
         };
         _count: {
             cart_items: number;
@@ -58,11 +58,11 @@ export declare class SellerService {
         };
     } & {
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -70,17 +70,17 @@ export declare class SellerService {
     })[]>;
     getSellerOrders(sellerId: number): Promise<({
         user: {
-            email: string;
             name: string;
+            email: string;
         };
         items: ({
             product: {
                 category: string;
-                id: number;
                 name: string;
+                description: string | null;
+                id: number;
                 created_at: Date;
                 updated_at: Date;
-                description: string | null;
                 status: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 images: import("@prisma/client/runtime/library").JsonValue | null;

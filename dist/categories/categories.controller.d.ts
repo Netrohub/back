@@ -5,51 +5,51 @@ export declare class CategoriesController {
     private readonly categoriesService;
     constructor(categoriesService: CategoriesService);
     create(createCategoryDto: CreateCategoryDto): Promise<{
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         slug: string;
         image: string | null;
     }>;
     findAll(): Promise<{
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         slug: string;
         image: string | null;
     }[]>;
     findOne(id: string): Promise<{
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         slug: string;
         image: string | null;
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         slug: string;
         image: string | null;
     }>;
     remove(id: string): Promise<{
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         slug: string;
         image: string | null;

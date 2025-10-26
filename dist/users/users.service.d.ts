@@ -6,11 +6,11 @@ export declare class UsersService {
     private validationService;
     constructor(prisma: PrismaService, validationService: ValidationService);
     findById(id: number): Promise<{
-        id: number;
-        username: string;
-        email: string;
         name: string;
+        email: string;
+        username: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -21,9 +21,9 @@ export declare class UsersService {
         updated_at: Date;
     }>;
     findByUsername(username: string): Promise<{
-        id: number;
-        username: string;
         name: string;
+        username: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -33,10 +33,10 @@ export declare class UsersService {
         created_at: Date;
     }>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<{
-        id: number;
-        email: string;
         name: string;
+        email: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;
@@ -50,10 +50,10 @@ export declare class UsersService {
         message: string;
     }>;
     findAll(): Promise<{
-        id: number;
-        email: string;
         name: string;
+        email: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;

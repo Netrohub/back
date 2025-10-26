@@ -1,7 +1,8 @@
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto, RegisterDto } from '../types';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { User } from '@prisma/client';
 export declare class AuthService {
     private prisma;
@@ -22,11 +23,11 @@ export declare class AuthService {
     register(registerDto: RegisterDto): Promise<{
         data: {
             user: {
-                id: number;
-                username: string;
-                email: string;
                 name: string;
+                email: string;
+                username: string;
                 phone: string | null;
+                id: number;
                 avatar: string | null;
                 roles: import("@prisma/client/runtime/library").JsonValue;
                 kyc_status: import("@prisma/client/runtime/library").JsonValue;

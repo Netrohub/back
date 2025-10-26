@@ -3,10 +3,10 @@ export declare class PublicUsersController {
     private usersService;
     constructor(usersService: UsersService);
     getMembers(): Promise<{
-        id: number;
-        email: string;
         name: string;
+        email: string;
         phone: string;
+        id: number;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
         kyc_status: import("@prisma/client/runtime/library").JsonValue;

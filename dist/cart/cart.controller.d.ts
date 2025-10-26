@@ -1,5 +1,6 @@
 import { CartService } from './cart.service';
-import { AddToCartDto, UpdateCartItemDto } from '../types';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 export declare class CartController {
     private cartService;
     constructor(cartService: CartService);
@@ -7,11 +8,11 @@ export declare class CartController {
         items: ({
             product: {
                 category: string;
-                id: number;
                 name: string;
+                description: string | null;
+                id: number;
                 created_at: Date;
                 updated_at: Date;
-                description: string | null;
                 status: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 images: import("@prisma/client/runtime/library").JsonValue | null;

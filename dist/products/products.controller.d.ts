@@ -6,17 +6,17 @@ export declare class ProductsController {
     findAll(filters: ProductFiltersDto): Promise<{
         data: ({
             seller: {
-                id: number;
                 name: string;
+                id: number;
                 avatar: string;
             };
         } & {
             category: string;
-            id: number;
             name: string;
+            description: string | null;
+            id: number;
             created_at: Date;
             updated_at: Date;
-            description: string | null;
             status: string;
             price: import("@prisma/client/runtime/library").Decimal;
             images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -33,17 +33,17 @@ export declare class ProductsController {
     }>;
     findOne(id: string): Promise<{
         seller: {
-            id: number;
             name: string;
+            id: number;
             avatar: string;
         };
     } & {
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -51,17 +51,17 @@ export declare class ProductsController {
     }>;
     create(createProductDto: CreateProductDto, req: any): Promise<{
         seller: {
-            id: number;
             name: string;
+            id: number;
             avatar: string;
         };
     } & {
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -69,17 +69,17 @@ export declare class ProductsController {
     }>;
     update(id: string, updateProductDto: UpdateProductDto, req: any): Promise<{
         seller: {
-            id: number;
             name: string;
+            id: number;
             avatar: string;
         };
     } & {
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
@@ -87,11 +87,11 @@ export declare class ProductsController {
     }>;
     remove(id: string, req: any): Promise<{
         category: string;
-        id: number;
         name: string;
+        description: string | null;
+        id: number;
         created_at: Date;
         updated_at: Date;
-        description: string | null;
         status: string;
         price: import("@prisma/client/runtime/library").Decimal;
         images: import("@prisma/client/runtime/library").JsonValue | null;
