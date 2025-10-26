@@ -16,6 +16,9 @@ export class KycService {
       
       console.log(`📋 Inquiry ${inquiryId} status: ${status}`);
       
+      // Convert userId to number if it's a string
+      const userIdNum = userId ? parseInt(String(userId), 10) : null;
+      
       // Find user by inquiry ID or other identifier
       // For now, we'll need to store the mapping between inquiry and user
       // This should be done when the inquiry is created
@@ -23,8 +26,8 @@ export class KycService {
       // Example: Find user by stored inquiry ID
       // Note: This assumes we store the inquiry ID in the user's metadata or create a separate mapping
       // For now, we'll skip finding the user by inquiry ID and use metadata instead
-      const user = userId ? await this.prisma.user.findUnique({
-        where: { id: userId },
+      const user = userIdNum ? await this.prisma.user.findUnique({
+        where: { id: userIdNum },
       }) : null;
       
       if (!user) {
