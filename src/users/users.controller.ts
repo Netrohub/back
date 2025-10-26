@@ -10,15 +10,6 @@ import { UpdateUserDto, UpdatePasswordDto } from '../types';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get(':username')
-  @Public()
-  @ApiOperation({ summary: 'Get user profile by username (public)' })
-  @ApiResponse({ status: 200, description: 'User profile retrieved' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserByUsername(@Param('username') username: string) {
-    return this.usersService.findByUsername(username);
-  }
-
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -50,6 +41,15 @@ export class UsersController {
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.usersService.updatePassword(user.id, updatePasswordDto);
+  }
+
+  @Get(':username')
+  @Public()
+  @ApiOperation({ summary: 'Get user profile by username (public)' })
+  @ApiResponse({ status: 200, description: 'User profile retrieved' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserByUsername(@Param('username') username: string) {
+    return this.usersService.findByUsername(username);
   }
 
 }
