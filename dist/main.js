@@ -10,7 +10,36 @@ const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const configService = app.get(config_1.ConfigService);
-    app.use((0, helmet_1.default)());
+    app.enableCors({
+        origin: [
+            'https://nxoland.com',
+            'https://www.nxoland.com',
+            'http://localhost:3000',
+            'http://localhost:5173',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:5173',
+            configService.get('CORS_ORIGIN', 'https://www.nxoland.com')
+        ],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
+        allowedHeaders: [
+            'Content-Type',
+            'Authorization',
+            'Accept',
+            'Origin',
+            'X-Requested-With',
+            'Access-Control-Request-Method',
+            'Access-Control-Request-Headers'
+        ],
+        exposedHeaders: ['Authorization'],
+        preflightContinue: false,
+        optionsSuccessStatus: 204
+    });
+    app.use((0, helmet_1.default)({
+        crossOriginEmbedderPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false,
+    }));
     app.use(compression());
     app.use((req, res, next) => {
         const allowedOrigins = [
@@ -45,31 +74,6 @@ async function bootstrap() {
             });
         }
         next();
-    });
-    app.enableCors({
-        origin: [
-            'https://nxoland.com',
-            'https://www.nxoland.com',
-            'http://localhost:3000',
-            'http://localhost:5173',
-            'http://127.0.0.1:3000',
-            'http://127.0.0.1:5173',
-            configService.get('CORS_ORIGIN', 'https://www.nxoland.com')
-        ],
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
-        allowedHeaders: [
-            'Content-Type',
-            'Authorization',
-            'Accept',
-            'Origin',
-            'X-Requested-With',
-            'Access-Control-Request-Method',
-            'Access-Control-Request-Headers'
-        ],
-        exposedHeaders: ['Authorization'],
-        preflightContinue: false,
-        optionsSuccessStatus: 204
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
