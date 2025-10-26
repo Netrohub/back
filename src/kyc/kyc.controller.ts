@@ -71,15 +71,6 @@ export class KycController {
     return this.kycService.getKycStatus(user.id);
   }
 
-  @Post('create-persona-inquiry')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create Persona verification inquiry' })
-  @ApiResponse({ status: 200, description: 'Inquiry created successfully' })
-  async createPersonaInquiry(@CurrentUser() user: any) {
-    return this.kycService.createPersonaInquiry(user.id);
-  }
-
   @Post('verify-phone')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
