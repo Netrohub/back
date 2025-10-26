@@ -29,8 +29,26 @@ export class KycController {
           await this.kycService.handlePersonaCallback(data);
           break;
         
+        case 'inquiry.approved':
+          console.log('✅ Inquiry approved:', data);
+          // Also update KYC status when approved
+          await this.kycService.handlePersonaCallback(data);
+          break;
+        
         case 'inquiry.created':
           console.log('📝 Inquiry created:', data);
+          break;
+        
+        case 'inquiry.started':
+          console.log('▶️ Inquiry started:', data);
+          break;
+        
+        case 'inquiry.declined':
+          console.log('❌ Inquiry declined:', data);
+          break;
+        
+        case 'inquiry.failed':
+          console.log('❌ Inquiry failed:', data);
           break;
         
         default:
