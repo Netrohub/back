@@ -1,9 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class KycService {
-  constructor(private prisma: PrismaService) {}
+  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5';
+  private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'itmpl_1bNZnx9mrbHZKKJsvJiN9BDDTuD6';
+
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   async handlePersonaCallback(data: any) {
     console.log('🔍 Processing Persona callback:', data);
@@ -168,5 +175,190 @@ export class KycService {
         kyc_status: updatedStatus,
       },
     });
+  }
+
+  async createPersonaInquiry(userId: number) {
+    try {
+      console.log('🔍 Creating Persona inquiry for user:', userId);
+      console.log('🔑 API Key full length:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.length : 0);
+      console.log('🔑 API Key first 50 chars:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.substring(0, 50) : 'NOT SET');
+      console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
+      console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
+      
+      // Create Persona inquiry via API
+      const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            type: 'inquiry',
+            attributes: {
+              template_id: this.PERSONA_TEMPLATE_ID,
+              reference_id: `user_${userId}_${Date.now()}`,
+              metadata: {
+                userId: userId,
+              },
+            }
+          }
+        }),
+      });
+
+      const responseText = await response.text();
+      console.log('📥 Persona API response status:', response.status);
+      console.log('📥 Persona API response body:', responseText);
+
+      if (!response.ok) {
+        const error = JSON.parse(responseText);
+        console.error('❌ Persona API error:', error);
+        throw new Error(error.error?.message || 'Failed to create Persona inquiry');
+      }
+
+      const result = JSON.parse(responseText);
+      console.log('✅ Persona inquiry created:', result.data);
+      
+      // Extract the inquiry ID and URL
+      const inquiryId = result.data.id;
+      const verificationUrl = result.data.attributes?.url;
+      
+      console.log('🔗 Verification URL:', verificationUrl);
+
+      if (!verificationUrl) {
+        // If no URL in response, construct it manually
+        const constructedUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
+        console.log('🔗 Constructed URL:', constructedUrl);
+        
+        return {
+          inquiryId,
+          verificationUrl: constructedUrl,
+        };
+      }
+
+      return {
+        inquiryId,
+        verificationUrl,
+      };
+    } catch (error) {
+      console.error('❌ Error creating Persona inquiry:', error);
+      throw error;
+    }
+  }
+
+  async sendEmailVerification(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Check if email is already verified using email_verified_at
+    if (user.email_verified_at) {
+      return { message: 'Email already verified', alreadyVerified: true };
+    }
+
+    // Generate 6-digit verification code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store verification code in kyc_status (expires in 10 minutes)
+    const verificationData = {
+      emailCode: code,
+      emailCodeExpiry: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+    };
+
+    // Get existing kyc_status or create new
+    const existingKycStatus = user.kyc_status as any || {};
+    const updatedKycStatus = { ...existingKycStatus, ...verificationData };
+
+    // Save verification code to database
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        kyc_status: updatedKycStatus,
+      },
+    });
+
+    // Send verification email
+    await this.emailService.sendVerificationEmail(user.email, code);
+
+    console.log(`✅ Verification code sent to ${user.email}`);
+
+    return {
+      message: 'Verification code sent to your email',
+      expiresIn: 600, // 10 minutes in seconds
+    };
+  }
+
+  async verifyEmail(userId: number, code: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Check if email is already verified
+    if (user.email_verified_at) {
+      return { message: 'Email already verified', verified: true };
+    }
+
+    // Get verification code from kyc_status
+    const kycStatus = user.kyc_status as any || {};
+    const storedCode = kycStatus.emailCode;
+    const codeExpiry = kycStatus.emailCodeExpiry;
+
+    if (!storedCode) {
+      throw new Error('No verification code found. Please request a new code.');
+    }
+
+    // Check if code has expired
+    if (new Date(codeExpiry) < new Date()) {
+      // Clear expired code
+      const updatedKycStatus = { ...kycStatus };
+      delete updatedKycStatus.emailCode;
+      delete updatedKycStatus.emailCodeExpiry;
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { kyc_status: updatedKycStatus },
+      });
+
+      throw new Error('Verification code has expired. Please request a new code.');
+    }
+
+    // Verify the code
+    if (storedCode !== code) {
+      throw new Error('Invalid verification code. Please try again.');
+    }
+
+    // Update user - mark email as verified and update KYC status
+    const currentStatus = user.kyc_status as any || {};
+    const updatedStatus = {
+      ...currentStatus,
+      email: true,
+      email_verified_at: new Date().toISOString(),
+      // Clear verification code after successful verification
+      emailCode: undefined,
+      emailCodeExpiry: undefined,
+    };
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        email_verified_at: new Date(),
+        kyc_status: updatedStatus,
+      },
+    });
+
+    console.log(`✅ Email verified for user ${userId}`);
+
+    return {
+      message: 'Email verified successfully',
+      verified: true,
+    };
   }
 }

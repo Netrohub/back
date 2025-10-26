@@ -71,6 +71,27 @@ export class KycController {
     return this.kycService.getKycStatus(user.id);
   }
 
+  @Post('send-email-verification')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Send email verification code' })
+  @ApiResponse({ status: 200, description: 'Verification code sent successfully' })
+  async sendEmailVerification(@CurrentUser() user: any) {
+    return this.kycService.sendEmailVerification(user.id);
+  }
+
+  @Post('verify-email')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Verify email with code' })
+  @ApiResponse({ status: 200, description: 'Email verified successfully' })
+  async verifyEmail(
+    @CurrentUser() user: any,
+    @Body() verifyEmailDto: { code: string },
+  ) {
+    return this.kycService.verifyEmail(user.id, verifyEmailDto.code);
+  }
+
   @Post('verify-phone')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
