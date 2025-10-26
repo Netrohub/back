@@ -23,14 +23,14 @@ export class KycController {
       const { type, data } = payload;
       
       switch (type) {
-        case 'inquiry.finished':
-          console.log('✅ Inquiry finished:', data);
+        case 'inquiry.completed':
+          console.log('✅ Inquiry completed:', data);
           // Update user KYC status based on inquiry result
           await this.kycService.handlePersonaCallback(data);
           break;
         
-        case 'inquiry.updated':
-          console.log('📝 Inquiry updated:', data);
+        case 'inquiry.created':
+          console.log('📝 Inquiry created:', data);
           break;
         
         default:
