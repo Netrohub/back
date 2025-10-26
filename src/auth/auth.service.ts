@@ -171,7 +171,18 @@ export class AuthService {
     }
 
     const { password: _, ...userWithoutPassword } = user;
-    return userWithoutPassword as User;
+    
+    // Transform user data for frontend
+    const kycStatus = typeof user.kyc_status === 'string' 
+      ? JSON.parse(user.kyc_status) 
+      : (user.kyc_status || {});
+    
+    return {
+      ...userWithoutPassword,
+      emailVerified: !!user.email_verified_at,
+      phoneVerified: !!user.phone_verified_at,
+      kycStatus: kycStatus.identity ? 'verified' : 'incomplete',
+    } as User;
   }
 
   async verifyToken(token: string): Promise<User> {

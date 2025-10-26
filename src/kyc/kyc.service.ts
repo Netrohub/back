@@ -56,6 +56,7 @@ export class KycService {
           where: { id: user.id },
           data: {
             kyc_status: updatedStatus,
+            identity_verified_at: new Date(),
             kyc_verified: true,
           },
         });
@@ -172,6 +173,7 @@ export class KycService {
       where: { id: userId },
       data: {
         phone,
+        phone_verified_at: new Date(),
         kyc_status: updatedStatus,
       },
     });
