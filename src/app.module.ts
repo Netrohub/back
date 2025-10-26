@@ -17,6 +17,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { PayoutsModule } from './payouts/payouts.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { AuditLogsModule } from './audit-logs/audit-logs.module';
 import { UploadModule } from './upload/upload.module';
 import { EmailModule } from './email/email.module';
 import { NotificationModule } from './notification/notification.module';
@@ -63,6 +64,7 @@ import { HealthModule } from './health/health.module';
     CouponsModule,
     PayoutsModule,
     TicketsModule,
+    AuditLogsModule,
     UploadModule,
     EmailModule,
     NotificationModule,
