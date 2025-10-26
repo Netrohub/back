@@ -3,19 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class KycService {
-  private readonly PERSONA_API_KEY = (() => {
-    const envKey = process.env.PERSONA_API_KEY;
-    // If it starts with persona_sandbox_, extract the UUID part and add sk_test_ prefix
-    if (envKey?.startsWith('persona_sandbox_')) {
-      const uuid = envKey.replace('persona_sandbox_', '');
-      return `sk_test_${uuid}`;
-    }
-    // If it doesn't start with sk_test_ or sk_live_, add sk_test_ prefix
-    if (envKey && !envKey.startsWith('sk_test_') && !envKey.startsWith('sk_live_')) {
-      return `sk_test_${envKey}`;
-    }
-    return envKey || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5';
-  })();
+  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || '';
   private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'itmpl_1bNZnx9mrbHZKKJsvJiN9BDDTuD6';
 
   constructor(private prisma: PrismaService) {}
@@ -188,6 +176,8 @@ export class KycService {
   async createPersonaInquiry(userId: number) {
     try {
       console.log('🔍 Creating Persona inquiry for user:', userId);
+      console.log('🔑 ENV API Key:', process.env.PERSONA_API_KEY);
+      console.log('🔑 Processed API Key:', this.PERSONA_API_KEY);
       console.log('🔑 API Key full length:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.length : 0);
       console.log('🔑 API Key first 50 chars:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.substring(0, 50) : 'NOT SET');
       console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
