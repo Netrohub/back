@@ -71,26 +71,13 @@ export class KycController {
     return this.kycService.getKycStatus(user.id);
   }
 
-  @Post(':step')
+  @Post('create-persona-inquiry')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Submit KYC document for specific step' })
-  @ApiResponse({ status: 200, description: 'Document submitted successfully' })
-  async submitKycDocument(
-    @CurrentUser() user: any,
-    @Param('step') step: string,
-    @Body() documentData: any,
-  ) {
-    return this.kycService.submitKycDocument(user.id, step, documentData);
-  }
-
-  @Post('complete')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Complete KYC process' })
-  @ApiResponse({ status: 200, description: 'KYC completed successfully' })
-  async completeKyc(@CurrentUser() user: any) {
-    return this.kycService.completeKyc(user.id);
+  @ApiOperation({ summary: 'Create Persona verification inquiry' })
+  @ApiResponse({ status: 200, description: 'Inquiry created successfully' })
+  async createPersonaInquiry(@CurrentUser() user: any) {
+    return this.kycService.createPersonaInquiry(user.id);
   }
 
   @Post('verify-phone')
@@ -105,12 +92,25 @@ export class KycController {
     return this.kycService.verifyPhone(user.id, verifyPhoneDto.phone, verifyPhoneDto.code);
   }
 
-  @Post('create-persona-inquiry')
+  @Post('complete')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create Persona verification inquiry' })
-  @ApiResponse({ status: 200, description: 'Inquiry created successfully' })
-  async createPersonaInquiry(@CurrentUser() user: any) {
-    return this.kycService.createPersonaInquiry(user.id);
+  @ApiOperation({ summary: 'Complete KYC process' })
+  @ApiResponse({ status: 200, description: 'KYC completed successfully' })
+  async completeKyc(@CurrentUser() user: any) {
+    return this.kycService.completeKyc(user.id);
+  }
+
+  @Post(':step')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Submit KYC document for specific step' })
+  @ApiResponse({ status: 200, description: 'Document submitted successfully' })
+  async submitKycDocument(
+    @CurrentUser() user: any,
+    @Param('step') step: string,
+    @Body() documentData: any,
+  ) {
+    return this.kycService.submitKycDocument(user.id, step, documentData);
   }
 }
