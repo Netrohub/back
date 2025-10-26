@@ -41,6 +41,16 @@ async function bootstrap() {
       return;
     }
     
+    // Debug logging for authorization header
+    if (req.url?.includes('/kyc/verify-email')) {
+      console.log('🔍 Incoming request headers:', {
+        method: req.method,
+        url: req.url,
+        auth: req.headers.authorization ? `${req.headers.authorization.substring(0, 30)}...` : 'none',
+        allHeaders: Object.keys(req.headers)
+      });
+    }
+    
     next();
   });
 
