@@ -5,6 +5,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "watchAssets": true,
+    "tsConfigPath": "tsconfig.json",
     "assets": [
       {
         "include": "**/*.html",
