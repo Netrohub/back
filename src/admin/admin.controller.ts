@@ -6,7 +6,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/decorators';
 
 @ApiTags('admin')
-@Controller()
+@Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('admin')
 @ApiBearerAuth()
