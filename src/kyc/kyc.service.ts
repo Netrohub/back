@@ -340,11 +340,10 @@ export class KycService {
     const updatedStatus = {
       ...currentStatus,
       email: true,
-      email_verified_at: new Date().toISOString(),
       // Clear verification code after successful verification
-      emailCode: undefined,
-      emailCodeExpiry: undefined,
     };
+    delete updatedStatus.emailCode;
+    delete updatedStatus.emailCodeExpiry;
 
     await this.prisma.user.update({
       where: { id: userId },
