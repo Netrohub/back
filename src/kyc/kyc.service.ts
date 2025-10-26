@@ -177,10 +177,9 @@ export class KycService {
     try {
       console.log('🔍 Creating Persona inquiry for user:', userId);
       console.log('🔑 API Key full length:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.length : 0);
-      console.log('🔑 API Key first 30 chars:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.substring(0, 30) : 'NOT SET');
-      console.log('🔑 API Key preview:', this.PERSONA_API_KEY ? `${this.PERSONA_API_KEY.substring(0, 8)}...` : 'NOT SET');
+      console.log('🔑 API Key first 50 chars:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.substring(0, 50) : 'NOT SET');
+      console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
       console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
-      console.log('📋 Template ID length:', this.PERSONA_TEMPLATE_ID ? this.PERSONA_TEMPLATE_ID.length : 0);
       
       // Create Persona inquiry via API
       const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
