@@ -1,9 +1,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class EmailService implements OnModuleInit {
   private transporter: nodemailer.Transporter;
+  private verificationTemplate: string;
 
   onModuleInit() {
     // Initialize transporter after module is ready and env vars are loaded
@@ -17,6 +20,16 @@ export class EmailService implements OnModuleInit {
       },
     });
 
+    // Load email template
+    const templatePath = path.join(__dirname, 'templates', 'verification-email.html');
+    try {
+      this.verificationTemplate = fs.readFileSync(templatePath, 'utf8');
+      console.log('✅ Email template loaded successfully');
+    } catch (error) {
+      console.error('⚠️ Could not load email template, using inline template');
+      this.verificationTemplate = null;
+    }
+
     // Verify configuration
     this.transporter.verify((error, success) => {
       if (error) {
@@ -29,11 +42,17 @@ export class EmailService implements OnModuleInit {
 
   async sendVerificationEmail(email: string, code: string): Promise<void> {
     try {
-      const mailOptions = {
-        from: process.env.SMTP_FROM || 'noreply@nxoland.com',
-        to: email,
-        subject: 'Verify Your Email - NXOLand',
-        html: `
+      // Use template if available, otherwise use inline HTML
+      let htmlContent: string;
+      
+      if (this.verificationTemplate) {
+        // Replace template variables
+        htmlContent = this.verificationTemplate
+          .replace(/{{CODE}}/g, code)
+          .replace(/{{YEAR}}/g, new Date().getFullYear().toString());
+      } else {
+        // Fallback inline template
+        htmlContent = `
           <!DOCTYPE html>
           <html>
             <head>
@@ -65,7 +84,14 @@ export class EmailService implements OnModuleInit {
               </div>
             </body>
           </html>
-        `,
+        `;
+      }
+
+      const mailOptions = {
+        from: process.env.SMTP_FROM || 'noreply@nxoland.com',
+        to: email,
+        subject: 'Verify Your Email - NXOLand',
+        html: htmlContent,
       };
 
       console.log('📧 Attempting to send email to:', email);
