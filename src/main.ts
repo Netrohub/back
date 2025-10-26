@@ -47,7 +47,9 @@ async function bootstrap() {
         method: req.method,
         url: req.url,
         auth: req.headers.authorization ? `${req.headers.authorization.substring(0, 30)}...` : 'none',
-        allHeaders: Object.keys(req.headers)
+        authorizationRaw: req.headers.authorization,
+        allHeaders: Object.keys(req.headers),
+        rawHeaders: req.rawHeaders
       });
     }
     
