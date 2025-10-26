@@ -161,7 +161,7 @@ export class AuthService {
     };
   }
 
-  async getCurrentUser(userId: number): Promise<User> {
+  async getCurrentUser(userId: number): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -182,7 +182,7 @@ export class AuthService {
       emailVerified: !!user.email_verified_at,
       phoneVerified: !!user.phone_verified_at,
       kycStatus: kycStatus.identity ? 'verified' : 'incomplete',
-    } as User;
+    };
   }
 
   async verifyToken(token: string): Promise<User> {
