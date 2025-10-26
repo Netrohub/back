@@ -54,6 +54,7 @@ export class ProductsService {
           seller: {
             select: {
               id: true,
+              username: true,
               name: true,
               avatar: true,
             },
@@ -83,6 +84,7 @@ export class ProductsService {
         seller: {
           select: {
             id: true,
+            username: true,
             name: true,
             avatar: true,
           },
@@ -111,6 +113,7 @@ export class ProductsService {
         seller: {
           select: {
             id: true,
+            username: true,
             name: true,
             avatar: true,
           },
@@ -139,6 +142,7 @@ export class ProductsService {
         seller: {
           select: {
             id: true,
+            username: true,
             name: true,
             avatar: true,
           },
@@ -173,6 +177,7 @@ export class ProductsService {
         seller: {
           select: {
             id: true,
+            username: true,
             name: true,
             avatar: true,
           },
