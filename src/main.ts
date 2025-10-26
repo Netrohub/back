@@ -65,18 +65,18 @@ async function bootstrap() {
     ];
     
     const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
     
+    // Set CORS headers for all requests
+    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With, Access-Control-Request-Method, Access-Control-Request-Headers');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Expose-Headers', 'Authorization');
     
     if (req.method === 'OPTIONS') {
-      res.status(204).end();
-      return;
+      // Return 204 with CORS headers for preflight requests
+      return res.status(204).send();
     }
     
     // Debug logging for authorization header
