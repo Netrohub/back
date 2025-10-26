@@ -14,6 +14,8 @@ import { KycModule } from './kyc/kyc.module';
 import { SellerModule } from './seller/seller.module';
 import { AdminModule } from './admin/admin.module';
 import { CategoriesModule } from './categories/categories.module';
+import { CouponsModule } from './coupons/coupons.module';
+import { PayoutsModule } from './payouts/payouts.module';
 import { UploadModule } from './upload/upload.module';
 import { EmailModule } from './email/email.module';
 import { NotificationModule } from './notification/notification.module';
@@ -57,6 +59,8 @@ import { HealthModule } from './health/health.module';
     SellerModule,
     AdminModule,
     CategoriesModule,
+    CouponsModule,
+    PayoutsModule,
     UploadModule,
     EmailModule,
     NotificationModule,

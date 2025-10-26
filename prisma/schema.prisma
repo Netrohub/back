@@ -42,6 +42,7 @@ model User {
   disputes_as_seller    Dispute[] @relation("SellerDisputes")
   admin_actions         AdminAction[] @relation("AdminActions")
   assigned_disputes     Dispute[] @relation("AssignedDisputes")
+  payouts               Payout[]
 
   @@map("users")
   @@index([email])
@@ -61,6 +62,26 @@ model Category {
   updated_at  DateTime @updatedAt
 
   @@map("categories")
+}
+
+model Coupon {
+  id            Int       @id @default(autoincrement())
+  code          String    @unique
+  description   String?
+  type          String    @db.VarChar(20) // percentage, fixed
+  value         Decimal   @db.Decimal(10, 2)
+  min_amount    Decimal?  @db.Decimal(10, 2)
+  max_discount  Decimal?  @db.Decimal(10, 2)
+  usage_limit   Int?
+  used_count    Int       @default(0)
+  status        String    @default("active")
+  expires_at    DateTime?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@map("coupons")
+  @@index([code])
+  @@index([status])
 }
 
 model Product {
@@ -246,4 +267,28 @@ model AdminInvite {
   @@index([email])
   @@index([token])
   @@index([expires_at])
+}
+
+model Payout {
+  id              Int      @id @default(autoincrement())
+  seller_id       Int
+  amount          Decimal  @db.Decimal(10, 2)
+  status          String   @default("pending") @db.VarChar(20) // pending, processing, completed, failed
+  method          String?  @db.VarChar(50) // bank_transfer, paypal, stripe
+  reference       String?  @db.VarChar(255)
+  description     String?  @db.Text
+  notes           String?  @db.Text
+  request_date    DateTime @default(now())
+  process_date    DateTime?
+  completed_date  DateTime?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  seller          User     @relation(fields: [seller_id], references: [id], onDelete: Cascade)
+
+  @@map("payouts")
+  @@index([seller_id])
+  @@index([status])
+  @@index([request_date])
 }
