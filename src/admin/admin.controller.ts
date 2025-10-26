@@ -18,13 +18,15 @@ export class AdminController {
   @ApiOperation({ summary: 'Get all users (Admin only)' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   async getUsers(
-    @Query('page') page: number = 1,
-    @Query('per_page') perPage: number = 10,
+    @Query('page') page: string = '1',
+    @Query('per_page') perPage: string = '10',
     @Query('search') search?: string,
     @Query('role') role?: string,
     @Query('status') status?: string,
   ) {
-    return this.adminService.getUsers(page, perPage, search, role, status);
+    const pageNum = parseInt(page, 10) || 1;
+    const perPageNum = parseInt(perPage, 10) || 10;
+    return this.adminService.getUsers(pageNum, perPageNum, search, role, status);
   }
 
   @Get('users/:id')
@@ -53,13 +55,15 @@ export class AdminController {
   @ApiOperation({ summary: 'Get all orders (Admin only)' })
   @ApiResponse({ status: 200, description: 'Orders retrieved successfully' })
   async getOrders(
-    @Query('page') page: number = 1,
-    @Query('per_page') perPage: number = 10,
+    @Query('page') page: string = '1',
+    @Query('per_page') perPage: string = '10',
     @Query('status') status?: string,
     @Query('date_from') dateFrom?: string,
     @Query('date_to') dateTo?: string,
   ) {
-    return this.adminService.getOrders(page, perPage, status, dateFrom, dateTo);
+    const pageNum = parseInt(page, 10) || 1;
+    const perPageNum = parseInt(perPage, 10) || 10;
+    return this.adminService.getOrders(pageNum, perPageNum, status, dateFrom, dateTo);
   }
 
   @Get('orders/:id')
@@ -81,12 +85,14 @@ export class AdminController {
   @ApiOperation({ summary: 'Get all vendors (Admin only)' })
   @ApiResponse({ status: 200, description: 'Vendors retrieved successfully' })
   async getVendors(
-    @Query('page') page: number = 1,
-    @Query('per_page') perPage: number = 10,
+    @Query('page') page: string = '1',
+    @Query('per_page') perPage: string = '10',
     @Query('search') search?: string,
     @Query('status') status?: string,
   ) {
-    return this.adminService.getVendors(page, perPage, search, status);
+    const pageNum = parseInt(page, 10) || 1;
+    const perPageNum = parseInt(perPage, 10) || 10;
+    return this.adminService.getVendors(pageNum, perPageNum, search, status);
   }
 
   @Get('vendors/:id')
@@ -108,12 +114,14 @@ export class AdminController {
   @ApiOperation({ summary: 'Get all listings (Admin only)' })
   @ApiResponse({ status: 200, description: 'Listings retrieved successfully' })
   async getListings(
-    @Query('page') page: number = 1,
-    @Query('per_page') perPage: number = 10,
+    @Query('page') page: string = '1',
+    @Query('per_page') perPage: string = '10',
     @Query('status') status?: string,
     @Query('category') category?: string,
   ) {
-    return this.adminService.getListings(page, perPage, status, category);
+    const pageNum = parseInt(page, 10) || 1;
+    const perPageNum = parseInt(perPage, 10) || 10;
+    return this.adminService.getListings(pageNum, perPageNum, status, category);
   }
 
   @Get('listings/:id')
@@ -135,13 +143,15 @@ export class AdminController {
   @ApiOperation({ summary: 'Get all payouts (Admin only)' })
   @ApiResponse({ status: 200, description: 'Payouts retrieved successfully' })
   async getPayouts(
-    @Query('page') page: number = 1,
-    @Query('per_page') perPage: number = 10,
+    @Query('page') page: string = '1',
+    @Query('per_page') perPage: string = '10',
     @Query('status') status?: string,
     @Query('date_from') dateFrom?: string,
     @Query('date_to') dateTo?: string,
   ) {
-    return this.adminService.getPayouts(page, perPage, status, dateFrom, dateTo);
+    const pageNum = parseInt(page, 10) || 1;
+    const perPageNum = parseInt(perPage, 10) || 10;
+    return this.adminService.getPayouts(pageNum, perPageNum, status, dateFrom, dateTo);
   }
 
   @Get('payouts/:id')

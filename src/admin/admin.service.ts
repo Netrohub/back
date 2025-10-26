@@ -7,7 +7,15 @@ export class AdminService {
 
   // Users Management
   async getUsers(page: number = 1, perPage: number = 10, search?: string, role?: string, status?: string) {
-    const skip = (page - 1) * perPage;
+    // Ensure page and perPage are valid numbers
+    const pageNum = Number(page) || 1;
+    const perPageNum = Number(perPage) || 10;
+    
+    // Validate and set reasonable limits
+    const validPage = Math.max(1, pageNum);
+    const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
+    
+    const skip = (validPage - 1) * validPerPage;
     const where: any = {};
 
     if (search) {
@@ -30,7 +38,7 @@ export class AdminService {
       this.prisma.user.findMany({
         where,
         skip,
-        take: perPage,
+        take: validPerPage,
         select: {
           id: true,
           username: true,
@@ -51,10 +59,10 @@ export class AdminService {
     return {
       data: users,
       pagination: {
-        page,
-        per_page: perPage,
+        page: validPage,
+        per_page: validPerPage,
         total,
-        total_pages: Math.ceil(total / perPage),
+        total_pages: Math.ceil(total / validPerPage),
       },
     };
   }
@@ -95,7 +103,15 @@ export class AdminService {
 
   // Orders Management
   async getOrders(page: number = 1, perPage: number = 10, status?: string, dateFrom?: string, dateTo?: string) {
-    const skip = (page - 1) * perPage;
+    // Ensure page and perPage are valid numbers
+    const pageNum = Number(page) || 1;
+    const perPageNum = Number(perPage) || 10;
+    
+    // Validate and set reasonable limits
+    const validPage = Math.max(1, pageNum);
+    const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
+    
+    const skip = (validPage - 1) * validPerPage;
     const where: any = {};
 
     if (status) {
@@ -112,7 +128,7 @@ export class AdminService {
       this.prisma.order.findMany({
         where,
         skip,
-        take: perPage,
+        take: validPerPage,
         include: {
           user: {
             select: {
@@ -142,10 +158,10 @@ export class AdminService {
     return {
       data: orders,
       pagination: {
-        page,
-        per_page: perPage,
+        page: validPage,
+        per_page: validPerPage,
         total,
-        total_pages: Math.ceil(total / perPage),
+        total_pages: Math.ceil(total / validPerPage),
       },
     };
   }
@@ -186,7 +202,15 @@ export class AdminService {
 
   // Vendors Management (using users with seller role)
   async getVendors(page: number = 1, perPage: number = 10, search?: string, status?: string) {
-    const skip = (page - 1) * perPage;
+    // Ensure page and perPage are valid numbers
+    const pageNum = Number(page) || 1;
+    const perPageNum = Number(perPage) || 10;
+    
+    // Validate and set reasonable limits
+    const validPage = Math.max(1, pageNum);
+    const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
+    
+    const skip = (validPage - 1) * validPerPage;
     const where: any = {
       roles: { contains: 'seller' },
     };
@@ -207,7 +231,7 @@ export class AdminService {
       this.prisma.user.findMany({
         where,
         skip,
-        take: perPage,
+        take: validPerPage,
         select: {
           id: true,
           username: true,
@@ -236,10 +260,10 @@ export class AdminService {
     return {
       data: vendors,
       pagination: {
-        page,
-        per_page: perPage,
+        page: validPage,
+        per_page: validPerPage,
         total,
-        total_pages: Math.ceil(total / perPage),
+        total_pages: Math.ceil(total / validPerPage),
       },
     };
   }
@@ -283,7 +307,15 @@ export class AdminService {
 
   // Listings Management (using products)
   async getListings(page: number = 1, perPage: number = 10, status?: string, category?: string) {
-    const skip = (page - 1) * perPage;
+    // Ensure page and perPage are valid numbers
+    const pageNum = Number(page) || 1;
+    const perPageNum = Number(perPage) || 10;
+    
+    // Validate and set reasonable limits
+    const validPage = Math.max(1, pageNum);
+    const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
+    
+    const skip = (validPage - 1) * validPerPage;
     const where: any = {};
 
     if (status) {
@@ -298,7 +330,7 @@ export class AdminService {
       this.prisma.product.findMany({
         where,
         skip,
-        take: perPage,
+        take: validPerPage,
         include: {
           seller: {
             select: {
@@ -317,10 +349,10 @@ export class AdminService {
     return {
       data: listings,
       pagination: {
-        page,
-        per_page: perPage,
+        page: validPage,
+        per_page: validPerPage,
         total,
-        total_pages: Math.ceil(total / perPage),
+        total_pages: Math.ceil(total / validPerPage),
       },
     };
   }
@@ -350,13 +382,21 @@ export class AdminService {
 
   // Payouts Management (placeholder - would need actual payout system)
   async getPayouts(page: number = 1, perPage: number = 10, status?: string, dateFrom?: string, dateTo?: string) {
+    // Ensure page and perPage are valid numbers
+    const pageNum = Number(page) || 1;
+    const perPageNum = Number(perPage) || 10;
+    
+    // Validate and set reasonable limits
+    const validPage = Math.max(1, pageNum);
+    const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
+    
     // This is a placeholder implementation
     // In a real system, you'd have a payouts table
     return {
       data: [],
       pagination: {
-        page,
-        per_page: perPage,
+        page: validPage,
+        per_page: validPerPage,
         total: 0,
         total_pages: 0,
       },
