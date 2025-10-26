@@ -43,6 +43,14 @@ export class UsersController {
     return this.usersService.updatePassword(user.id, updatePasswordDto);
   }
 
+  @Get('members')
+  @Public()
+  @ApiOperation({ summary: 'Get all members (public)' })
+  @ApiResponse({ status: 200, description: 'Members list retrieved' })
+  async getMembers() {
+    return this.usersService.findAll();
+  }
+
   @Get(':username')
   @Public()
   @ApiOperation({ summary: 'Get user profile by username (public)' })

@@ -32,6 +32,9 @@ let UsersController = class UsersController {
     async updatePassword(user, updatePasswordDto) {
         return this.usersService.updatePassword(user.id, updatePasswordDto);
     }
+    async getMembers() {
+        return this.usersService.findAll();
+    }
     async getUserByUsername(username) {
         return this.usersService.findByUsername(username);
     }
@@ -72,6 +75,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updatePassword", null);
+__decorate([
+    (0, common_1.Get)('members'),
+    (0, decorators_1.Public)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all members (public)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Members list retrieved' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getMembers", null);
 __decorate([
     (0, common_1.Get)(':username'),
     (0, decorators_1.Public)(),
