@@ -181,6 +181,13 @@ export class KycService {
       console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
       console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
       
+      // Convert itmpl_ prefix to tmpl_ if needed
+      let templateId = this.PERSONA_TEMPLATE_ID;
+      if (templateId.startsWith('itmpl_')) {
+        templateId = 'tmpl_' + templateId.substring(6); // Remove 'itmpl_' prefix
+        console.log('📋 Converted Template ID:', templateId);
+      }
+      
       // Create Persona inquiry via API
       const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
         method: 'POST',
@@ -192,7 +199,7 @@ export class KycService {
           data: {
             type: 'inquiry',
             attributes: {
-              template_id: this.PERSONA_TEMPLATE_ID,
+              template_id: templateId,
               reference_id: `user_${userId}_${Date.now()}`,
               metadata: {
                 userId: userId,
