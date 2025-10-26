@@ -247,27 +247,24 @@ export class KycService {
       const result = JSON.parse(responseText);
       console.log('✅ Persona inquiry created:', result.data);
       
-      // Extract the inquiry ID and URL
-      const inquiryId = result.data.id;
-      const verificationUrl = result.data.attributes?.url;
-      
-      console.log('🔗 Verification URL:', verificationUrl);
+             // Extract the inquiry ID and URL
+       const inquiryId = result.data.id;
+       let verificationUrl = result.data.attributes?.url;
+       
+       console.log('🔗 Verification URL from API:', verificationUrl);
 
-      if (!verificationUrl) {
-        // If no URL in response, construct it manually
-        const constructedUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
-        console.log('🔗 Constructed URL:', constructedUrl);
-        
-        return {
-          inquiryId,
-          verificationUrl: constructedUrl,
-        };
-      }
-
-      return {
-        inquiryId,
-        verificationUrl,
-      };
+       // For Dynamic Flow Templates, construct the URL using the inquiry ID
+       if (!verificationUrl || isDynamicFlowTemplate) {
+         // Use the inquiry ID directly to construct the verification URL
+         const constructedUrl = `https://withpersona.com/verify/${inquiryId}`;
+         console.log('🔗 Constructed verification URL:', constructedUrl);
+         verificationUrl = constructedUrl;
+       }
+       
+       return {
+         inquiryId,
+         verificationUrl,
+       };
     } catch (error) {
       console.error('❌ Error creating Persona inquiry:', error);
       throw error;
