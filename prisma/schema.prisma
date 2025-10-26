@@ -43,6 +43,8 @@ model User {
   admin_actions         AdminAction[] @relation("AdminActions")
   assigned_disputes     Dispute[] @relation("AssignedDisputes")
   payouts               Payout[]
+  tickets               Ticket[] @relation("TicketUsers")
+  assigned_tickets      Ticket[] @relation("AssignedTickets")
 
   @@map("users")
   @@index([email])
@@ -291,4 +293,29 @@ model Payout {
   @@index([seller_id])
   @@index([status])
   @@index([request_date])
+}
+
+model Ticket {
+  id              Int      @id @default(autoincrement())
+  user_id         Int
+  subject         String   @db.VarChar(255)
+  message         String   @db.Text
+  status          String   @default("open") @db.VarChar(20) // open, in_progress, resolved, closed
+  priority        String   @default("medium") @db.VarChar(20) // low, medium, high, urgent
+  category        String?  @db.VarChar(100) // support, technical, billing, general
+  assigned_to     Int?
+  resolved_at     DateTime?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  user            User     @relation("TicketUsers", fields: [user_id], references: [id], onDelete: Cascade)
+  assigned_admin  User?    @relation("AssignedTickets", fields: [assigned_to], references: [id], onDelete: SetNull)
+
+  @@map("tickets")
+  @@index([user_id])
+  @@index([status])
+  @@index([priority])
+  @@index([assigned_to])
+  @@index([created_at])
 }
