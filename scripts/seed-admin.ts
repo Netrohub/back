@@ -22,6 +22,7 @@ async function seedAdmin() {
     
     const superAdmin = await prisma.user.create({
       data: {
+        username: 'admin',
         name: 'Super Admin',
         email: 'admin@nxoland.com',
         password: hashedPassword,
