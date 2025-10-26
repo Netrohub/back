@@ -42,6 +42,10 @@ async function bootstrap() {
     }));
     app.use(compression());
     app.use((req, res, next) => {
+        console.log(`🔍 ${req.method} ${req.url}`);
+        next();
+    });
+    app.use((req, res, next) => {
         const allowedOrigins = [
             'https://nxoland.com',
             'https://www.nxoland.com',
@@ -101,6 +105,16 @@ async function bootstrap() {
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup(configService.get('SWAGGER_PATH', 'api/docs'), app, document);
+    const routes = app.getHttpServer()._events.request;
+    const registeredRoutes = [];
+    app.getHttpAdapter().getInstance()._router?.stack?.forEach((middleware) => {
+        if (middleware.route) {
+            const methods = Object.keys(middleware.route.methods).join(',').toUpperCase();
+            registeredRoutes.push(`${methods} ${middleware.route.path}`);
+        }
+    });
+    console.log('📋 Registered Routes:');
+    registeredRoutes.forEach(route => console.log(`  ${route}`));
     const port = configService.get('PORT', 3000);
     await app.listen(port);
     console.log(`🚀 NXOLand API is running on: https://api.nxoland.com/api`);

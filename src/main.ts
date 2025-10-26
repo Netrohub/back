@@ -45,6 +45,12 @@ async function bootstrap() {
   }));
   app.use(compression());
 
+  // Request logging middleware
+  app.use((req, res, next) => {
+    console.log(`🔍 ${req.method} ${req.url}`);
+    next();
+  });
+
   // Manual CORS middleware for additional support
   app.use((req, res, next) => {
     const allowedOrigins = [
@@ -125,6 +131,19 @@ async function bootstrap() {
     app,
     document,
   );
+
+  // Log all registered routes
+  const routes = app.getHttpServer()._events.request;
+  const registeredRoutes = [];
+  app.getHttpAdapter().getInstance()._router?.stack?.forEach((middleware) => {
+    if (middleware.route) {
+      const methods = Object.keys(middleware.route.methods).join(',').toUpperCase();
+      registeredRoutes.push(`${methods} ${middleware.route.path}`);
+    }
+  });
+  
+  console.log('📋 Registered Routes:');
+  registeredRoutes.forEach(route => console.log(`  ${route}`));
 
   const port = configService.get('PORT', 3000);
   await app.listen(port);
