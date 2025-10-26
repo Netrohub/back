@@ -52,48 +52,6 @@ async function bootstrap() {
     next();
   });
 
-  // Manual CORS middleware for additional support
-  app.use((req, res, next) => {
-    const allowedOrigins = [
-      'https://nxoland.com',
-      'https://www.nxoland.com',
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:5173',
-      configService.get('CORS_ORIGIN', 'https://www.nxoland.com')
-    ];
-    
-    const origin = req.headers.origin;
-    const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
-    
-    // Set CORS headers for all requests
-    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With, Access-Control-Request-Method, Access-Control-Request-Headers');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Expose-Headers', 'Authorization');
-    
-    if (req.method === 'OPTIONS') {
-      // Return 204 with CORS headers for preflight requests
-      return res.status(204).send();
-    }
-    
-    // Debug logging for authorization header
-    if (req.url?.includes('/kyc/verify-email')) {
-      console.log('🔍 Incoming request headers:', {
-        method: req.method,
-        url: req.url,
-        auth: req.headers.authorization ? `${req.headers.authorization.substring(0, 30)}...` : 'none',
-        authorizationRaw: req.headers.authorization,
-        allHeaders: Object.keys(req.headers),
-        rawHeaders: req.rawHeaders
-      });
-    }
-    
-    next();
-  });
-
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
