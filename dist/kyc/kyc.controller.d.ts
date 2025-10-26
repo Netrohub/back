@@ -2,11 +2,36 @@ import { KycService } from './kyc.service';
 export declare class KycController {
     private kycService;
     constructor(kycService: KycService);
+    handlePersonaWebhook(payload: any, headers: any): Promise<{
+        success: boolean;
+        error?: undefined;
+    } | {
+        success: boolean;
+        error: any;
+    }>;
     getKycStatus(user: any): Promise<{
         status: import("@prisma/client/runtime/library").JsonValue;
         documents: import("@prisma/client/runtime/library").JsonValue;
     }>;
-    submitKycDocument(user: any, step: string, documentData: any): Promise<{
+    sendEmailVerification(user: any): Promise<{
+        message: string;
+        alreadyVerified: boolean;
+        expiresIn?: undefined;
+    } | {
+        message: string;
+        expiresIn: number;
+        alreadyVerified?: undefined;
+    }>;
+    verifyEmail(user: any, verifyEmailDto: {
+        code: string;
+    }): Promise<{
+        message: string;
+        verified: boolean;
+    }>;
+    verifyPhone(user: any, verifyPhoneDto: {
+        phone: string;
+        code: string;
+    }): Promise<{
         id: number;
         username: string;
         email: string;
@@ -52,10 +77,7 @@ export declare class KycController {
         created_at: Date;
         updated_at: Date;
     }>;
-    verifyPhone(user: any, verifyPhoneDto: {
-        phone: string;
-        code: string;
-    }): Promise<{
+    submitKycDocument(user: any, step: string, documentData: any): Promise<{
         id: number;
         username: string;
         email: string;

@@ -1,0 +1,82 @@
+import { CouponsService } from './coupons.service';
+import { CreateCouponDto } from './dto/create-coupon.dto';
+import { UpdateCouponDto } from './dto/update-coupon.dto';
+export declare class CouponsController {
+    private readonly couponsService;
+    constructor(couponsService: CouponsService);
+    create(createCouponDto: CreateCouponDto): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        description: string | null;
+        type: string;
+        status: string;
+        code: string;
+        value: import("@prisma/client/runtime/library").Decimal;
+        min_amount: import("@prisma/client/runtime/library").Decimal | null;
+        max_discount: import("@prisma/client/runtime/library").Decimal | null;
+        usage_limit: number | null;
+        used_count: number;
+        expires_at: Date | null;
+    }>;
+    findAll(): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        description: string | null;
+        type: string;
+        status: string;
+        code: string;
+        value: import("@prisma/client/runtime/library").Decimal;
+        min_amount: import("@prisma/client/runtime/library").Decimal | null;
+        max_discount: import("@prisma/client/runtime/library").Decimal | null;
+        usage_limit: number | null;
+        used_count: number;
+        expires_at: Date | null;
+    }[]>;
+    findOne(id: string): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        description: string | null;
+        type: string;
+        status: string;
+        code: string;
+        value: import("@prisma/client/runtime/library").Decimal;
+        min_amount: import("@prisma/client/runtime/library").Decimal | null;
+        max_discount: import("@prisma/client/runtime/library").Decimal | null;
+        usage_limit: number | null;
+        used_count: number;
+        expires_at: Date | null;
+    }>;
+    update(id: string, updateCouponDto: UpdateCouponDto): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        description: string | null;
+        type: string;
+        status: string;
+        code: string;
+        value: import("@prisma/client/runtime/library").Decimal;
+        min_amount: import("@prisma/client/runtime/library").Decimal | null;
+        max_discount: import("@prisma/client/runtime/library").Decimal | null;
+        usage_limit: number | null;
+        used_count: number;
+        expires_at: Date | null;
+    }>;
+    remove(id: string): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        description: string | null;
+        type: string;
+        status: string;
+        code: string;
+        value: import("@prisma/client/runtime/library").Decimal;
+        min_amount: import("@prisma/client/runtime/library").Decimal | null;
+        max_discount: import("@prisma/client/runtime/library").Decimal | null;
+        usage_limit: number | null;
+        used_count: number;
+        expires_at: Date | null;
+    }>;
+}

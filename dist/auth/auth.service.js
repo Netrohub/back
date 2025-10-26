@@ -150,7 +150,15 @@ let AuthService = class AuthService {
             throw new common_1.UnauthorizedException('User not found');
         }
         const { password: _, ...userWithoutPassword } = user;
-        return userWithoutPassword;
+        const kycStatus = typeof user.kyc_status === 'string'
+            ? JSON.parse(user.kyc_status)
+            : (user.kyc_status || {});
+        return {
+            ...userWithoutPassword,
+            emailVerified: !!user.email_verified_at,
+            phoneVerified: !!user.phone_verified_at,
+            kycStatus: kycStatus.identity ? 'verified' : 'incomplete',
+        };
     }
     async verifyToken(token) {
         try {

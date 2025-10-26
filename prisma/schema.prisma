@@ -45,6 +45,7 @@ model User {
   payouts               Payout[]
   tickets               Ticket[] @relation("TicketUsers")
   assigned_tickets      Ticket[] @relation("AssignedTickets")
+  audit_logs            AuditLog[] @relation("AuditLogUsers")
 
   @@map("users")
   @@index([email])
@@ -247,6 +248,9 @@ model AuditLog {
   ip_address  String?  @db.VarChar(45)
   user_agent  String?  @db.Text
   created_at  DateTime @default(now())
+
+  // Relations
+  user        User?    @relation("AuditLogUsers", fields: [user_id], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
   @@index([user_id])

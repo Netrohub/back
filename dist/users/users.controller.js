@@ -23,6 +23,9 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
+    async getUserByUsername(username) {
+        return this.usersService.findByUsername(username);
+    }
     async getProfile(user) {
         return this.usersService.findById(user.id);
     }
@@ -35,7 +38,20 @@ let UsersController = class UsersController {
 };
 exports.UsersController = UsersController;
 __decorate([
+    (0, common_1.Get)(':username'),
+    (0, decorators_1.Public)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get user profile by username (public)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User profile retrieved' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'User not found' }),
+    __param(0, (0, common_1.Param)('username')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserByUsername", null);
+__decorate([
     (0, common_1.Get)('me'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get current user profile' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'User profile retrieved' }),
     __param(0, (0, decorators_1.CurrentUser)()),
@@ -45,6 +61,8 @@ __decorate([
 ], UsersController.prototype, "getProfile", null);
 __decorate([
     (0, common_1.Put)('me'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Update current user profile' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Profile updated successfully' }),
     __param(0, (0, decorators_1.CurrentUser)()),
@@ -55,6 +73,8 @@ __decorate([
 ], UsersController.prototype, "updateProfile", null);
 __decorate([
     (0, common_1.Put)('me/password'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({ summary: 'Update user password' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Password updated successfully' }),
     __param(0, (0, decorators_1.CurrentUser)()),
@@ -66,8 +86,6 @@ __decorate([
 exports.UsersController = UsersController = __decorate([
     (0, swagger_1.ApiTags)('users'),
     (0, common_1.Controller)('users'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

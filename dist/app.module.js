@@ -23,6 +23,10 @@ const kyc_module_1 = require("./kyc/kyc.module");
 const seller_module_1 = require("./seller/seller.module");
 const admin_module_1 = require("./admin/admin.module");
 const categories_module_1 = require("./categories/categories.module");
+const coupons_module_1 = require("./coupons/coupons.module");
+const payouts_module_1 = require("./payouts/payouts.module");
+const tickets_module_1 = require("./tickets/tickets.module");
+const audit_logs_module_1 = require("./audit-logs/audit-logs.module");
 const upload_module_1 = require("./upload/upload.module");
 const email_module_1 = require("./email/email.module");
 const notification_module_1 = require("./notification/notification.module");
@@ -62,6 +66,10 @@ exports.AppModule = AppModule = __decorate([
             seller_module_1.SellerModule,
             admin_module_1.AdminModule,
             categories_module_1.CategoriesModule,
+            coupons_module_1.CouponsModule,
+            payouts_module_1.PayoutsModule,
+            tickets_module_1.TicketsModule,
+            audit_logs_module_1.AuditLogsModule,
             upload_module_1.UploadModule,
             email_module_1.EmailModule,
             notification_module_1.NotificationModule,

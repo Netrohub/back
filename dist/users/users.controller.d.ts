@@ -3,8 +3,21 @@ import { UpdateUserDto, UpdatePasswordDto } from '../types';
 export declare class UsersController {
     private usersService;
     constructor(usersService: UsersService);
+    getUserByUsername(username: string): Promise<{
+        id: number;
+        username: string;
+        name: string;
+        avatar: string;
+        roles: import("@prisma/client/runtime/library").JsonValue;
+        kyc_status: import("@prisma/client/runtime/library").JsonValue;
+        email_verified_at: Date;
+        phone_verified_at: Date;
+        identity_verified_at: Date;
+        created_at: Date;
+    }>;
     getProfile(user: any): Promise<{
         id: number;
+        username: string;
         email: string;
         name: string;
         phone: string;

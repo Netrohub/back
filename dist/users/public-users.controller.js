@@ -13,6 +13,7 @@ exports.PublicUsersController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const users_service_1 = require("./users.service");
+const decorators_1 = require("../auth/decorators");
 let PublicUsersController = class PublicUsersController {
     usersService;
     constructor(usersService) {
@@ -25,6 +26,7 @@ let PublicUsersController = class PublicUsersController {
 exports.PublicUsersController = PublicUsersController;
 __decorate([
     (0, common_1.Get)('members'),
+    (0, decorators_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Get all members (public)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Members list retrieved' }),
     __metadata("design:type", Function),

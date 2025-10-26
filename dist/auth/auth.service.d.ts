@@ -50,7 +50,7 @@ export declare class AuthService {
         message: string;
         status: string;
     }>;
-    getCurrentUser(userId: number): Promise<User>;
+    getCurrentUser(userId: number): Promise<any>;
     verifyToken(token: string): Promise<User>;
     verifyPhone(userId: number, phone: string, code: string): Promise<{
         message: string;

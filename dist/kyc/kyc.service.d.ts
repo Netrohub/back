@@ -1,7 +1,14 @@
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 export declare class KycService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private emailService;
+    private readonly PERSONA_API_KEY;
+    private readonly PERSONA_TEMPLATE_ID;
+    constructor(prisma: PrismaService, emailService: EmailService);
+    handlePersonaCallback(data: any): Promise<{
+        success: boolean;
+    }>;
     getKycStatus(userId: number): Promise<{
         status: import("@prisma/client/runtime/library").JsonValue;
         documents: import("@prisma/client/runtime/library").JsonValue;
@@ -74,5 +81,22 @@ export declare class KycService {
         locked_until: Date | null;
         created_at: Date;
         updated_at: Date;
+    }>;
+    createPersonaInquiry(userId: number): Promise<{
+        inquiryId: any;
+        verificationUrl: any;
+    }>;
+    sendEmailVerification(userId: number): Promise<{
+        message: string;
+        alreadyVerified: boolean;
+        expiresIn?: undefined;
+    } | {
+        message: string;
+        expiresIn: number;
+        alreadyVerified?: undefined;
+    }>;
+    verifyEmail(userId: number, code: string): Promise<{
+        message: string;
+        verified: boolean;
     }>;
 }

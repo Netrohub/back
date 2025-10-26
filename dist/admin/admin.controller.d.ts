@@ -6,8 +6,8 @@ export declare class AdminController {
         data: {
             id: number;
             username: string;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             roles: import("@prisma/client/runtime/library").JsonValue;
             kyc_verified: boolean;
@@ -25,8 +25,8 @@ export declare class AdminController {
     getUser(id: number): Promise<{
         id: number;
         username: string;
-        name: string;
         email: string;
+        name: string;
         phone: string;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
@@ -40,8 +40,8 @@ export declare class AdminController {
     updateUser(id: number, updateData: any): Promise<{
         id: number;
         username: string;
-        name: string;
         email: string;
+        name: string;
         password: string;
         phone: string | null;
         avatar: string | null;
@@ -63,8 +63,8 @@ export declare class AdminController {
     deleteUser(id: number): Promise<{
         id: number;
         username: string;
-        name: string;
         email: string;
+        name: string;
         password: string;
         phone: string | null;
         avatar: string | null;
@@ -88,8 +88,8 @@ export declare class AdminController {
             user: {
                 id: number;
                 username: string;
-                name: string;
                 email: string;
+                name: string;
             };
             items: ({
                 product: {
@@ -100,18 +100,18 @@ export declare class AdminController {
             } & {
                 id: number;
                 created_at: Date;
-                price: import("@prisma/client/runtime/library").Decimal;
-                order_id: number;
                 product_id: number;
                 quantity: number;
+                price: import("@prisma/client/runtime/library").Decimal;
+                order_id: number;
             })[];
         } & {
             id: number;
             created_at: Date;
             updated_at: Date;
             user_id: number;
-            total_amount: import("@prisma/client/runtime/library").Decimal;
             status: string;
+            total_amount: import("@prisma/client/runtime/library").Decimal;
             payment_status: string;
             shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
             payment_method: string | null;
@@ -127,8 +127,8 @@ export declare class AdminController {
         user: {
             id: number;
             username: string;
-            name: string;
             email: string;
+            name: string;
         };
         items: ({
             product: {
@@ -139,18 +139,18 @@ export declare class AdminController {
         } & {
             id: number;
             created_at: Date;
-            price: import("@prisma/client/runtime/library").Decimal;
-            order_id: number;
             product_id: number;
             quantity: number;
+            price: import("@prisma/client/runtime/library").Decimal;
+            order_id: number;
         })[];
     } & {
         id: number;
         created_at: Date;
         updated_at: Date;
         user_id: number;
-        total_amount: import("@prisma/client/runtime/library").Decimal;
         status: string;
+        total_amount: import("@prisma/client/runtime/library").Decimal;
         payment_status: string;
         shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
         payment_method: string | null;
@@ -162,8 +162,8 @@ export declare class AdminController {
         created_at: Date;
         updated_at: Date;
         user_id: number;
-        total_amount: import("@prisma/client/runtime/library").Decimal;
         status: string;
+        total_amount: import("@prisma/client/runtime/library").Decimal;
         payment_status: string;
         shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
         payment_method: string | null;
@@ -172,8 +172,8 @@ export declare class AdminController {
         data: {
             id: number;
             username: string;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             roles: import("@prisma/client/runtime/library").JsonValue;
             kyc_verified: boolean;
@@ -197,8 +197,8 @@ export declare class AdminController {
     getVendor(id: number): Promise<{
         id: number;
         username: string;
-        name: string;
         email: string;
+        name: string;
         phone: string;
         avatar: string;
         roles: import("@prisma/client/runtime/library").JsonValue;
@@ -221,8 +221,8 @@ export declare class AdminController {
     }): Promise<{
         id: number;
         username: string;
-        name: string;
         email: string;
+        name: string;
         password: string;
         phone: string | null;
         avatar: string | null;
@@ -246,18 +246,18 @@ export declare class AdminController {
             seller: {
                 id: number;
                 username: string;
-                name: string;
                 email: string;
+                name: string;
             };
         } & {
+            category: string;
             id: number;
             name: string;
             created_at: Date;
             updated_at: Date;
-            status: string;
             description: string | null;
+            status: string;
             price: import("@prisma/client/runtime/library").Decimal;
-            category: string;
             images: import("@prisma/client/runtime/library").JsonValue | null;
             seller_id: number | null;
         })[];
@@ -272,32 +272,32 @@ export declare class AdminController {
         seller: {
             id: number;
             username: string;
-            name: string;
             email: string;
+            name: string;
         };
     } & {
+        category: string;
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
-        status: string;
         description: string | null;
+        status: string;
         price: import("@prisma/client/runtime/library").Decimal;
-        category: string;
         images: import("@prisma/client/runtime/library").JsonValue | null;
         seller_id: number | null;
     }>;
     updateListingStatus(id: number, statusData: {
         status: string;
     }): Promise<{
+        category: string;
         id: number;
         name: string;
         created_at: Date;
         updated_at: Date;
-        status: string;
         description: string | null;
+        status: string;
         price: import("@prisma/client/runtime/library").Decimal;
-        category: string;
         images: import("@prisma/client/runtime/library").JsonValue | null;
         seller_id: number | null;
     }>;
@@ -322,16 +322,16 @@ export declare class AdminController {
         totalRevenue: number | import("@prisma/client/runtime/library").Decimal;
         recentOrders: ({
             user: {
-                name: string;
                 email: string;
+                name: string;
             };
         } & {
             id: number;
             created_at: Date;
             updated_at: Date;
             user_id: number;
-            total_amount: import("@prisma/client/runtime/library").Decimal;
             status: string;
+            total_amount: import("@prisma/client/runtime/library").Decimal;
             payment_status: string;
             shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
             payment_method: string | null;

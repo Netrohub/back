@@ -28,10 +28,18 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         this.authService = authService;
     }
     async validate(payload) {
+        console.log('🔐 JWT Strategy validate called with payload:', {
+            sub: payload.sub,
+            email: payload.email,
+            iat: payload.iat,
+            exp: payload.exp
+        });
         const user = await this.authService.getCurrentUser(payload.sub);
         if (!user) {
-            throw new common_1.UnauthorizedException();
+            console.error('❌ JWT Strategy: User not found for id:', payload.sub);
+            throw new common_1.UnauthorizedException('User not found');
         }
+        console.log('✅ JWT Strategy: User validated successfully:', user.id, user.email);
         return user;
     }
 };

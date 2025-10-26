@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const kyc_controller_1 = require("./kyc.controller");
 const kyc_service_1 = require("./kyc.service");
 const prisma_module_1 = require("../prisma/prisma.module");
+const email_module_1 = require("../email/email.module");
 let KycModule = class KycModule {
 };
 exports.KycModule = KycModule;
 exports.KycModule = KycModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [prisma_module_1.PrismaModule, email_module_1.EmailModule],
         controllers: [kyc_controller_1.KycController],
         providers: [kyc_service_1.KycService],
         exports: [kyc_service_1.KycService],

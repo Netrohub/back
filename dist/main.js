@@ -34,6 +34,16 @@ async function bootstrap() {
             res.status(204).end();
             return;
         }
+        if (req.url?.includes('/kyc/verify-email')) {
+            console.log('🔍 Incoming request headers:', {
+                method: req.method,
+                url: req.url,
+                auth: req.headers.authorization ? `${req.headers.authorization.substring(0, 30)}...` : 'none',
+                authorizationRaw: req.headers.authorization,
+                allHeaders: Object.keys(req.headers),
+                rawHeaders: req.rawHeaders
+            });
+        }
         next();
     });
     app.enableCors({

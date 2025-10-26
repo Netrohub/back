@@ -25,6 +25,7 @@ let UsersService = class UsersService {
             where: { id },
             select: {
                 id: true,
+                username: true,
                 name: true,
                 email: true,
                 phone: true,
@@ -36,6 +37,27 @@ let UsersService = class UsersService {
                 identity_verified_at: true,
                 created_at: true,
                 updated_at: true,
+            },
+        });
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        return user;
+    }
+    async findByUsername(username) {
+        const user = await this.prisma.user.findUnique({
+            where: { username },
+            select: {
+                id: true,
+                username: true,
+                name: true,
+                avatar: true,
+                roles: true,
+                kyc_status: true,
+                email_verified_at: true,
+                phone_verified_at: true,
+                identity_verified_at: true,
+                created_at: true,
             },
         });
         if (!user) {
