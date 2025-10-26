@@ -176,36 +176,67 @@ export class KycService {
   }
 
   async createPersonaInquiry(userId: number) {
-    // Create Persona inquiry via API
-    const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          type: 'inquiry',
-          attributes: {
-            template_id: this.PERSONA_TEMPLATE_ID,
-            reference_id: `user_${userId}_${Date.now()}`,
-            metadata: {
-              userId: userId,
-            },
+    try {
+      console.log('🔍 Creating Persona inquiry for user:', userId);
+      
+      // Create Persona inquiry via API
+      const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            type: 'inquiry',
+            attributes: {
+              template_id: this.PERSONA_TEMPLATE_ID,
+              reference_id: `user_${userId}_${Date.now()}`,
+              metadata: {
+                userId: userId,
+              },
+            }
           }
-        }
-      }),
-    });
+        }),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to create Persona inquiry');
+      const responseText = await response.text();
+      console.log('📥 Persona API response status:', response.status);
+      console.log('📥 Persona API response body:', responseText);
+
+      if (!response.ok) {
+        const error = JSON.parse(responseText);
+        console.error('❌ Persona API error:', error);
+        throw new Error(error.error?.message || 'Failed to create Persona inquiry');
+      }
+
+      const result = JSON.parse(responseText);
+      console.log('✅ Persona inquiry created:', result.data);
+      
+      // Extract the inquiry ID and URL
+      const inquiryId = result.data.id;
+      const verificationUrl = result.data.attributes?.url;
+      
+      console.log('🔗 Verification URL:', verificationUrl);
+
+      if (!verificationUrl) {
+        // If no URL in response, construct it manually
+        const constructedUrl = `https://inquiry.withpersona.com/verify/${inquiryId}`;
+        console.log('🔗 Constructed URL:', constructedUrl);
+        
+        return {
+          inquiryId,
+          verificationUrl: constructedUrl,
+        };
+      }
+
+      return {
+        inquiryId,
+        verificationUrl,
+      };
+    } catch (error) {
+      console.error('❌ Error creating Persona inquiry:', error);
+      throw error;
     }
-
-    const result = await response.json();
-    return {
-      inquiryId: result.data.id,
-      verificationUrl: result.data.attributes.url,
-    };
   }
 }
