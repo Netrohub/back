@@ -251,28 +251,47 @@ export class KycService {
        
        // Extract the inquiry ID
        const inquiryId = result.data.id;
-       const accountId = result.data.relationships?.account?.data?.id;
        
-               // Get verification URL from Persona API response
-        // The URL is in attributes.redirect_url or attributes.url
-        let verificationUrl = result.data.attributes?.redirect_url || 
-                             result.data.attributes?.url || 
-                             result.data.attributes?.['verification-url'];
-        
-        // If no URL in response, construct it manually
-        if (!verificationUrl) {
-          if (isDynamicFlowTemplate) {
-            // For Dynamic Flow Templates, use the withpersona.com domain
-            verificationUrl = `https://withpersona.com/verify/${inquiryId}?environment=sandbox`;
-          } else {
-            verificationUrl = `https://inquiry.withpersona.com/verify/${inquiryId}?environment=sandbox`;
-          }
-        } else {
-          // Add environment if not present
-          if (!verificationUrl.includes('environment=')) {
-            verificationUrl += (verificationUrl.includes('?') ? '&' : '?') + 'environment=sandbox';
-          }
-        }
+       // Get the inquiry session ID for generating a one-time link
+       const inquirySessionId = result.data.relationships?.sessions?.data?.[0]?.id;
+       
+       let verificationUrl;
+       
+       if (inquirySessionId) {
+         // Generate a one-time verification link using the inquiry session
+         console.log('📋 Generating one-time link for session:', inquirySessionId);
+         
+         const linkResponse = await fetch(
+           `https://api.withpersona.com/api/v1/inquiry-sessions/${inquirySessionId}/generate-one-time-link`,
+           {
+             method: 'POST',
+             headers: {
+               'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+               'Content-Type': 'application/json',
+             },
+             body: JSON.stringify({
+               data: {
+                 type: 'session',
+                 attributes: {}
+               }
+             })
+           }
+         );
+         
+         const linkResult = JSON.parse(await linkResponse.text());
+         
+         if (linkResponse.ok && linkResult.data?.attributes?.url) {
+           verificationUrl = linkResult.data.attributes.url;
+           console.log('🔗 Generated one-time link from Persona API');
+         } else {
+           console.log('⚠️ Failed to generate one-time link, falling back to constructed URL');
+           verificationUrl = `https://withpersona.com/verify/${inquiryId}?environment=sandbox`;
+         }
+       } else {
+         // Fallback: construct URL manually
+         console.log('⚠️ No session ID found, constructing URL manually');
+         verificationUrl = `https://withpersona.com/verify/${inquiryId}?environment=sandbox`;
+       }
        
        console.log('🔗 Final verification URL:', verificationUrl);
        
