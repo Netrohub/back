@@ -10,14 +10,21 @@ export class EmailService implements OnModuleInit {
 
   onModuleInit() {
     // Initialize transporter after module is ready and env vars are loaded
+    const port = parseInt(process.env.SMTP_PORT || '587');
+    const isSecure = port === 465; // Port 465 uses SSL
+    
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // true for 465, false for other ports
+      host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+      port: port,
+      secure: isSecure, // true for 465 (SSL), false for 587 (TLS)
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      tls: {
+        // Do not fail on invalid certificates (useful for some hosting providers)
+        rejectUnauthorized: false
+      }
     });
 
     // Load email template
