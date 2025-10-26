@@ -1,8 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import * as https from 'https';
+import { URL } from 'url';
 
 @Injectable()
 export class KycService {
+  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || 'sk_test_c7fca5cf-4d36-4466-a8a0-cc4657055617';
+  private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'vtmpl_gnPSyThsGJMjMqU3rpS1DoXQ69rr';
+
   constructor(private prisma: PrismaService) {}
 
   async handlePersonaCallback(data: any) {
@@ -168,5 +173,39 @@ export class KycService {
         kyc_status: updatedStatus,
       },
     });
+  }
+
+  async createPersonaInquiry(userId: number) {
+    // Create Persona inquiry via API
+    const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.PERSONA_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'inquiry',
+          attributes: {
+            template_id: this.PERSONA_TEMPLATE_ID,
+            reference_id: `user_${userId}_${Date.now()}`,
+            metadata: {
+              userId: userId,
+            },
+          }
+        }
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'Failed to create Persona inquiry');
+    }
+
+    const result = await response.json();
+    return {
+      inquiryId: result.data.id,
+      verificationUrl: result.data.attributes.url,
+    };
   }
 }
