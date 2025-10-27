@@ -6,7 +6,6 @@ export declare class PayoutsController {
     constructor(payoutsService: PayoutsService);
     create(createPayoutDto: CreatePayoutDto): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -14,8 +13,9 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
+        method: string | null;
+        reference: string | null;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -25,13 +25,12 @@ export declare class PayoutsController {
     }>;
     findAll(sellerId?: number, status?: string): Promise<({
         seller: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -39,8 +38,9 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
+        method: string | null;
+        reference: string | null;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -50,13 +50,12 @@ export declare class PayoutsController {
     })[]>;
     findOne(id: string): Promise<{
         seller: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -64,8 +63,9 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
+        method: string | null;
+        reference: string | null;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -75,7 +75,6 @@ export declare class PayoutsController {
     }>;
     update(id: string, updatePayoutDto: UpdatePayoutDto): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -83,8 +82,9 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
+        method: string | null;
+        reference: string | null;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -94,7 +94,6 @@ export declare class PayoutsController {
     }>;
     remove(id: string): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -102,8 +101,9 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
+        method: string | null;
+        reference: string | null;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;

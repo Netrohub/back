@@ -1908,9 +1908,9 @@ let ProductsService = class ProductsService {
         this.prisma = prisma;
     }
     async findAll(filters = {}) {
-        const { categoryId: category, search, minPrice: min_price, maxPrice: max_price, status = 'active', page = 1, limit: per_page = 20, sortBy: sort = 'created_at', } = filters;
+        const { categoryId: category, search, minPrice: min_price, maxPrice: max_price, status = 'ACTIVE', page = 1, limit: per_page = 20, sortBy: sort = 'created_at', } = filters;
         const where = {
-            status: status === 'all' ? undefined : status,
+            status: status === 'all' ? undefined : (status === 'active' ? 'ACTIVE' : status),
         };
         if (category) {
             where.category_id = category;
@@ -1991,7 +1991,7 @@ let ProductsService = class ProductsService {
     async getByCategory(categorySlug, filters = {}) {
         const { search, minPrice: min_price, maxPrice: max_price, page = 1, limit: per_page = 20, sortBy: sort = 'created_at', } = filters;
         const where = {
-            status: 'active',
+            status: 'ACTIVE',
             category: categorySlug,
         };
         if (search) {

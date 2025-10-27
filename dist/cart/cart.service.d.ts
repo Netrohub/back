@@ -7,19 +7,19 @@ export declare class CartService {
     private jwtService;
     constructor(prisma: PrismaService, jwtService: JwtService);
     getUserFromToken(token: string): Promise<{
-        name: string;
         id: number;
+        name: string;
         email: string;
     }>;
     getCart(userId: number): Promise<{
         items: ({
             product: {
                 description: string | null;
-                name: string;
                 id: number;
                 status: import(".prisma/client").$Enums.ProductStatus;
                 created_at: Date;
                 updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;

@@ -7,11 +7,11 @@ export declare class DisputesService {
             items: ({
                 product: {
                     description: string | null;
-                    name: string;
                     id: number;
                     status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -71,7 +71,6 @@ export declare class DisputesService {
         };
     } & {
         description: string | null;
-        priority: import(".prisma/client").$Enums.DisputePriority;
         id: number;
         status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
@@ -79,6 +78,7 @@ export declare class DisputesService {
         seller_id: number;
         order_id: number;
         buyer_id: number;
+        priority: import(".prisma/client").$Enums.DisputePriority;
         assigned_to: number | null;
         reason: string;
         resolution: string | null;
@@ -89,11 +89,11 @@ export declare class DisputesService {
             items: ({
                 product: {
                     description: string | null;
-                    name: string;
                     id: number;
                     status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -153,7 +153,6 @@ export declare class DisputesService {
         };
     } & {
         description: string | null;
-        priority: import(".prisma/client").$Enums.DisputePriority;
         id: number;
         status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
@@ -161,6 +160,7 @@ export declare class DisputesService {
         seller_id: number;
         order_id: number;
         buyer_id: number;
+        priority: import(".prisma/client").$Enums.DisputePriority;
         assigned_to: number | null;
         reason: string;
         resolution: string | null;
@@ -168,7 +168,6 @@ export declare class DisputesService {
     }>;
     createDispute(userId: number, orderId: number, reason: string, description: string): Promise<{
         description: string | null;
-        priority: import(".prisma/client").$Enums.DisputePriority;
         id: number;
         status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
@@ -176,6 +175,7 @@ export declare class DisputesService {
         seller_id: number;
         order_id: number;
         buyer_id: number;
+        priority: import(".prisma/client").$Enums.DisputePriority;
         assigned_to: number | null;
         reason: string;
         resolution: string | null;
@@ -183,7 +183,6 @@ export declare class DisputesService {
     }>;
     updateDisputeStatus(id: number, status: string, adminId: number): Promise<{
         description: string | null;
-        priority: import(".prisma/client").$Enums.DisputePriority;
         id: number;
         status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
@@ -191,6 +190,7 @@ export declare class DisputesService {
         seller_id: number;
         order_id: number;
         buyer_id: number;
+        priority: import(".prisma/client").$Enums.DisputePriority;
         assigned_to: number | null;
         reason: string;
         resolution: string | null;
@@ -201,11 +201,11 @@ export declare class DisputesService {
             items: ({
                 product: {
                     description: string | null;
-                    name: string;
                     id: number;
                     status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -264,13 +264,12 @@ export declare class DisputesService {
             notes: string | null;
         };
         buyer: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        priority: import(".prisma/client").$Enums.DisputePriority;
         id: number;
         status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
@@ -278,6 +277,7 @@ export declare class DisputesService {
         seller_id: number;
         order_id: number;
         buyer_id: number;
+        priority: import(".prisma/client").$Enums.DisputePriority;
         assigned_to: number | null;
         reason: string;
         resolution: string | null;

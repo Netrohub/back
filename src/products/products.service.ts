@@ -12,14 +12,14 @@ export class ProductsService {
       search,
       minPrice: min_price,
       maxPrice: max_price,
-      status = 'active',
+      status = 'ACTIVE',
       page = 1,
       limit: per_page = 20,
       sortBy: sort = 'created_at',
     } = filters;
 
     const where: any = {
-      status: status === 'all' ? undefined : status,
+      status: status === 'all' ? undefined : (status === 'active' ? 'ACTIVE' : status),
     };
 
     if (category) {
@@ -118,7 +118,7 @@ export class ProductsService {
     } = filters;
 
     const where: any = {
-      status: 'active',
+      status: 'ACTIVE',
       category: categorySlug,
     };
 
