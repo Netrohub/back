@@ -23,6 +23,8 @@ model User {
   password              String    @db.VarChar(255)
   phone                 String?   @db.VarChar(20)
   avatar                String?   @db.Text
+  bio                   String?   @db.Text
+  location              String?   @db.VarChar(100)
   email_verified_at     DateTime?
   phone_verified_at     DateTime?
   is_active             Boolean   @default(true)

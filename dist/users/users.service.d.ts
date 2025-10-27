@@ -6,11 +6,11 @@ export declare class UsersService {
     private validationService;
     constructor(prisma: PrismaService, validationService: ValidationService);
     findById(id: number): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -19,10 +19,10 @@ export declare class UsersService {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -38,20 +38,22 @@ export declare class UsersService {
         })[];
     }>;
     findByUsername(username: string): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         username: string;
-        name: string;
         avatar: string;
+        bio: string;
+        location: string;
         email_verified_at: Date;
         phone_verified_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -83,10 +85,10 @@ export declare class UsersService {
         }[];
     }>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -95,10 +97,10 @@ export declare class UsersService {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -117,10 +119,10 @@ export declare class UsersService {
         message: string;
     }>;
     findAll(): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -129,10 +131,10 @@ export declare class UsersService {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -149,18 +151,18 @@ export declare class UsersService {
     }[]>;
     findAllPublic(page?: number, perPage?: number, search?: string, role?: string): Promise<{
         data: {
+            name: string;
             id: number;
             created_at: Date;
             username: string;
-            name: string;
             avatar: string;
             user_roles: ({
                 role: {
                     description: string | null;
+                    name: string;
                     id: number;
                     created_at: Date;
                     updated_at: Date;
-                    name: string;
                     is_active: boolean;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -182,6 +184,39 @@ export declare class UsersService {
             total: number;
             from: number;
             to: number;
+        };
+    }>;
+    getUserListings(username: string): Promise<{
+        data: {
+            id: number;
+            title: string;
+            description: string;
+            price: number;
+            discount_price: number;
+            category: string;
+            subcategory: string;
+            platform: string;
+            level: string;
+            type: string;
+            images: string[];
+            tags: any[];
+            status: string;
+            created_at: string;
+            updated_at: string;
+        }[];
+        meta: {
+            total: number;
+            user_id: number;
+            username: string;
+        };
+    }>;
+    getUserReviews(username: string): Promise<{
+        data: any[];
+        meta: {
+            total: number;
+            user_id: number;
+            username: string;
+            message: string;
         };
     }>;
 }

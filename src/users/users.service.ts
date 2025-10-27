@@ -260,35 +260,64 @@ export class UsersService {
       where: {
         seller_id: user.id,
         status: {
-          in: ['active', 'pending'] // Only show active and pending products
+          in: ['ACTIVE', 'PENDING'] // Only show active and pending products
         }
       },
       select: {
         id: true,
-        title: true,
+        name: true,
         description: true,
         price: true,
         discount_price: true,
-        category: true,
-        subcategory: true,
         platform: true,
-        level: true,
-        type: true,
-        images: true,
-        tags: true,
+        account_level: true,
         status: true,
         created_at: true,
         updated_at: true,
+        images: {
+          select: {
+            image_url: true,
+            is_primary: true,
+          },
+          orderBy: {
+            sort_order: 'asc'
+          }
+        },
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          }
+        }
       },
       orderBy: {
         created_at: 'desc'
       }
     });
 
+    // Transform products to match frontend expectations
+    const transformedProducts = products.map(product => ({
+      id: product.id,
+      title: product.name, // Map name to title for frontend
+      description: product.description,
+      price: Number(product.price),
+      discount_price: product.discount_price ? Number(product.discount_price) : undefined,
+      category: product.category?.name || 'Uncategorized',
+      subcategory: '', // Not available in current schema
+      platform: product.platform,
+      level: product.account_level,
+      type: '', // Not available in current schema
+      images: product.images?.map(img => img.image_url) || [],
+      tags: [], // Not available in current schema
+      status: product.status.toLowerCase(),
+      created_at: product.created_at.toISOString(),
+      updated_at: product.updated_at.toISOString(),
+    }));
+
     return {
-      data: products,
+      data: transformedProducts,
       meta: {
-        total: products.length,
+        total: transformedProducts.length,
         user_id: user.id,
         username: user.username
       }

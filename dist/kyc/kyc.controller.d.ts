@@ -54,15 +54,17 @@ export declare class KycController {
         phone: string;
         code: string;
     }): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
         avatar: string | null;
+        bio: string | null;
+        location: string | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
         is_active: boolean;
@@ -74,15 +76,17 @@ export declare class KycController {
         locked_until: Date | null;
     }>;
     completeKyc(user: any): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
         avatar: string | null;
+        bio: string | null;
+        location: string | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
         is_active: boolean;

@@ -4,10 +4,10 @@ export declare class AdminController {
     constructor(adminService: AdminService);
     getUsers(page?: string, perPage?: string, search?: string, role?: string, status?: string): Promise<{
         data: {
+            name: string;
             id: number;
             created_at: Date;
             username: string;
-            name: string;
             email: string;
             phone: string;
             is_active: boolean;
@@ -15,10 +15,10 @@ export declare class AdminController {
             user_roles: ({
                 role: {
                     description: string | null;
+                    name: string;
                     id: number;
                     created_at: Date;
                     updated_at: Date;
-                    name: string;
                     is_active: boolean;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -41,11 +41,11 @@ export declare class AdminController {
         };
     }>;
     getUser(id: number): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -54,10 +54,10 @@ export declare class AdminController {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -73,15 +73,17 @@ export declare class AdminController {
         })[];
     }>;
     updateUser(id: number, updateData: any): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
         avatar: string | null;
+        bio: string | null;
+        location: string | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
         is_active: boolean;
@@ -93,15 +95,17 @@ export declare class AdminController {
         locked_until: Date | null;
     }>;
     deleteUser(id: number): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
         avatar: string | null;
+        bio: string | null;
+        location: string | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
         is_active: boolean;
@@ -115,15 +119,15 @@ export declare class AdminController {
     getOrders(page?: string, perPage?: string, status?: string, dateFrom?: string, dateTo?: string): Promise<{
         data: ({
             buyer: {
+                name: string;
                 id: number;
                 username: string;
-                name: string;
                 email: string;
             };
             items: ({
                 product: {
-                    id: number;
                     name: string;
+                    id: number;
                     price: import("@prisma/client/runtime/library").Decimal;
                 };
             } & {
@@ -171,15 +175,15 @@ export declare class AdminController {
     }>;
     getOrder(id: number): Promise<{
         buyer: {
+            name: string;
             id: number;
             username: string;
-            name: string;
             email: string;
         };
         items: ({
             product: {
-                id: number;
                 name: string;
+                id: number;
                 price: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
@@ -247,10 +251,10 @@ export declare class AdminController {
     }>;
     getVendors(page?: string, perPage?: string, search?: string, status?: string): Promise<{
         data: {
+            name: string;
             id: number;
             created_at: Date;
             username: string;
-            name: string;
             email: string;
             phone: string;
             is_active: boolean;
@@ -258,10 +262,10 @@ export declare class AdminController {
             user_roles: ({
                 role: {
                     description: string | null;
+                    name: string;
                     id: number;
                     created_at: Date;
                     updated_at: Date;
-                    name: string;
                     is_active: boolean;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -276,9 +280,9 @@ export declare class AdminController {
                 expires_at: Date | null;
             })[];
             products: {
+                name: string;
                 id: number;
                 status: import(".prisma/client").$Enums.ProductStatus;
-                name: string;
                 price: import("@prisma/client/runtime/library").Decimal;
             }[];
         }[];
@@ -290,11 +294,11 @@ export declare class AdminController {
         };
     }>;
     getVendor(id: number): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -303,10 +307,10 @@ export declare class AdminController {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -321,25 +325,27 @@ export declare class AdminController {
             expires_at: Date | null;
         })[];
         products: {
+            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
-            name: string;
             price: import("@prisma/client/runtime/library").Decimal;
         }[];
     }>;
     updateVendorStatus(id: number, statusData: {
         status: string;
     }): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
         avatar: string | null;
+        bio: string | null;
+        location: string | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
         is_active: boolean;
@@ -353,18 +359,18 @@ export declare class AdminController {
     getListings(page?: string, perPage?: string, status?: string, category?: string): Promise<{
         data: ({
             seller: {
+                name: string;
                 id: number;
                 username: string;
-                name: string;
                 email: string;
             };
         } & {
             description: string | null;
+            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
-            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -395,18 +401,18 @@ export declare class AdminController {
     }>;
     getListing(id: number): Promise<{
         seller: {
+            name: string;
             id: number;
             username: string;
-            name: string;
             email: string;
         };
     } & {
         description: string | null;
+        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
-        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -432,11 +438,11 @@ export declare class AdminController {
         status: string;
     }): Promise<{
         description: string | null;
+        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
-        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;

@@ -355,6 +355,22 @@ let AuthService = class AuthService {
         };
     }
     async register(registerDto) {
+        try {
+            const reservedUsername = await this.prisma.$queryRaw `
+        SELECT username FROM reserved_usernames 
+        WHERE LOWER(username) = LOWER(${registerDto.username})
+      `;
+            if (Array.isArray(reservedUsername) && reservedUsername.length > 0) {
+                throw new common_1.ConflictException({
+                    message: 'Username is reserved and cannot be used',
+                    status: 'error',
+                    errors: { username: ['This username is reserved and cannot be used'] }
+                });
+            }
+        }
+        catch (error) {
+            console.log('Reserved usernames table not found, skipping check');
+        }
         const existingUserByEmail = await this.prisma.user.findUnique({
             where: { email: registerDto.email },
         });
@@ -365,8 +381,13 @@ let AuthService = class AuthService {
                 errors: { email: ['Email is already registered'] }
             });
         }
-        const existingUserByUsername = await this.prisma.user.findUnique({
-            where: { username: registerDto.username },
+        const existingUserByUsername = await this.prisma.user.findFirst({
+            where: {
+                username: {
+                    equals: registerDto.username,
+                    mode: 'insensitive'
+                }
+            },
         });
         if (existingUserByUsername) {
             throw new common_1.ConflictException({
@@ -826,7 +847,7 @@ class RegisterDto {
     password;
     phone;
     static _OPENAPI_METADATA_FACTORY() {
-        return { username: { required: true, type: () => String, minLength: 3, pattern: "/^[a-zA-Z0-9_]+$/" }, name: { required: true, type: () => String }, email: { required: true, type: () => String }, password: { required: true, type: () => String, minLength: 6 }, phone: { required: false, type: () => String } };
+        return { username: { required: true, type: () => String, minLength: 3, pattern: "/^[a-zA-Z0-9_\\.]{3,20}$/" }, name: { required: true, type: () => String }, email: { required: true, type: () => String }, password: { required: true, type: () => String, minLength: 6 }, phone: { required: false, type: () => String } };
     }
 }
 exports.RegisterDto = RegisterDto;
@@ -835,7 +856,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'Username is required' }),
     (0, class_validator_1.MinLength)(3, { message: 'Username must be at least 3 characters' }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9_]+$/, { message: 'Username can only contain letters, numbers, and underscores' }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z0-9_\.]{3,20}$/, { message: 'Username can only contain letters, numbers, underscores, and dots (3-20 characters)' }),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "username", void 0);
 __decorate([
@@ -1149,13 +1170,20 @@ let UsersService = class UsersService {
         return user;
     }
     async findByUsername(username) {
-        const user = await this.prisma.user.findUnique({
-            where: { username },
+        const user = await this.prisma.user.findFirst({
+            where: {
+                username: {
+                    equals: username,
+                    mode: 'insensitive',
+                },
+            },
             select: {
                 id: true,
                 username: true,
                 name: true,
                 avatar: true,
+                bio: true,
+                location: true,
                 email_verified_at: true,
                 user_roles: {
                     include: {
@@ -1310,6 +1338,84 @@ let UsersService = class UsersService {
                 from: skip + 1,
                 to: Math.min(skip + perPage, total),
             },
+        };
+    }
+    async getUserListings(username) {
+        const user = await this.findByUsername(username);
+        const products = await this.prisma.product.findMany({
+            where: {
+                seller_id: user.id,
+                status: {
+                    in: ['ACTIVE', 'PENDING']
+                }
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                discount_price: true,
+                platform: true,
+                account_level: true,
+                status: true,
+                created_at: true,
+                updated_at: true,
+                images: {
+                    select: {
+                        image_url: true,
+                        is_primary: true,
+                    },
+                    orderBy: {
+                        sort_order: 'asc'
+                    }
+                },
+                category: {
+                    select: {
+                        name: true,
+                        slug: true,
+                    }
+                }
+            },
+            orderBy: {
+                created_at: 'desc'
+            }
+        });
+        const transformedProducts = products.map(product => ({
+            id: product.id,
+            title: product.name,
+            description: product.description,
+            price: Number(product.price),
+            discount_price: product.discount_price ? Number(product.discount_price) : undefined,
+            category: product.category?.name || 'Uncategorized',
+            subcategory: '',
+            platform: product.platform,
+            level: product.account_level,
+            type: '',
+            images: product.images?.map(img => img.image_url) || [],
+            tags: [],
+            status: product.status.toLowerCase(),
+            created_at: product.created_at.toISOString(),
+            updated_at: product.updated_at.toISOString(),
+        }));
+        return {
+            data: transformedProducts,
+            meta: {
+                total: transformedProducts.length,
+                user_id: user.id,
+                username: user.username
+            }
+        };
+    }
+    async getUserReviews(username) {
+        const user = await this.findByUsername(username);
+        return {
+            data: [],
+            meta: {
+                total: 0,
+                user_id: user.id,
+                username: user.username,
+                message: 'Reviews system not implemented yet'
+            }
         };
     }
 };
@@ -1525,6 +1631,12 @@ let UsersController = class UsersController {
     async getUserByUsername(username) {
         return this.usersService.findByUsername(username);
     }
+    async getUserListings(username) {
+        return this.usersService.getUserListings(username);
+    }
+    async getUserReviews(username) {
+        return this.usersService.getUserReviews(username);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -1601,6 +1713,29 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserByUsername", null);
+__decorate([
+    (0, common_1.Get)(':username/listings'),
+    (0, decorators_1.Public)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get user listings/products by username (public)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User listings retrieved' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'User not found' }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('username')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserListings", null);
+__decorate([
+    (0, common_1.Get)(':username/reviews'),
+    (0, decorators_1.Public)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get user reviews by username (public)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'User reviews retrieved' }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('username')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserReviews", null);
 exports.UsersController = UsersController = __decorate([
     (0, swagger_1.ApiTags)('users'),
     (0, common_1.Controller)('users'),

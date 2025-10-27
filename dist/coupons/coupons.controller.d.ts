@@ -7,10 +7,10 @@ export declare class CouponsController {
     create(createCouponDto: CreateCouponDto): Promise<{
         description: string | null;
         type: import(".prisma/client").$Enums.CouponType;
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         is_active: boolean;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -25,10 +25,10 @@ export declare class CouponsController {
     findAll(): Promise<{
         description: string | null;
         type: import(".prisma/client").$Enums.CouponType;
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         is_active: boolean;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -43,10 +43,10 @@ export declare class CouponsController {
     findOne(id: string): Promise<{
         description: string | null;
         type: import(".prisma/client").$Enums.CouponType;
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         is_active: boolean;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -61,10 +61,10 @@ export declare class CouponsController {
     update(id: string, updateCouponDto: UpdateCouponDto): Promise<{
         description: string | null;
         type: import(".prisma/client").$Enums.CouponType;
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         is_active: boolean;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
@@ -79,10 +79,10 @@ export declare class CouponsController {
     remove(id: string): Promise<{
         description: string | null;
         type: import(".prisma/client").$Enums.CouponType;
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         is_active: boolean;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;

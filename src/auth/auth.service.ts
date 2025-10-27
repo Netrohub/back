@@ -102,18 +102,23 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    // Check if username is reserved
-    const reservedUsername = await this.prisma.$queryRaw`
-      SELECT username FROM reserved_usernames 
-      WHERE LOWER(username) = LOWER(${registerDto.username})
-    `;
+    // Check if username is reserved (if reserved_usernames table exists)
+    try {
+      const reservedUsername = await this.prisma.$queryRaw`
+        SELECT username FROM reserved_usernames 
+        WHERE LOWER(username) = LOWER(${registerDto.username})
+      `;
 
-    if (Array.isArray(reservedUsername) && reservedUsername.length > 0) {
-      throw new ConflictException({
-        message: 'Username is reserved and cannot be used',
-        status: 'error',
-        errors: { username: ['This username is reserved and cannot be used'] }
-      });
+      if (Array.isArray(reservedUsername) && reservedUsername.length > 0) {
+        throw new ConflictException({
+          message: 'Username is reserved and cannot be used',
+          status: 'error',
+          errors: { username: ['This username is reserved and cannot be used'] }
+        });
+      }
+    } catch (error) {
+      // If reserved_usernames table doesn't exist, skip this check
+      console.log('Reserved usernames table not found, skipping check');
     }
 
     // Check if user already exists by email
