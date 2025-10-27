@@ -10,13 +10,14 @@ RUN apk add --no-cache openssl
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies (local file dependency removed)
-RUN npm ci --only=production
+# Install dependencies including dev dependencies for Prisma
+RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Generate Prisma client
+# Generate Prisma client with proper permissions
+RUN chmod +x node_modules/.bin/* || true
 RUN npx prisma generate
 
 # Build the application
