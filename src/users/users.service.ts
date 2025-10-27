@@ -173,4 +173,57 @@ export class UsersService {
       },
     });
   }
+
+  async findAllPublic(page: number = 1, perPage: number = 20, search?: string, role?: string) {
+    const where: any = {
+      is_active: true, // Only show active users
+    };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { username: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (role) {
+      where.roles = {
+        path: '$[*]',
+        array_contains: role,
+      };
+    }
+
+    const skip = (page - 1) * perPage;
+    const take = perPage;
+
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { created_at: 'desc' },
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          avatar: true,
+          roles: true,
+          created_at: true,
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      data: users,
+      meta: {
+        current_page: page,
+        last_page: Math.ceil(total / perPage),
+        per_page: perPage,
+        total,
+        from: skip + 1,
+        to: Math.min(skip + perPage, total),
+      },
+    };
+  }
 }

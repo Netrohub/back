@@ -24,6 +24,23 @@ export class ProductsController {
     return this.productsService.findAll(filters);
   }
 
+  @Get('trending')
+  @ApiOperation({ summary: 'Get trending products' })
+  @ApiResponse({ status: 200, description: 'Trending products retrieved successfully' })
+  async getTrending(@Query('limit') limit?: number) {
+    return this.productsService.getTrending(limit || 10);
+  }
+
+  @Get('categories/:categorySlug')
+  @ApiOperation({ summary: 'Get products by category slug' })
+  @ApiResponse({ status: 200, description: 'Products by category retrieved successfully' })
+  async getByCategory(
+    @Param('categorySlug') categorySlug: string,
+    @Query() filters: ProductFiltersDto
+  ) {
+    return this.productsService.getByCategory(categorySlug, filters);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get product by ID' })
   @ApiResponse({ status: 200, description: 'Product retrieved successfully' })

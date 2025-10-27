@@ -77,6 +77,103 @@ export class ProductsService {
     };
   }
 
+  async getTrending(limit: number = 10) {
+    const products = await this.prisma.product.findMany({
+      where: {
+        status: 'active',
+      },
+      take: limit,
+      orderBy: [
+        { views_count: 'desc' },
+        { sales_count: 'desc' },
+        { created_at: 'desc' },
+      ],
+      include: {
+        seller: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
+    return {
+      data: products,
+      message: 'Trending products retrieved successfully',
+      status: 'success',
+    };
+  }
+
+  async getByCategory(categorySlug: string, filters: ProductFiltersDto = {}) {
+    const {
+      search,
+      minPrice: min_price,
+      maxPrice: max_price,
+      page = 1,
+      limit: per_page = 20,
+      sortBy: sort = 'created_at',
+    } = filters;
+
+    const where: any = {
+      status: 'active',
+      category: categorySlug,
+    };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (min_price !== undefined) {
+      where.price = { ...where.price, gte: min_price };
+    }
+
+    if (max_price !== undefined) {
+      where.price = { ...where.price, lte: max_price };
+    }
+
+    const skip = (page - 1) * per_page;
+    const take = per_page;
+
+    const [products, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { [sort]: 'desc' },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    return {
+      data: products,
+      meta: {
+        current_page: page,
+        last_page: Math.ceil(total / per_page),
+        per_page,
+        total,
+        from: skip + 1,
+        to: Math.min(skip + per_page, total),
+        category: categorySlug,
+      },
+    };
+  }
+
   async findById(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },

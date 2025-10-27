@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, UseGuards, Param, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -43,9 +43,22 @@ export class UsersController {
     return this.usersService.updatePassword(user.id, updatePasswordDto);
   }
 
+  @Get()
+  @Public()
+  @ApiOperation({ summary: 'Get all public users / members list (filtered)' })
+  @ApiResponse({ status: 200, description: 'Users list retrieved' })
+  async getUsers(
+    @Query('page') page?: number,
+    @Query('per_page') perPage?: number,
+    @Query('search') search?: string,
+    @Query('role') role?: string,
+  ) {
+    return this.usersService.findAllPublic(page, perPage, search, role);
+  }
+
   @Get('members')
   @Public()
-  @ApiOperation({ summary: 'Get all members (public)' })
+  @ApiOperation({ summary: 'Get all members (public) - alias for /users' })
   @ApiResponse({ status: 200, description: 'Members list retrieved' })
   async getMembers() {
     return this.usersService.findAll();
