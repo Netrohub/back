@@ -15,8 +15,8 @@ export declare class PayoutsService {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: Decimal;
         reference: string | null;
+        amount: Decimal;
         fee_amount: Decimal;
         net_amount: Decimal;
         currency: string;
@@ -43,8 +43,8 @@ export declare class PayoutsService {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: Decimal;
         reference: string | null;
+        amount: Decimal;
         fee_amount: Decimal;
         net_amount: Decimal;
         currency: string;
@@ -68,8 +68,8 @@ export declare class PayoutsService {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: Decimal;
         reference: string | null;
+        amount: Decimal;
         fee_amount: Decimal;
         net_amount: Decimal;
         currency: string;
@@ -87,8 +87,8 @@ export declare class PayoutsService {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: Decimal;
         reference: string | null;
+        amount: Decimal;
         fee_amount: Decimal;
         net_amount: Decimal;
         currency: string;
@@ -106,8 +106,8 @@ export declare class PayoutsService {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: Decimal;
         reference: string | null;
+        amount: Decimal;
         fee_amount: Decimal;
         net_amount: Decimal;
         currency: string;

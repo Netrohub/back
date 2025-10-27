@@ -19,8 +19,8 @@ export declare class TicketsController {
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        message: string;
         assigned_to: number | null;
+        message: string;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;
@@ -45,8 +45,8 @@ export declare class TicketsController {
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        message: string;
         assigned_to: number | null;
+        message: string;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;
@@ -71,8 +71,8 @@ export declare class TicketsController {
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        message: string;
         assigned_to: number | null;
+        message: string;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;
@@ -97,8 +97,8 @@ export declare class TicketsController {
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        message: string;
         assigned_to: number | null;
+        message: string;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;
@@ -112,8 +112,8 @@ export declare class TicketsController {
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        message: string;
         assigned_to: number | null;
+        message: string;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;

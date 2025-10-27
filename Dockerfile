@@ -3,8 +3,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache openssl
+# Install system dependencies and update npm to latest
+RUN apk add --no-cache openssl && npm install -g npm@latest
 
 # Copy package files first
 COPY package*.json ./
@@ -29,7 +29,7 @@ FROM node:20-alpine AS production
 WORKDIR /app
 
 # Install system dependencies and build tools for native dependencies
-RUN apk add --no-cache openssl dumb-init python3 make g++
+RUN apk add --no-cache openssl dumb-init python3 make g++ && npm install -g npm@latest
 
 # Create app user
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001

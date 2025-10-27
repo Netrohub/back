@@ -14,8 +14,8 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -39,8 +39,8 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -64,8 +64,8 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -83,8 +83,8 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
@@ -102,8 +102,8 @@ export declare class PayoutsController {
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         fee_amount: import("@prisma/client/runtime/library").Decimal;
         net_amount: import("@prisma/client/runtime/library").Decimal;
         currency: string;
