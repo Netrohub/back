@@ -40,13 +40,21 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { username },
+    // Case-insensitive username lookup
+    const user = await this.prisma.user.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: 'insensitive', // Case-insensitive search
+        },
+      },
       select: {
         id: true,
         username: true,
         name: true,
         avatar: true,
+        bio: true,
+        location: true,
         email_verified_at: true,
         user_roles: {
           include: {

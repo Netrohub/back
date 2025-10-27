@@ -6,7 +6,7 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty({ message: 'Username is required' })
   @MinLength(3, { message: 'Username must be at least 3 characters' })
-  @Matches(/^[a-zA-Z0-9_]+$/, { message: 'Username can only contain letters, numbers, and underscores' })
+  @Matches(/^[a-zA-Z0-9_\.]{3,20}$/, { message: 'Username can only contain letters, numbers, underscores, and dots (3-20 characters)' })
   username: string;
 
   @ApiProperty({ description: 'Full name', example: 'John Doe' })
