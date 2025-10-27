@@ -232,7 +232,6 @@ model ProductReview {
   @@index([user_id])
   @@index([rating])
   @@index([created_at])
-  @@check(rating >= 1 AND rating <= 5)
 }
 
 // ========================================
