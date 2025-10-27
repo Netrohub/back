@@ -8,10 +8,10 @@ export declare class DisputesService {
                 product: {
                     description: string | null;
                     id: number;
-                    status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
-                    updated_at: Date;
                     name: string;
+                    updated_at: Date;
+                    status: import(".prisma/client").$Enums.ProductStatus;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -35,9 +35,9 @@ export declare class DisputesService {
                 };
             } & {
                 id: number;
+                created_at: Date;
                 product_id: number;
                 quantity: number;
-                created_at: Date;
                 metadata: import("@prisma/client/runtime/library").JsonValue | null;
                 order_id: number;
                 product_name: string;
@@ -46,9 +46,9 @@ export declare class DisputesService {
             })[];
         } & {
             id: number;
-            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
+            status: import(".prisma/client").$Enums.OrderStatus;
             seller_id: number;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_number: string;
@@ -72,9 +72,9 @@ export declare class DisputesService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.DisputeStatus;
         seller_id: number;
         order_id: number;
         buyer_id: number;
@@ -90,10 +90,10 @@ export declare class DisputesService {
                 product: {
                     description: string | null;
                     id: number;
-                    status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
-                    updated_at: Date;
                     name: string;
+                    updated_at: Date;
+                    status: import(".prisma/client").$Enums.ProductStatus;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -117,9 +117,9 @@ export declare class DisputesService {
                 };
             } & {
                 id: number;
+                created_at: Date;
                 product_id: number;
                 quantity: number;
-                created_at: Date;
                 metadata: import("@prisma/client/runtime/library").JsonValue | null;
                 order_id: number;
                 product_name: string;
@@ -128,9 +128,9 @@ export declare class DisputesService {
             })[];
         } & {
             id: number;
-            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
+            status: import(".prisma/client").$Enums.OrderStatus;
             seller_id: number;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_number: string;
@@ -154,9 +154,9 @@ export declare class DisputesService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.DisputeStatus;
         seller_id: number;
         order_id: number;
         buyer_id: number;
@@ -169,9 +169,9 @@ export declare class DisputesService {
     createDispute(userId: number, orderId: number, reason: string, description: string): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.DisputeStatus;
         seller_id: number;
         order_id: number;
         buyer_id: number;
@@ -184,9 +184,9 @@ export declare class DisputesService {
     updateDisputeStatus(id: number, status: string, adminId: number): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.DisputeStatus;
         seller_id: number;
         order_id: number;
         buyer_id: number;
@@ -202,10 +202,10 @@ export declare class DisputesService {
                 product: {
                     description: string | null;
                     id: number;
-                    status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
-                    updated_at: Date;
                     name: string;
+                    updated_at: Date;
+                    status: import(".prisma/client").$Enums.ProductStatus;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -229,9 +229,9 @@ export declare class DisputesService {
                 };
             } & {
                 id: number;
+                created_at: Date;
                 product_id: number;
                 quantity: number;
-                created_at: Date;
                 metadata: import("@prisma/client/runtime/library").JsonValue | null;
                 order_id: number;
                 product_name: string;
@@ -240,9 +240,9 @@ export declare class DisputesService {
             })[];
         } & {
             id: number;
-            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
+            status: import(".prisma/client").$Enums.OrderStatus;
             seller_id: number;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_number: string;
@@ -271,9 +271,9 @@ export declare class DisputesService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.DisputeStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.DisputeStatus;
         seller_id: number;
         order_id: number;
         buyer_id: number;

@@ -17,9 +17,9 @@ export declare class AdminService {
                     description: string | null;
                     id: number;
                     created_at: Date;
-                    updated_at: Date;
                     name: string;
                     is_active: boolean;
+                    updated_at: Date;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
                 };
@@ -43,7 +43,6 @@ export declare class AdminService {
     getUser(id: number): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -51,14 +50,15 @@ export declare class AdminService {
         avatar: string;
         is_active: boolean;
         last_login_at: Date;
+        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
-                updated_at: Date;
                 name: string;
                 is_active: boolean;
+                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -75,7 +75,6 @@ export declare class AdminService {
     updateUser(id: number, updateData: any): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -91,11 +90,11 @@ export declare class AdminService {
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
+        updated_at: Date;
     }>;
     deleteUser(id: number): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -111,6 +110,7 @@ export declare class AdminService {
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
+        updated_at: Date;
     }>;
     getOrders(page?: number, perPage?: number, status?: string, dateFrom?: string, dateTo?: string): Promise<{
         data: ({
@@ -128,9 +128,9 @@ export declare class AdminService {
                 };
             } & {
                 id: number;
+                created_at: Date;
                 product_id: number;
                 quantity: number;
-                created_at: Date;
                 metadata: import("@prisma/client/runtime/library").JsonValue | null;
                 order_id: number;
                 product_name: string;
@@ -139,9 +139,9 @@ export declare class AdminService {
             })[];
         } & {
             id: number;
-            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
+            status: import(".prisma/client").$Enums.OrderStatus;
             seller_id: number;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_number: string;
@@ -184,9 +184,9 @@ export declare class AdminService {
             };
         } & {
             id: number;
+            created_at: Date;
             product_id: number;
             quantity: number;
-            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -195,9 +195,9 @@ export declare class AdminService {
         })[];
     } & {
         id: number;
-        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -220,9 +220,9 @@ export declare class AdminService {
     }>;
     updateOrderStatus(id: number, status: string): Promise<{
         id: number;
-        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -258,9 +258,9 @@ export declare class AdminService {
                     description: string | null;
                     id: number;
                     created_at: Date;
-                    updated_at: Date;
                     name: string;
                     is_active: boolean;
+                    updated_at: Date;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
                 };
@@ -275,8 +275,8 @@ export declare class AdminService {
             })[];
             products: {
                 id: number;
-                status: import(".prisma/client").$Enums.ProductStatus;
                 name: string;
+                status: import(".prisma/client").$Enums.ProductStatus;
                 price: import("@prisma/client/runtime/library").Decimal;
             }[];
         }[];
@@ -290,7 +290,6 @@ export declare class AdminService {
     getVendor(id: number): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -298,14 +297,15 @@ export declare class AdminService {
         avatar: string;
         is_active: boolean;
         last_login_at: Date;
+        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
-                updated_at: Date;
                 name: string;
                 is_active: boolean;
+                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -320,16 +320,15 @@ export declare class AdminService {
         })[];
         products: {
             id: number;
-            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             name: string;
+            status: import(".prisma/client").$Enums.ProductStatus;
             price: import("@prisma/client/runtime/library").Decimal;
         }[];
     }>;
     updateVendorStatus(id: number, status: string): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -345,6 +344,7 @@ export declare class AdminService {
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
+        updated_at: Date;
     }>;
     getListings(page?: number, perPage?: number, status?: string, category?: string): Promise<{
         data: ({
@@ -357,10 +357,10 @@ export declare class AdminService {
         } & {
             description: string | null;
             id: number;
-            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
-            updated_at: Date;
             name: string;
+            updated_at: Date;
+            status: import(".prisma/client").$Enums.ProductStatus;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -399,10 +399,10 @@ export declare class AdminService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -427,10 +427,10 @@ export declare class AdminService {
     updateListingStatus(id: number, status: string): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -476,9 +476,9 @@ export declare class AdminService {
             };
         } & {
             id: number;
-            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
+            status: import(".prisma/client").$Enums.OrderStatus;
             seller_id: number;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_number: string;

@@ -13,7 +13,6 @@ export declare class AuditLogsController {
         } & {
             id: number;
             user_id: number | null;
-            created_at: Date;
             action: string;
             entity_type: string;
             entity_id: number;
@@ -21,6 +20,7 @@ export declare class AuditLogsController {
             new_values: import("@prisma/client/runtime/library").JsonValue | null;
             ip_address: string | null;
             user_agent: string | null;
+            created_at: Date;
         })[];
         pagination: {
             total: number;
@@ -38,7 +38,6 @@ export declare class AuditLogsController {
     } & {
         id: number;
         user_id: number | null;
-        created_at: Date;
         action: string;
         entity_type: string;
         entity_id: number;
@@ -46,6 +45,7 @@ export declare class AuditLogsController {
         new_values: import("@prisma/client/runtime/library").JsonValue | null;
         ip_address: string | null;
         user_agent: string | null;
+        created_at: Date;
     })[]>;
     findOne(id: string): Promise<{
         user: {
@@ -56,7 +56,6 @@ export declare class AuditLogsController {
     } & {
         id: number;
         user_id: number | null;
-        created_at: Date;
         action: string;
         entity_type: string;
         entity_id: number;
@@ -64,5 +63,6 @@ export declare class AuditLogsController {
         new_values: import("@prisma/client/runtime/library").JsonValue | null;
         ip_address: string | null;
         user_agent: string | null;
+        created_at: Date;
     }>;
 }

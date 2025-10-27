@@ -5,21 +5,21 @@ export declare class PublicUsersController {
     getMembers(): Promise<{
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         email: string;
         phone: string;
         avatar: string;
         email_verified_at: Date;
         phone_verified_at: Date;
+        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
-                updated_at: Date;
                 name: string;
                 is_active: boolean;
+                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };

@@ -8,9 +8,9 @@ export declare class PayoutsService {
     create(createPayoutDto: CreatePayoutDto): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.PayoutStatus;
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
@@ -36,9 +36,9 @@ export declare class PayoutsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.PayoutStatus;
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
@@ -61,9 +61,9 @@ export declare class PayoutsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.PayoutStatus;
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
@@ -80,9 +80,9 @@ export declare class PayoutsService {
     update(id: string, updatePayoutDto: UpdatePayoutDto): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.PayoutStatus;
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;
@@ -99,9 +99,9 @@ export declare class PayoutsService {
     remove(id: string): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
         updated_at: Date;
+        status: import(".prisma/client").$Enums.PayoutStatus;
         seller_id: number;
         completed_at: Date | null;
         notes: string | null;

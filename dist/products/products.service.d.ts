@@ -14,10 +14,10 @@ export declare class ProductsService {
         } & {
             description: string | null;
             id: number;
-            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
-            updated_at: Date;
             name: string;
+            updated_at: Date;
+            status: import(".prisma/client").$Enums.ProductStatus;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -59,10 +59,10 @@ export declare class ProductsService {
         } & {
             description: string | null;
             id: number;
-            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
-            updated_at: Date;
             name: string;
+            updated_at: Date;
+            status: import(".prisma/client").$Enums.ProductStatus;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -98,10 +98,10 @@ export declare class ProductsService {
         } & {
             description: string | null;
             id: number;
-            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
-            updated_at: Date;
             name: string;
+            updated_at: Date;
+            status: import(".prisma/client").$Enums.ProductStatus;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -143,10 +143,10 @@ export declare class ProductsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -179,9 +179,9 @@ export declare class ProductsService {
             description: string | null;
             id: number;
             created_at: Date;
-            updated_at: Date;
             name: string;
             is_active: boolean;
+            updated_at: Date;
             slug: string;
             image: string | null;
             sort_order: number;
@@ -189,8 +189,8 @@ export declare class ProductsService {
         };
         images: {
             id: number;
-            product_id: number;
             created_at: Date;
+            product_id: number;
             sort_order: number;
             image_url: string;
             alt_text: string | null;
@@ -199,10 +199,10 @@ export declare class ProductsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -235,9 +235,9 @@ export declare class ProductsService {
             description: string | null;
             id: number;
             created_at: Date;
-            updated_at: Date;
             name: string;
             is_active: boolean;
+            updated_at: Date;
             slug: string;
             image: string | null;
             sort_order: number;
@@ -245,8 +245,8 @@ export declare class ProductsService {
         };
         images: {
             id: number;
-            product_id: number;
             created_at: Date;
+            product_id: number;
             sort_order: number;
             image_url: string;
             alt_text: string | null;
@@ -255,10 +255,10 @@ export declare class ProductsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -283,10 +283,10 @@ export declare class ProductsService {
     remove(id: number, sellerId: number): Promise<{
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -318,10 +318,10 @@ export declare class ProductsService {
     } & {
         description: string | null;
         id: number;
-        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
-        updated_at: Date;
         name: string;
+        updated_at: Date;
+        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;

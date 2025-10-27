@@ -28,9 +28,9 @@ export declare class AuthService {
                         description: string | null;
                         id: number;
                         created_at: Date;
-                        updated_at: Date;
                         name: string;
                         is_active: boolean;
+                        updated_at: Date;
                         slug: string;
                         permissions: import("@prisma/client/runtime/library").JsonValue | null;
                     };
@@ -45,7 +45,6 @@ export declare class AuthService {
                 })[];
                 id: number;
                 created_at: Date;
-                updated_at: Date;
                 username: string;
                 name: string;
                 email: string;
@@ -60,6 +59,7 @@ export declare class AuthService {
                 last_login_at: Date | null;
                 login_attempts: number;
                 locked_until: Date | null;
+                updated_at: Date;
             };
             access_token: string;
             token_type: string;

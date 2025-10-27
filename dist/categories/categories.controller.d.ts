@@ -8,9 +8,9 @@ export declare class CategoriesController {
         description: string | null;
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         is_active: boolean;
+        updated_at: Date;
         slug: string;
         image: string | null;
         sort_order: number;
@@ -20,9 +20,9 @@ export declare class CategoriesController {
         description: string | null;
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         is_active: boolean;
+        updated_at: Date;
         slug: string;
         image: string | null;
         sort_order: number;
@@ -32,9 +32,9 @@ export declare class CategoriesController {
         description: string | null;
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         is_active: boolean;
+        updated_at: Date;
         slug: string;
         image: string | null;
         sort_order: number;
@@ -44,9 +44,9 @@ export declare class CategoriesController {
         description: string | null;
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         is_active: boolean;
+        updated_at: Date;
         slug: string;
         image: string | null;
         sort_order: number;
@@ -56,9 +56,9 @@ export declare class CategoriesController {
         description: string | null;
         id: number;
         created_at: Date;
-        updated_at: Date;
         name: string;
         is_active: boolean;
+        updated_at: Date;
         slug: string;
         image: string | null;
         sort_order: number;
