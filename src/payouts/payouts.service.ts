@@ -32,13 +32,13 @@ export class PayoutsService {
     // Create payout
     return this.prisma.payout.create({
       data: {
-        seller_id: createPayoutDto.seller_id,
+        user: { connect: { id: createPayoutDto.seller_id } },
         amount: new Decimal(createPayoutDto.amount),
         method: createPayoutDto.method || 'bank_transfer',
         description: createPayoutDto.description,
         notes: createPayoutDto.notes,
         status: 'PENDING',
-      },
+      } as any,
     });
   }
 

@@ -203,7 +203,7 @@ export class ProductsService {
         slug: createProductDto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         description: createProductDto.description,
         price: createProductDto.price,
-        category_id: createProductDto.categoryId,
+        category_id: parseInt(createProductDto.categoryId),
         seller_id: sellerId,
         images: {
           create: createProductDto.images?.map((imageUrl, index) => ({

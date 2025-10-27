@@ -25,9 +25,9 @@ export declare class KycController {
             updated_at: Date;
             notes: string | null;
             expires_at: Date | null;
+            data: import("@prisma/client/runtime/library").JsonValue | null;
             provider: string | null;
             external_id: string | null;
-            data: import("@prisma/client/runtime/library").JsonValue | null;
             documents: import("@prisma/client/runtime/library").JsonValue | null;
             verified_at: Date | null;
             rejected_at: Date | null;
@@ -54,11 +54,11 @@ export declare class KycController {
         phone: string;
         code: string;
     }): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -74,11 +74,11 @@ export declare class KycController {
         locked_until: Date | null;
     }>;
     completeKyc(user: any): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -102,9 +102,9 @@ export declare class KycController {
         updated_at: Date;
         notes: string | null;
         expires_at: Date | null;
+        data: import("@prisma/client/runtime/library").JsonValue | null;
         provider: string | null;
         external_id: string | null;
-        data: import("@prisma/client/runtime/library").JsonValue | null;
         documents: import("@prisma/client/runtime/library").JsonValue | null;
         verified_at: Date | null;
         rejected_at: Date | null;

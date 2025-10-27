@@ -6,8 +6,8 @@ export declare class AuditLogsController {
     findAll(query: QueryAuditLogsDto): Promise<{
         data: ({
             user: {
-                id: number;
                 name: string;
+                id: number;
                 email: string;
             };
         } & {
@@ -31,8 +31,8 @@ export declare class AuditLogsController {
     }>;
     export(query: QueryAuditLogsDto): Promise<({
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {
@@ -49,8 +49,8 @@ export declare class AuditLogsController {
     })[]>;
     findOne(id: string): Promise<{
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {

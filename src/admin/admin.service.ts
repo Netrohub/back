@@ -203,7 +203,7 @@ export class AdminService {
   async updateOrderStatus(id: number, status: string) {
     return this.prisma.order.update({
       where: { id },
-      data: { status },
+      data: { status: status as any },
     });
   }
 

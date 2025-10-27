@@ -3,10 +3,10 @@ export declare class PublicUsersController {
     private usersService;
     constructor(usersService: UsersService);
     getMembers(): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
-        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -15,10 +15,10 @@ export declare class PublicUsersController {
         user_roles: ({
             role: {
                 description: string | null;
+                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
-                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;

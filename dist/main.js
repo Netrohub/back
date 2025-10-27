@@ -2066,7 +2066,7 @@ let ProductsService = class ProductsService {
                 slug: createProductDto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
                 description: createProductDto.description,
                 price: createProductDto.price,
-                category_id: createProductDto.categoryId,
+                category_id: parseInt(createProductDto.categoryId),
                 seller_id: sellerId,
                 images: {
                     create: createProductDto.images?.map((imageUrl, index) => ({
@@ -2286,7 +2286,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Create new product (seller only)' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Product created successfully' }),
     (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden - seller role required' }),
-    openapi.ApiResponse({ status: 201 }),
+    openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -2827,7 +2827,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Order updated successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Order not found' }),
     (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden' }),
-    openapi.ApiResponse({ status: 200 }),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, decorators_2.CurrentUser)()),
@@ -3040,7 +3040,11 @@ let OrdersService = class OrdersService {
         }
         return this.prisma.order.update({
             where: { id },
-            data: updateOrderDto,
+            data: {
+                ...updateOrderDto,
+                status: updateOrderDto.status ? updateOrderDto.status.toUpperCase() : undefined,
+                payment_status: updateOrderDto.payment_status ? updateOrderDto.payment_status.toUpperCase() : undefined,
+            },
             include: {
                 items: {
                     include: {
@@ -3675,7 +3679,6 @@ let DisputesService = class DisputesService {
             where: { id },
             data: {
                 status: status.toUpperCase(),
-                resolved_by: adminId,
                 resolved_at: new Date(),
             },
         });
@@ -5194,7 +5197,6 @@ let AdminService = class AdminService {
                         }
                     },
                     is_active: true,
-                    kyc_verifications: true,
                     created_at: true,
                     last_login_at: true,
                 },
@@ -5224,8 +5226,6 @@ let AdminService = class AdminService {
                 avatar: true,
                 user_roles: { include: { role: true } },
                 is_active: true,
-                kyc_verifications: true,
-                kyc_verifications: true,
                 created_at: true,
                 updated_at: true,
                 last_login_at: true,
@@ -5329,7 +5329,7 @@ let AdminService = class AdminService {
     async updateOrderStatus(id, status) {
         return this.prisma.order.update({
             where: { id },
-            data: { status },
+            data: { status: status },
         });
     }
     async getVendors(page = 1, perPage = 10, search, status) {
@@ -5368,7 +5368,6 @@ let AdminService = class AdminService {
                         }
                     },
                     is_active: true,
-                    kyc_verifications: true,
                     created_at: true,
                     last_login_at: true,
                     products: {
@@ -5406,8 +5405,6 @@ let AdminService = class AdminService {
                 avatar: true,
                 user_roles: { include: { role: true } },
                 is_active: true,
-                kyc_verifications: true,
-                kyc_verifications: true,
                 created_at: true,
                 updated_at: true,
                 last_login_at: true,
@@ -6047,12 +6044,13 @@ let CouponsService = class CouponsService {
         if (existingCoupon) {
             throw new common_1.ConflictException('Coupon with this code already exists');
         }
-        if (createCouponDto.type === 'PERCENTAGE' && createCouponDto.value > 100) {
+        if (createCouponDto.type.toUpperCase() === 'PERCENTAGE' && createCouponDto.value > 100) {
             throw new common_1.BadRequestException('Percentage discount cannot exceed 100%');
         }
         const expiresAt = createCouponDto.expiresAt ? new Date(createCouponDto.expiresAt) : null;
         return this.prisma.coupon.create({
             data: {
+                name: createCouponDto.code,
                 code: createCouponDto.code.toUpperCase(),
                 description: createCouponDto.description || null,
                 type: createCouponDto.type.toUpperCase(),
@@ -6060,7 +6058,6 @@ let CouponsService = class CouponsService {
                 min_amount: createCouponDto.minAmount || null,
                 max_discount: createCouponDto.maxDiscount || null,
                 usage_limit: createCouponDto.usageLimit || null,
-                status: createCouponDto.status || 'ACTIVE',
                 expires_at: expiresAt,
             },
         });
@@ -6304,7 +6301,7 @@ let PayoutsService = class PayoutsService {
         }
         return this.prisma.payout.create({
             data: {
-                seller_id: createPayoutDto.seller_id,
+                user: { connect: { id: createPayoutDto.seller_id } },
                 amount: new library_1.Decimal(createPayoutDto.amount),
                 method: createPayoutDto.method || 'bank_transfer',
                 description: createPayoutDto.description,
@@ -6686,7 +6683,7 @@ let TicketsService = class TicketsService {
         }
         return this.prisma.ticket.create({
             data: {
-                user_id: userId,
+                user: { connect: { id: userId } },
                 subject: createTicketDto.subject,
                 message: createTicketDto.message,
                 priority: (createTicketDto.priority || 'MEDIUM').toUpperCase(),
@@ -6898,7 +6895,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Ticket created successfully' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad request' }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
-    openapi.ApiResponse({ status: 201 }),
+    openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),

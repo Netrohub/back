@@ -20,13 +20,13 @@ export class TicketsService {
     // Create ticket
     return this.prisma.ticket.create({
       data: {
-        user_id: userId,
+        user: { connect: { id: userId } },
         subject: createTicketDto.subject,
         message: createTicketDto.message,
-        priority: (createTicketDto.priority || 'MEDIUM').toUpperCase(),
+        priority: (createTicketDto.priority || 'MEDIUM').toUpperCase() as any,
         category: createTicketDto.category || 'general',
         status: 'OPEN',
-      },
+      } as any,
       include: {
         user: {
           select: {

@@ -18,7 +18,7 @@ export class CouponsService {
     }
 
     // Validate percentage coupon
-    if (createCouponDto.type === 'PERCENTAGE' && createCouponDto.value > 100) {
+    if ((createCouponDto.type as string).toUpperCase() === 'PERCENTAGE' && createCouponDto.value > 100) {
       throw new BadRequestException('Percentage discount cannot exceed 100%');
     }
 
@@ -27,16 +27,16 @@ export class CouponsService {
 
     return this.prisma.coupon.create({
       data: {
+        name: createCouponDto.code,
         code: createCouponDto.code.toUpperCase(),
         description: createCouponDto.description || null,
-        type: createCouponDto.type.toUpperCase(),
+        type: createCouponDto.type.toUpperCase() as any,
         value: createCouponDto.value,
         min_amount: createCouponDto.minAmount || null,
         max_discount: createCouponDto.maxDiscount || null,
         usage_limit: createCouponDto.usageLimit || null,
-        status: createCouponDto.status || 'ACTIVE',
         expires_at: expiresAt,
-      },
+      } as any,
     });
   }
 

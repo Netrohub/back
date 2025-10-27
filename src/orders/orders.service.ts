@@ -183,7 +183,11 @@ export class OrdersService {
 
     return this.prisma.order.update({
       where: { id },
-      data: updateOrderDto,
+      data: {
+        ...updateOrderDto,
+        status: updateOrderDto.status ? updateOrderDto.status.toUpperCase() as any : undefined,
+        payment_status: updateOrderDto.payment_status ? updateOrderDto.payment_status.toUpperCase() as any : undefined,
+      },
       include: {
         items: {
           include: {

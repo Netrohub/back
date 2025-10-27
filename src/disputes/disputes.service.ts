@@ -93,7 +93,7 @@ export class DisputesService {
       where: { id },
       data: {
         status: status.toUpperCase() as any,
-        resolved_by: adminId,
+        // resolved_by: adminId, // Field not in v2.0 schema
         resolved_at: new Date(),
       },
     });
