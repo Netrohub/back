@@ -3,17 +3,34 @@ export declare class PublicUsersController {
     private usersService;
     constructor(usersService: UsersService);
     getMembers(): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
         name: string;
         email: string;
         phone: string;
-        id: number;
         avatar: string;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
         email_verified_at: Date;
         phone_verified_at: Date;
-        identity_verified_at: Date;
-        created_at: Date;
-        updated_at: Date;
+        user_roles: ({
+            role: {
+                description: string | null;
+                id: number;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
+                is_active: boolean;
+                slug: string;
+                permissions: import("@prisma/client/runtime/library").JsonValue | null;
+            };
+        } & {
+            id: number;
+            user_id: number;
+            created_at: Date;
+            granted_by: number | null;
+            granted_at: Date;
+            expires_at: Date | null;
+            role_id: number;
+        })[];
     }[]>;
 }

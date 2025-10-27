@@ -7,32 +7,48 @@ export declare class CartService {
     private jwtService;
     constructor(prisma: PrismaService, jwtService: JwtService);
     getUserFromToken(token: string): Promise<{
+        id: number;
         name: string;
         email: string;
-        id: number;
     }>;
     getCart(userId: number): Promise<{
         items: ({
             product: {
-                category: string;
-                name: string;
                 description: string | null;
                 id: number;
+                status: import(".prisma/client").$Enums.ProductStatus;
                 created_at: Date;
                 updated_at: Date;
-                status: string;
+                name: string;
+                slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
-                images: import("@prisma/client/runtime/library").JsonValue | null;
-                seller_id: number | null;
+                discount_price: import("@prisma/client/runtime/library").Decimal | null;
+                category_id: number;
+                seller_id: number;
+                platform: string | null;
+                game: string | null;
+                account_level: string | null;
+                account_username: string | null;
+                stock_quantity: number;
+                delivery_time: string;
+                setup_instructions: string | null;
+                views_count: number;
+                sales_count: number;
+                rating_avg: import("@prisma/client/runtime/library").Decimal;
+                rating_count: number;
+                is_featured: boolean;
+                featured_until: Date | null;
+                metadata: import("@prisma/client/runtime/library").JsonValue | null;
+                deleted_at: Date | null;
             };
         } & {
             id: number;
-            created_at: Date;
-            updated_at: Date;
             user_id: number;
             product_id: number;
             quantity: number;
-            status: string;
+            status: import(".prisma/client").$Enums.CartStatus;
+            created_at: Date;
+            updated_at: Date;
         })[];
         subtotal: number;
         service_fee: number;
@@ -41,12 +57,12 @@ export declare class CartService {
     }>;
     addToCart(userId: number, addToCartDto: AddToCartDto): Promise<{
         id: number;
-        created_at: Date;
-        updated_at: Date;
         user_id: number;
         product_id: number;
         quantity: number;
-        status: string;
+        status: import(".prisma/client").$Enums.CartStatus;
+        created_at: Date;
+        updated_at: Date;
     }>;
     updateCartItem(userId: number, itemId: number, updateCartItemDto: UpdateCartItemDto): Promise<import(".prisma/client").Prisma.BatchPayload>;
     removeFromCart(userId: number, itemId: number): Promise<import(".prisma/client").Prisma.BatchPayload>;

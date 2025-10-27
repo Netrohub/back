@@ -6,14 +6,14 @@ export declare class AuditLogsService {
     findAll(query: QueryAuditLogsDto): Promise<{
         data: ({
             user: {
+                id: number;
                 name: string;
                 email: string;
-                id: number;
             };
         } & {
             id: number;
-            created_at: Date;
             user_id: number | null;
+            created_at: Date;
             action: string;
             entity_type: string;
             entity_id: number;
@@ -31,14 +31,14 @@ export declare class AuditLogsService {
     }>;
     findOne(id: string): Promise<{
         user: {
+            id: number;
             name: string;
             email: string;
-            id: number;
         };
     } & {
         id: number;
-        created_at: Date;
         user_id: number | null;
+        created_at: Date;
         action: string;
         entity_type: string;
         entity_id: number;
@@ -49,14 +49,14 @@ export declare class AuditLogsService {
     }>;
     export(query: QueryAuditLogsDto): Promise<({
         user: {
+            id: number;
             name: string;
             email: string;
-            id: number;
         };
     } & {
         id: number;
-        created_at: Date;
         user_id: number | null;
+        created_at: Date;
         action: string;
         entity_type: string;
         entity_id: number;

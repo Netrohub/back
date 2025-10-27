@@ -2,18 +2,26 @@ import { AdminService } from './admin.service';
 export declare class AdminController {
     private adminService;
     constructor(adminService: AdminService);
-    getUsers(page?: number, perPage?: number, search?: string, role?: string, status?: string): Promise<{
+    getUsers(page?: string, perPage?: string, search?: string, role?: string, status?: string): Promise<{
         data: {
+            id: number;
+            created_at: Date;
+            updated_at: Date;
+            username: string;
             name: string;
             email: string;
-            username: string;
-            phone: string;
-            id: number;
-            roles: import("@prisma/client/runtime/library").JsonValue;
-            kyc_verified: boolean;
+            password: string;
+            phone: string | null;
+            avatar: string | null;
+            email_verified_at: Date | null;
+            phone_verified_at: Date | null;
             is_active: boolean;
-            last_login_at: Date;
-            created_at: Date;
+            is_banned: boolean;
+            banned_until: Date | null;
+            ban_reason: string | null;
+            last_login_at: Date | null;
+            login_attempts: number;
+            locked_until: Date | null;
         }[];
         pagination: {
             page: number;
@@ -23,98 +31,114 @@ export declare class AdminController {
         };
     }>;
     getUser(id: number): Promise<{
-        name: string;
-        email: string;
-        username: string;
-        phone: string;
         id: number;
-        avatar: string;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
-        kyc_verified: boolean;
-        is_active: boolean;
-        last_login_at: Date;
         created_at: Date;
         updated_at: Date;
+        username: string;
+        name: string;
+        email: string;
+        password: string;
+        phone: string | null;
+        avatar: string | null;
+        email_verified_at: Date | null;
+        phone_verified_at: Date | null;
+        is_active: boolean;
+        is_banned: boolean;
+        banned_until: Date | null;
+        ban_reason: string | null;
+        last_login_at: Date | null;
+        login_attempts: number;
+        locked_until: Date | null;
     }>;
     updateUser(id: number, updateData: any): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        username: string;
         name: string;
         email: string;
         password: string;
-        username: string;
         phone: string | null;
-        id: number;
         avatar: string | null;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
-        kyc_documents: import("@prisma/client/runtime/library").JsonValue | null;
-        kyc_verified: boolean;
-        kyc_completed_at: Date | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
-        identity_verified_at: Date | null;
         is_active: boolean;
+        is_banned: boolean;
+        banned_until: Date | null;
+        ban_reason: string | null;
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
-        created_at: Date;
-        updated_at: Date;
     }>;
     deleteUser(id: number): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        username: string;
         name: string;
         email: string;
         password: string;
-        username: string;
         phone: string | null;
-        id: number;
         avatar: string | null;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
-        kyc_documents: import("@prisma/client/runtime/library").JsonValue | null;
-        kyc_verified: boolean;
-        kyc_completed_at: Date | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
-        identity_verified_at: Date | null;
         is_active: boolean;
+        is_banned: boolean;
+        banned_until: Date | null;
+        ban_reason: string | null;
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
-        created_at: Date;
-        updated_at: Date;
     }>;
-    getOrders(page?: number, perPage?: number, status?: string, dateFrom?: string, dateTo?: string): Promise<{
+    getOrders(page?: string, perPage?: string, status?: string, dateFrom?: string, dateTo?: string): Promise<{
         data: ({
-            user: {
+            buyer: {
+                id: number;
+                username: string;
                 name: string;
                 email: string;
-                username: string;
-                id: number;
             };
             items: ({
                 product: {
-                    name: string;
                     id: number;
+                    name: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                 };
             } & {
                 id: number;
-                created_at: Date;
                 product_id: number;
                 quantity: number;
-                price: import("@prisma/client/runtime/library").Decimal;
+                created_at: Date;
+                metadata: import("@prisma/client/runtime/library").JsonValue | null;
                 order_id: number;
+                product_name: string;
+                unit_price: import("@prisma/client/runtime/library").Decimal;
+                total_price: import("@prisma/client/runtime/library").Decimal;
             })[];
         } & {
             id: number;
+            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
-            user_id: number;
-            status: string;
+            seller_id: number;
+            metadata: import("@prisma/client/runtime/library").JsonValue | null;
+            order_number: string;
+            buyer_id: number;
+            subtotal: import("@prisma/client/runtime/library").Decimal;
+            service_fee: import("@prisma/client/runtime/library").Decimal;
+            discount_amount: import("@prisma/client/runtime/library").Decimal;
             total_amount: import("@prisma/client/runtime/library").Decimal;
-            payment_status: string;
-            shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
+            payment_status: import(".prisma/client").$Enums.PaymentStatus;
             payment_method: string | null;
+            payment_transaction_id: string | null;
+            buyer_email: string | null;
+            buyer_phone: string | null;
+            payment_completed_at: Date | null;
+            delivered_at: Date | null;
+            completed_at: Date | null;
+            cancelled_at: Date | null;
+            refunded_at: Date | null;
+            notes: string | null;
         })[];
         pagination: {
             page: number;
@@ -124,68 +148,77 @@ export declare class AdminController {
         };
     }>;
     getOrder(id: number): Promise<{
-        user: {
-            name: string;
-            email: string;
-            username: string;
-            id: number;
-        };
-        items: ({
-            product: {
-                name: string;
-                id: number;
-                price: import("@prisma/client/runtime/library").Decimal;
-            };
-        } & {
-            id: number;
-            created_at: Date;
-            product_id: number;
-            quantity: number;
-            price: import("@prisma/client/runtime/library").Decimal;
-            order_id: number;
-        })[];
-    } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        user_id: number;
-        status: string;
+        seller_id: number;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        order_number: string;
+        buyer_id: number;
+        subtotal: import("@prisma/client/runtime/library").Decimal;
+        service_fee: import("@prisma/client/runtime/library").Decimal;
+        discount_amount: import("@prisma/client/runtime/library").Decimal;
         total_amount: import("@prisma/client/runtime/library").Decimal;
-        payment_status: string;
-        shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
+        payment_status: import(".prisma/client").$Enums.PaymentStatus;
         payment_method: string | null;
+        payment_transaction_id: string | null;
+        buyer_email: string | null;
+        buyer_phone: string | null;
+        payment_completed_at: Date | null;
+        delivered_at: Date | null;
+        completed_at: Date | null;
+        cancelled_at: Date | null;
+        refunded_at: Date | null;
+        notes: string | null;
     }>;
     updateOrderStatus(id: number, statusData: {
         status: string;
     }): Promise<{
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        user_id: number;
-        status: string;
+        seller_id: number;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        order_number: string;
+        buyer_id: number;
+        subtotal: import("@prisma/client/runtime/library").Decimal;
+        service_fee: import("@prisma/client/runtime/library").Decimal;
+        discount_amount: import("@prisma/client/runtime/library").Decimal;
         total_amount: import("@prisma/client/runtime/library").Decimal;
-        payment_status: string;
-        shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
+        payment_status: import(".prisma/client").$Enums.PaymentStatus;
         payment_method: string | null;
+        payment_transaction_id: string | null;
+        buyer_email: string | null;
+        buyer_phone: string | null;
+        payment_completed_at: Date | null;
+        delivered_at: Date | null;
+        completed_at: Date | null;
+        cancelled_at: Date | null;
+        refunded_at: Date | null;
+        notes: string | null;
     }>;
-    getVendors(page?: number, perPage?: number, search?: string, status?: string): Promise<{
+    getVendors(page?: string, perPage?: string, search?: string, status?: string): Promise<{
         data: {
+            id: number;
+            created_at: Date;
+            updated_at: Date;
+            username: string;
             name: string;
             email: string;
-            username: string;
-            phone: string;
-            id: number;
-            roles: import("@prisma/client/runtime/library").JsonValue;
-            kyc_verified: boolean;
+            password: string;
+            phone: string | null;
+            avatar: string | null;
+            email_verified_at: Date | null;
+            phone_verified_at: Date | null;
             is_active: boolean;
-            last_login_at: Date;
-            created_at: Date;
-            products: {
-                name: string;
-                id: number;
-                status: string;
-                price: import("@prisma/client/runtime/library").Decimal;
-            }[];
+            is_banned: boolean;
+            banned_until: Date | null;
+            ban_reason: string | null;
+            last_login_at: Date | null;
+            login_attempts: number;
+            locked_until: Date | null;
         }[];
         pagination: {
             page: number;
@@ -195,71 +228,82 @@ export declare class AdminController {
         };
     }>;
     getVendor(id: number): Promise<{
-        name: string;
-        email: string;
-        username: string;
-        phone: string;
         id: number;
-        avatar: string;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
-        kyc_verified: boolean;
-        is_active: boolean;
-        last_login_at: Date;
         created_at: Date;
         updated_at: Date;
-        products: {
-            name: string;
-            id: number;
-            created_at: Date;
-            status: string;
-            price: import("@prisma/client/runtime/library").Decimal;
-        }[];
+        username: string;
+        name: string;
+        email: string;
+        password: string;
+        phone: string | null;
+        avatar: string | null;
+        email_verified_at: Date | null;
+        phone_verified_at: Date | null;
+        is_active: boolean;
+        is_banned: boolean;
+        banned_until: Date | null;
+        ban_reason: string | null;
+        last_login_at: Date | null;
+        login_attempts: number;
+        locked_until: Date | null;
     }>;
     updateVendorStatus(id: number, statusData: {
         status: string;
     }): Promise<{
+        id: number;
+        created_at: Date;
+        updated_at: Date;
+        username: string;
         name: string;
         email: string;
         password: string;
-        username: string;
         phone: string | null;
-        id: number;
         avatar: string | null;
-        roles: import("@prisma/client/runtime/library").JsonValue;
-        kyc_status: import("@prisma/client/runtime/library").JsonValue;
-        kyc_documents: import("@prisma/client/runtime/library").JsonValue | null;
-        kyc_verified: boolean;
-        kyc_completed_at: Date | null;
         email_verified_at: Date | null;
         phone_verified_at: Date | null;
-        identity_verified_at: Date | null;
         is_active: boolean;
+        is_banned: boolean;
+        banned_until: Date | null;
+        ban_reason: string | null;
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
-        created_at: Date;
-        updated_at: Date;
     }>;
-    getListings(page?: number, perPage?: number, status?: string, category?: string): Promise<{
+    getListings(page?: string, perPage?: string, status?: string, category?: string): Promise<{
         data: ({
             seller: {
+                id: number;
+                username: string;
                 name: string;
                 email: string;
-                username: string;
-                id: number;
             };
         } & {
-            category: string;
-            name: string;
             description: string | null;
             id: number;
+            status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
-            status: string;
+            name: string;
+            slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
-            images: import("@prisma/client/runtime/library").JsonValue | null;
-            seller_id: number | null;
+            discount_price: import("@prisma/client/runtime/library").Decimal | null;
+            category_id: number;
+            seller_id: number;
+            platform: string | null;
+            game: string | null;
+            account_level: string | null;
+            account_username: string | null;
+            stock_quantity: number;
+            delivery_time: string;
+            setup_instructions: string | null;
+            views_count: number;
+            sales_count: number;
+            rating_avg: import("@prisma/client/runtime/library").Decimal;
+            rating_count: number;
+            is_featured: boolean;
+            featured_until: Date | null;
+            metadata: import("@prisma/client/runtime/library").JsonValue | null;
+            deleted_at: Date | null;
         })[];
         pagination: {
             page: number;
@@ -270,38 +314,70 @@ export declare class AdminController {
     }>;
     getListing(id: number): Promise<{
         seller: {
+            id: number;
+            username: string;
             name: string;
             email: string;
-            username: string;
-            id: number;
         };
     } & {
-        category: string;
-        name: string;
         description: string | null;
         id: number;
+        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
-        images: import("@prisma/client/runtime/library").JsonValue | null;
-        seller_id: number | null;
+        discount_price: import("@prisma/client/runtime/library").Decimal | null;
+        category_id: number;
+        seller_id: number;
+        platform: string | null;
+        game: string | null;
+        account_level: string | null;
+        account_username: string | null;
+        stock_quantity: number;
+        delivery_time: string;
+        setup_instructions: string | null;
+        views_count: number;
+        sales_count: number;
+        rating_avg: import("@prisma/client/runtime/library").Decimal;
+        rating_count: number;
+        is_featured: boolean;
+        featured_until: Date | null;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        deleted_at: Date | null;
     }>;
     updateListingStatus(id: number, statusData: {
         status: string;
     }): Promise<{
-        category: string;
-        name: string;
         description: string | null;
         id: number;
+        status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
-        images: import("@prisma/client/runtime/library").JsonValue | null;
-        seller_id: number | null;
+        discount_price: import("@prisma/client/runtime/library").Decimal | null;
+        category_id: number;
+        seller_id: number;
+        platform: string | null;
+        game: string | null;
+        account_level: string | null;
+        account_username: string | null;
+        stock_quantity: number;
+        delivery_time: string;
+        setup_instructions: string | null;
+        views_count: number;
+        sales_count: number;
+        rating_avg: import("@prisma/client/runtime/library").Decimal;
+        rating_count: number;
+        is_featured: boolean;
+        featured_until: Date | null;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        deleted_at: Date | null;
     }>;
-    getPayouts(page?: number, perPage?: number, status?: string, dateFrom?: string, dateTo?: string): Promise<{
+    getPayouts(page?: string, perPage?: string, status?: string, dateFrom?: string, dateTo?: string): Promise<{
         data: any[];
         pagination: {
             page: number;
@@ -321,20 +397,34 @@ export declare class AdminController {
         totalProducts: number;
         totalRevenue: number | import("@prisma/client/runtime/library").Decimal;
         recentOrders: ({
-            user: {
+            buyer: {
                 name: string;
                 email: string;
             };
         } & {
             id: number;
+            status: import(".prisma/client").$Enums.OrderStatus;
             created_at: Date;
             updated_at: Date;
-            user_id: number;
-            status: string;
+            seller_id: number;
+            metadata: import("@prisma/client/runtime/library").JsonValue | null;
+            order_number: string;
+            buyer_id: number;
+            subtotal: import("@prisma/client/runtime/library").Decimal;
+            service_fee: import("@prisma/client/runtime/library").Decimal;
+            discount_amount: import("@prisma/client/runtime/library").Decimal;
             total_amount: import("@prisma/client/runtime/library").Decimal;
-            payment_status: string;
-            shipping_address: import("@prisma/client/runtime/library").JsonValue | null;
+            payment_status: import(".prisma/client").$Enums.PaymentStatus;
             payment_method: string | null;
+            payment_transaction_id: string | null;
+            buyer_email: string | null;
+            buyer_phone: string | null;
+            payment_completed_at: Date | null;
+            delivered_at: Date | null;
+            completed_at: Date | null;
+            cancelled_at: Date | null;
+            refunded_at: Date | null;
+            notes: string | null;
         })[];
     }>;
 }

@@ -5,54 +5,64 @@ export declare class CategoriesService {
     private prisma;
     constructor(prisma: PrismaService);
     create(createCategoryDto: CreateCategoryDto): Promise<{
-        name: string;
         description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        is_active: boolean;
         slug: string;
         image: string | null;
+        sort_order: number;
+        parent_id: number | null;
     }>;
     findAll(): Promise<{
-        name: string;
         description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        is_active: boolean;
         slug: string;
         image: string | null;
+        sort_order: number;
+        parent_id: number | null;
     }[]>;
     findOne(id: string): Promise<{
-        name: string;
         description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        is_active: boolean;
         slug: string;
         image: string | null;
+        sort_order: number;
+        parent_id: number | null;
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{
-        name: string;
         description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        is_active: boolean;
         slug: string;
         image: string | null;
+        sort_order: number;
+        parent_id: number | null;
     }>;
     remove(id: string): Promise<{
-        name: string;
         description: string | null;
         id: number;
         created_at: Date;
         updated_at: Date;
-        status: string;
+        name: string;
+        is_active: boolean;
         slug: string;
         image: string | null;
+        sort_order: number;
+        parent_id: number | null;
     }>;
     private generateSlug;
 }
