@@ -23,7 +23,7 @@ export class ProductsService {
     };
 
     if (category) {
-      where.category = category;
+      where.category_id = category;
     }
 
     if (search) {
@@ -80,7 +80,7 @@ export class ProductsService {
   async getTrending(limit: number = 10) {
     const products = await this.prisma.product.findMany({
       where: {
-        status: 'active',
+        status: 'ACTIVE',
       },
       take: limit,
       orderBy: [
@@ -200,13 +200,24 @@ export class ProductsService {
     return this.prisma.product.create({
       data: {
         name: createProductDto.name,
+        slug: createProductDto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         description: createProductDto.description,
         price: createProductDto.price,
-        category: createProductDto.categoryId,
-        images: createProductDto.images,
+        category_id: createProductDto.categoryId,
         seller_id: sellerId,
+        images: {
+          create: createProductDto.images?.map((imageUrl, index) => ({
+            image_url: imageUrl,
+            sort_order: index,
+            is_primary: index === 0
+          })) || []
+        },
       },
       include: {
+        category: true,
+        images: {
+          orderBy: { sort_order: 'asc' }
+        },
         seller: {
           select: {
             id: true,
@@ -232,10 +243,37 @@ export class ProductsService {
       throw new ForbiddenException('You can only update your own products');
     }
 
+    // Prepare update data
+    const updateData: any = {
+      ...updateProductDto
+    };
+    
+    // Handle category update
+    if (updateProductDto.categoryId) {
+      updateData.category_id = updateProductDto.categoryId;
+      delete updateData.categoryId;
+    }
+    
+    // Handle image updates
+    if (updateProductDto.images) {
+      updateData.images = {
+        deleteMany: {},
+        create: updateProductDto.images.map((imageUrl, index) => ({
+          image_url: imageUrl,
+          sort_order: index,
+          is_primary: index === 0
+        }))
+      };
+    }
+    
     return this.prisma.product.update({
       where: { id },
-      data: updateProductDto,
+      data: updateData,
       include: {
+        category: true,
+        images: {
+          orderBy: { sort_order: 'asc' }
+        },
         seller: {
           select: {
             id: true,
@@ -263,7 +301,7 @@ export class ProductsService {
 
     return this.prisma.product.update({
       where: { id },
-      data: { status: 'deleted' },
+      data: { status: 'INACTIVE' },
     });
   }
 

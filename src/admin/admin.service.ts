@@ -27,7 +27,13 @@ export class AdminService {
     }
 
     if (role) {
-      where.roles = { contains: role };
+      where.user_roles = {
+        some: {
+          role: {
+            slug: role
+          }
+        }
+      };
     }
 
     if (status) {
@@ -45,7 +51,11 @@ export class AdminService {
           name: true,
           email: true,
           phone: true,
-          roles: true,
+          user_roles: {
+            include: {
+              role: true
+            }
+          },
           is_active: true,
           kyc_verified: true,
           created_at: true,
@@ -130,7 +140,7 @@ export class AdminService {
         skip,
         take: validPerPage,
         include: {
-          user: {
+          buyer: {
             select: {
               id: true,
               name: true,
@@ -238,7 +248,11 @@ export class AdminService {
           name: true,
           email: true,
           phone: true,
-          roles: true,
+          user_roles: {
+            include: {
+              role: true
+            }
+          },
           is_active: true,
           kyc_verified: true,
           created_at: true,
@@ -433,7 +447,7 @@ export class AdminService {
       this.prisma.order.findMany({
         take: 5,
         include: {
-          user: {
+          buyer: {
             select: {
               name: true,
               email: true,

@@ -20,13 +20,15 @@ export class UsersService {
         email: true,
         phone: true,
         avatar: true,
-        roles: true,
-        kyc_status: true,
         email_verified_at: true,
         phone_verified_at: true,
-        identity_verified_at: true,
         created_at: true,
         updated_at: true,
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
       },
     });
 
@@ -45,9 +47,12 @@ export class UsersService {
         username: true,
         name: true,
         avatar: true,
-        roles: true,
-        kyc_status: true,
         email_verified_at: true,
+        user_roles: {
+          include: {
+            role: true
+          }
+        },
         phone_verified_at: true,
         identity_verified_at: true,
         created_at: true,
@@ -98,13 +103,15 @@ export class UsersService {
         email: true,
         phone: true,
         avatar: true,
-        roles: true,
-        kyc_status: true,
         email_verified_at: true,
         phone_verified_at: true,
-        identity_verified_at: true,
         created_at: true,
         updated_at: true,
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
       },
     });
 
@@ -163,13 +170,15 @@ export class UsersService {
         email: true,
         phone: true,
         avatar: true,
-        roles: true,
-        kyc_status: true,
         email_verified_at: true,
         phone_verified_at: true,
-        identity_verified_at: true,
         created_at: true,
         updated_at: true,
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
       },
     });
   }
@@ -187,9 +196,12 @@ export class UsersService {
     }
 
     if (role) {
-      where.roles = {
-        path: '$[*]',
-        array_contains: role,
+      where.user_roles = {
+        some: {
+          role: {
+            slug: role
+          }
+        }
       };
     }
 
@@ -207,8 +219,12 @@ export class UsersService {
           username: true,
           name: true,
           avatar: true,
-          roles: true,
           created_at: true,
+          user_roles: {
+            include: {
+              role: true
+            }
+          }
         },
       }),
       this.prisma.user.count({ where }),

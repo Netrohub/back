@@ -7,7 +7,7 @@ export class DisputesService {
 
   async getDisputes(userId: number) {
     return this.prisma.dispute.findMany({
-      where: { user_id: userId },
+      where: { buyer_id: userId },
       include: {
         order: {
           include: {
@@ -39,7 +39,7 @@ export class DisputesService {
       throw new NotFoundException('Dispute not found');
     }
 
-    if (dispute.user_id !== userId) {
+    if (dispute.buyer_id !== userId) {
       throw new ForbiddenException('Access denied');
     }
 
@@ -51,7 +51,7 @@ export class DisputesService {
     const order = await this.prisma.order.findFirst({
       where: {
         id: orderId,
-        user_id: userId,
+        buyer_id: userId,
       },
     });
 
@@ -70,11 +70,12 @@ export class DisputesService {
 
     return this.prisma.dispute.create({
       data: {
-        user_id: userId,
+        buyer_id: userId,
+        seller_id: order.seller_id,
         order_id: orderId,
         reason,
         description,
-        status: 'pending',
+        status: 'PENDING',
       },
     });
   }
@@ -91,7 +92,7 @@ export class DisputesService {
     return this.prisma.dispute.update({
       where: { id },
       data: {
-        status,
+        status: status.toUpperCase(),
         resolved_by: adminId,
         resolved_at: new Date(),
       },
@@ -101,7 +102,7 @@ export class DisputesService {
   async getAdminDisputes() {
     return this.prisma.dispute.findMany({
       include: {
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,

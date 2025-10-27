@@ -21,7 +21,7 @@ export class OrdersService {
         throw new NotFoundException(`Product with ID ${item.product_id} not found`);
       }
 
-      if (product.status !== 'active') {
+      if (product.status !== 'ACTIVE') {
         throw new BadRequestException(`Product ${product.name} is not available`);
       }
 
@@ -38,20 +38,32 @@ export class OrdersService {
       )
     );
 
+    // Generate order number
+    const orderNumber = `ORD-${Date.now()}-${userId}`;
+    
+    // Calculate fees
+    const serviceFee = totalAmount * 0.05; // 5% service fee
+    const finalTotal = totalAmount + serviceFee;
+    
     // Create order with items
     const order = await this.prisma.order.create({
       data: {
-        user_id: userId,
-        total_amount: totalAmount,
-        status: 'pending',
-        payment_status: 'pending',
+        order_number: orderNumber,
+        buyer_id: userId,
+        seller_id: items[0]?.seller_id || userId, // Use first item's seller or fallback
+        subtotal: totalAmount,
+        service_fee: serviceFee,
+        total_amount: finalTotal,
+        status: 'PENDING',
+        payment_status: 'PENDING',
         payment_method,
-        shipping_address: shipping_address as any,
         items: {
           create: items.map((item, index) => ({
             product_id: item.product_id,
+            product_name: `Product ${item.product_id}`, // Should be fetched from product
             quantity: item.quantity,
-            price: Number(productPrices[index]?.price || 0),
+            unit_price: Number(productPrices[index]?.price || 0),
+            total_price: Number(productPrices[index]?.price || 0) * item.quantity,
           })),
         },
       },
@@ -61,7 +73,14 @@ export class OrdersService {
             product: true,
           },
         },
-        user: {
+        buyer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        seller: {
           select: {
             id: true,
             name: true,
@@ -76,7 +95,7 @@ export class OrdersService {
 
   async findAll(userId: number, userRole: string) {
     // Admins can see all orders, users only see their own
-    const where = userRole === 'admin' ? {} : { user_id: userId };
+    const where = userRole === 'admin' ? {} : { buyer_id: userId };
 
     return this.prisma.order.findMany({
       where,

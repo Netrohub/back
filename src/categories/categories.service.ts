@@ -25,7 +25,7 @@ export class CategoriesService {
         name: createCategoryDto.name,
         description: createCategoryDto.description || '',
         slug,
-        status: createCategoryDto.isActive !== undefined ? (createCategoryDto.isActive ? 'active' : 'inactive') : 'active',
+        is_active: createCategoryDto.isActive !== undefined ? createCategoryDto.isActive : true,
       },
     });
   }
@@ -84,12 +84,10 @@ export class CategoriesService {
     // Check if category exists
     await this.findOne(id);
 
-    // Check if category has products (using category field as string)
+    // Check if category has products
     const productsCount = await this.prisma.product.count({
       where: { 
-        category: {
-          contains: '', // We'll check if any products reference this category
-        },
+        category_id: parseInt(id),
       },
     });
 

@@ -26,7 +26,7 @@ export class CartService {
 
   async getCart(userId: number) {
     const cartItems = await this.prisma.cartItem.findMany({
-      where: { user_id: userId, status: 'active' },
+      where: { user_id: userId, status: 'ACTIVE' },
       include: { product: true },
     });
 
@@ -48,7 +48,7 @@ export class CartService {
       where: {
         user_id: userId,
         product_id: Number(addToCartDto.productId),
-        status: 'active',
+        status: 'ACTIVE',
       },
     });
 

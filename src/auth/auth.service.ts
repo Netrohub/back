@@ -19,6 +19,13 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email },
+      include: {
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
+      }
     });
 
     if (!user) {
@@ -132,13 +139,21 @@ export class AuthService {
         email: registerDto.email,
         password: hashedPassword,
         phone: registerDto.phone,
-        roles: JSON.stringify(['user']),
-        kyc_status: JSON.stringify({
-          email: false,
-          phone: false,
-          identity: false,
-        }),
+        user_roles: {
+          create: {
+            role: {
+              connect: { slug: "user" }
+            }
+          }
+        }
       },
+      include: {
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
+      }
     });
 
     const { password: _, ...userWithoutPassword } = user;
@@ -148,7 +163,7 @@ export class AuthService {
       email: user.email,
       username: user.username,
       name: user.name,
-      roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
+      roles: user.user_roles?.map(ur => ur.role.slug) || ['user'],
     };
 
     return {
@@ -166,6 +181,13 @@ export class AuthService {
   async getCurrentUser(userId: number): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
+      include: {
+        user_roles: {
+          include: {
+            role: true
+          }
+        }
+      }
     });
 
     if (!user) {
@@ -174,16 +196,22 @@ export class AuthService {
 
     const { password: _, ...userWithoutPassword } = user;
     
-    // Transform user data for frontend
-    const kycStatus = typeof user.kyc_status === 'string' 
-      ? JSON.parse(user.kyc_status) 
-      : (user.kyc_status || {});
+    // Get KYC status from kyc_verifications table
+    const kycVerifications = await this.prisma.kycVerification.findMany({
+      where: { user_id: user.id },
+      orderBy: { created_at: 'desc' }
+    });
+    
+    const hasIdentityVerification = kycVerifications.some(
+      kyc => kyc.type === 'IDENTITY' && kyc.status === 'APPROVED'
+    );
     
     return {
       ...userWithoutPassword,
       emailVerified: !!user.email_verified_at,
       phoneVerified: !!user.phone_verified_at,
-      kycStatus: kycStatus.identity ? 'verified' : 'incomplete',
+      kycStatus: hasIdentityVerification ? 'verified' : 'incomplete',
+      roles: user.user_roles?.map(ur => ur.role.slug) || ['user'],
     };
   }
 
