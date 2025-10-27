@@ -35,8 +35,8 @@ export class DatabaseHealthService {
         this.prisma.dispute.count(),
         this.prisma.user.count({ where: { is_active: true } }),
         this.prisma.user.count({ where: { is_active: false } }),
-        this.prisma.order.count({ where: { status: 'pending' } }),
-        this.prisma.dispute.count({ where: { status: 'resolved' } }),
+        this.prisma.order.count({ where: { status: 'PENDING' } }),
+        this.prisma.dispute.count({ where: { status: 'RESOLVED' } }),
       ]);
 
       return {
@@ -96,28 +96,17 @@ export class DatabaseHealthService {
         issues.push(`Found ${orphanedOrderItems.length} orphaned order items`);
       }
 
-      // Check for users with invalid roles
-      const usersWithInvalidRoles = await this.prisma.user.findMany({
+      // Check for users without roles
+      const usersWithoutRoles = await this.prisma.user.findMany({
         where: {
-          roles: {
-            not: {
-              in: [
-                '["user"]',
-                '["seller"]',
-                '["admin"]',
-                '["moderator"]',
-                '["super_admin"]',
-                '["user","seller"]',
-                '["user","admin"]',
-                '["user","moderator"]',
-              ],
-            },
-          },
+          user_roles: {
+            none: {}
+          }
         },
       });
 
-      if (usersWithInvalidRoles.length > 0) {
-        issues.push(`Found ${usersWithInvalidRoles.length} users with invalid roles`);
+      if (usersWithoutRoles.length > 0) {
+        issues.push(`Found ${usersWithoutRoles.length} users without roles`);
       }
 
       // Check for products without sellers

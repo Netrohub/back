@@ -19,8 +19,13 @@ export class PayoutsService {
     }
 
     // Validate seller has seller role
-    const roles = Array.isArray(seller.roles) ? seller.roles : [seller.roles];
-    if (!roles.includes('seller')) {
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { user_id: seller.id },
+      include: { role: true }
+    });
+    
+    const hasSellerRole = userRoles.some(ur => ur.role.slug === 'seller');
+    if (!hasSellerRole) {
       throw new BadRequestException('User is not a seller');
     }
 
@@ -32,7 +37,7 @@ export class PayoutsService {
         method: createPayoutDto.method || 'bank_transfer',
         description: createPayoutDto.description,
         notes: createPayoutDto.notes,
-        status: 'pending',
+        status: 'PENDING',
       },
     });
   }
@@ -50,7 +55,7 @@ export class PayoutsService {
 
     return this.prisma.payout.findMany({
       where,
-      orderBy: { request_date: 'desc' },
+      orderBy: { created_at: 'desc' },
       include: {
         seller: {
           select: {

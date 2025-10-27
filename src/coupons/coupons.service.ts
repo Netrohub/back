@@ -18,7 +18,7 @@ export class CouponsService {
     }
 
     // Validate percentage coupon
-    if (createCouponDto.type === 'percentage' && createCouponDto.value > 100) {
+    if (createCouponDto.type === 'PERCENTAGE' && createCouponDto.value > 100) {
       throw new BadRequestException('Percentage discount cannot exceed 100%');
     }
 
@@ -29,7 +29,7 @@ export class CouponsService {
       data: {
         code: createCouponDto.code.toUpperCase(),
         description: createCouponDto.description || null,
-        type: createCouponDto.type,
+        type: createCouponDto.type.toUpperCase(),
         value: createCouponDto.value,
         min_amount: createCouponDto.minAmount || null,
         max_discount: createCouponDto.maxDiscount || null,
@@ -86,7 +86,7 @@ export class CouponsService {
       data: {
         ...(updateCouponDto.code && { code: updateCouponDto.code.toUpperCase() }),
         ...(updateCouponDto.description !== undefined && { description: updateCouponDto.description }),
-        ...(updateCouponDto.type && { type: updateCouponDto.type }),
+        ...(updateCouponDto.type && { type: updateCouponDto.type.toUpperCase() }),
         ...(updateCouponDto.value !== undefined && { value: updateCouponDto.value }),
         ...(updateCouponDto.minAmount !== undefined && { min_amount: updateCouponDto.minAmount }),
         ...(updateCouponDto.maxDiscount !== undefined && { max_discount: updateCouponDto.maxDiscount }),

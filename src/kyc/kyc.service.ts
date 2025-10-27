@@ -44,20 +44,34 @@ export class KycService {
       
       // Update KYC status based on Persona result
       if (status === 'passed') {
-        const currentStatus = user.kyc_status as any || {};
-        const updatedStatus = {
-          ...currentStatus,
-          identity: true,
-          persona_inquiry_id: inquiryId,
-          persona_verified_at: new Date().toISOString(),
-        };
+        // Create or update identity verification record
+        await this.prisma.kycVerification.upsert({
+          where: {
+            user_id_type: {
+              user_id: user.id,
+              type: 'IDENTITY'
+            }
+          },
+          create: {
+            user_id: user.id,
+            type: 'IDENTITY',
+            status: 'APPROVED',
+            provider: 'persona',
+            external_id: inquiryId,
+            verified_at: new Date(),
+          },
+          update: {
+            status: 'APPROVED',
+            external_id: inquiryId,
+            verified_at: new Date(),
+          },
+        });
         
+        // Update user verification flags
         await this.prisma.user.update({
           where: { id: user.id },
           data: {
-            kyc_status: updatedStatus,
             identity_verified_at: new Date(),
-            kyc_verified: true,
           },
         });
         

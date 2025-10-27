@@ -23,9 +23,9 @@ export class TicketsService {
         user_id: userId,
         subject: createTicketDto.subject,
         message: createTicketDto.message,
-        priority: createTicketDto.priority || 'medium',
+        priority: (createTicketDto.priority || 'MEDIUM').toUpperCase(),
         category: createTicketDto.category || 'general',
-        status: 'open',
+        status: 'OPEN',
       },
       include: {
         user: {
@@ -137,14 +137,19 @@ export class TicketsService {
         // Validate assigned user exists and has admin role
         const assignedUser = await this.prisma.user.findUnique({
           where: { id: updateTicketDto.assigned_to },
+          include: {
+            user_roles: {
+              include: { role: true }
+            }
+          }
         });
 
         if (!assignedUser) {
           throw new NotFoundException('Assigned user not found');
         }
 
-        const roles = Array.isArray(assignedUser.roles) ? assignedUser.roles : [assignedUser.roles];
-        if (!roles.includes('admin')) {
+        const hasAdminRole = assignedUser.user_roles?.some(ur => ur.role.slug === 'admin');
+        if (!hasAdminRole) {
           throw new BadRequestException('Assigned user must be an admin');
         }
 

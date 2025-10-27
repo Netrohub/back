@@ -32,7 +32,7 @@ export class SellerService {
             },
           },
         },
-        status: 'completed',
+        status: 'COMPLETED',
       },
       _sum: {
         total_amount: true,
@@ -50,7 +50,7 @@ export class SellerService {
         },
       },
       include: {
-        user: {
+        buyer: {
           select: {
             name: true,
             email: true,
@@ -110,7 +110,7 @@ export class SellerService {
         },
       },
       include: {
-        user: {
+        buyer: {
           select: {
             name: true,
             email: true,
