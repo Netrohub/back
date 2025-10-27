@@ -115,27 +115,39 @@ CREATE TABLE categories (
 
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
-    seller_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    category_id INTEGER REFERENCES categories(id),
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     price DECIMAL(10,2) NOT NULL,
-    original_price DECIMAL(10,2),
-    stock_quantity INTEGER DEFAULT 0,
-    sku VARCHAR(255),
+    discount_price DECIMAL(10,2),
+    category_id INTEGER REFERENCES categories(id),
+    seller_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Gaming/Social Media specific fields
+    platform VARCHAR(100),
+    game VARCHAR(100),
+    account_level VARCHAR(50),
+    account_username VARCHAR(100),
+    
+    -- Product management
     status product_status DEFAULT 'PENDING',
+    stock_quantity INTEGER DEFAULT 1,
+    delivery_time VARCHAR(50) DEFAULT 'instant',
+    setup_instructions TEXT,
+    
+    -- Metrics
     views_count INTEGER DEFAULT 0,
     sales_count INTEGER DEFAULT 0,
     rating_avg DECIMAL(3,2) DEFAULT 0,
-    platform VARCHAR(255),
-    game VARCHAR(255),
-    account_level VARCHAR(100),
+    
+    -- SEO & Marketing
     featured BOOLEAN DEFAULT false,
     featured_until TIMESTAMP,
     meta_title VARCHAR(255),
     meta_description TEXT,
     tags TEXT,
+    
+    -- Timestamps
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     deleted_at TIMESTAMP
