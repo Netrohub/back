@@ -10,9 +10,8 @@ RUN apk add --no-cache openssl
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Clear npm cache and install with legacy peer deps support
-RUN npm cache clean --force
-RUN npm install --legacy-peer-deps --no-optional
+# Install dependencies (local file dependency removed)
+RUN npm ci --only=production
 
 # Copy source code
 COPY . .
