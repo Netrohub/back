@@ -91,19 +91,31 @@ export class KycService {
   async getKycStatus(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        kyc_status: true,
-        kyc_documents: true,
-      },
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
+    // Get all KYC verifications for this user
+    const kycVerifications = await this.prisma.kycVerification.findMany({
+      where: { user_id: userId },
+      orderBy: { created_at: 'desc' }
+    });
+
+    // Build status object from verifications
+    const status = {
+      identity: kycVerifications.some(v => v.type === 'IDENTITY' && v.status === 'APPROVED'),
+      address: kycVerifications.some(v => v.type === 'ADDRESS' && v.status === 'APPROVED'),
+      phone: kycVerifications.some(v => v.type === 'PHONE' && v.status === 'APPROVED'),
+      email: kycVerifications.some(v => v.type === 'EMAIL' && v.status === 'APPROVED'),
+    };
+
     return {
-      status: user.kyc_status,
-      documents: user.kyc_documents,
+      status,
+      verifications: kycVerifications,
+      hasIdentityVerification: status.identity,
+      kycStatus: status.identity ? 'verified' : 'pending'
     };
   }
 
@@ -116,27 +128,39 @@ export class KycService {
       throw new NotFoundException('User not found');
     }
 
-    // Update KYC status based on step
-    const currentStatus = user.kyc_status as any || {};
-    const updatedStatus = {
-      ...currentStatus,
-      [step]: true,
+    // Map step to KYC verification type
+    const typeMapping = {
+      'identity': 'IDENTITY',
+      'address': 'ADDRESS', 
+      'phone': 'PHONE',
+      'email': 'EMAIL',
+      'documents': 'IDENTITY' // fallback
     };
 
-    // Update documents
-    const currentDocuments = user.kyc_documents as any || {};
-    const updatedDocuments = {
-      ...currentDocuments,
-      [step]: documentData,
-    };
+    const verificationType = typeMapping[step] || 'IDENTITY';
 
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        kyc_status: updatedStatus,
-        kyc_documents: updatedDocuments,
+    // Create or update KYC verification record
+    const kycVerification = await this.prisma.kycVerification.upsert({
+      where: {
+        user_id_type: {
+          user_id: userId,
+          type: verificationType
+        }
+      },
+      create: {
+        user_id: userId,
+        type: verificationType,
+        status: 'PENDING',
+        data: documentData,
+      },
+      update: {
+        status: 'PENDING',
+        data: documentData,
+        updated_at: new Date(),
       },
     });
+
+    return kycVerification;
   }
 
   async completeKyc(userId: number) {
@@ -148,9 +172,16 @@ export class KycService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if all KYC steps are completed
-    const kycStatus = user.kyc_status as any;
-    const allStepsCompleted = kycStatus?.email && kycStatus?.phone && kycStatus?.identity;
+    // Check if all KYC steps are completed using the new table
+    const kycVerifications = await this.prisma.kycVerification.findMany({
+      where: { user_id: userId }
+    });
+
+    const hasIdentity = kycVerifications.some(v => v.type === 'IDENTITY' && v.status === 'APPROVED');
+    const hasPhone = kycVerifications.some(v => v.type === 'PHONE' && v.status === 'APPROVED');
+    const hasEmail = kycVerifications.some(v => v.type === 'EMAIL' && v.status === 'APPROVED');
+
+    const allStepsCompleted = hasIdentity && hasPhone && hasEmail;
 
     if (!allStepsCompleted) {
       throw new Error('All KYC steps must be completed before final submission');
@@ -159,7 +190,6 @@ export class KycService {
     return this.prisma.user.update({
       where: { id: userId },
       data: {
-        kyc_verified: true,
         kyc_completed_at: new Date(),
       },
     });
@@ -176,19 +206,33 @@ export class KycService {
       throw new NotFoundException('User not found');
     }
 
-    // Update phone and mark as verified
-    const currentStatus = user.kyc_status as any || {};
-    const updatedStatus = {
-      ...currentStatus,
-      phone: true,
-    };
+    // Create phone verification record
+    await this.prisma.kycVerification.upsert({
+      where: {
+        user_id_type: {
+          user_id: userId,
+          type: 'PHONE'
+        }
+      },
+      create: {
+        user_id: userId,
+        type: 'PHONE',
+        status: 'APPROVED',
+        data: { phone, verificationCode: code },
+        verified_at: new Date(),
+      },
+      update: {
+        status: 'APPROVED',
+        data: { phone, verificationCode: code },
+        verified_at: new Date(),
+      },
+    });
 
     return this.prisma.user.update({
       where: { id: userId },
       data: {
         phone,
         phone_verified_at: new Date(),
-        kyc_status: updatedStatus,
       },
     });
   }
@@ -278,22 +322,34 @@ export class KycService {
 
     // Generate 6-digit verification code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiryDate = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Store verification code in kyc_status (expires in 10 minutes)
-    const verificationData = {
-      emailCode: code,
-      emailCodeExpiry: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-    };
-
-    // Get existing kyc_status or create new
-    const existingKycStatus = user.kyc_status as any || {};
-    const updatedKycStatus = { ...existingKycStatus, ...verificationData };
-
-    // Save verification code to database
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        kyc_status: updatedKycStatus,
+    // Store verification code in KYC verification record
+    await this.prisma.kycVerification.upsert({
+      where: {
+        user_id_type: {
+          user_id: userId,
+          type: 'EMAIL'
+        }
+      },
+      create: {
+        user_id: userId,
+        type: 'EMAIL',
+        status: 'PENDING',
+        data: { 
+          verificationCode: code, 
+          expiresAt: expiryDate.toISOString(),
+          email: user.email 
+        },
+      },
+      update: {
+        status: 'PENDING',
+        data: { 
+          verificationCode: code, 
+          expiresAt: expiryDate.toISOString(),
+          email: user.email 
+        },
+        updated_at: new Date(),
       },
     });
 
@@ -322,10 +378,23 @@ export class KycService {
       return { message: 'Email already verified', verified: true };
     }
 
-    // Get verification code from kyc_status
-    const kycStatus = user.kyc_status as any || {};
-    const storedCode = kycStatus.emailCode;
-    const codeExpiry = kycStatus.emailCodeExpiry;
+    // Get verification record from KYC table
+    const emailVerification = await this.prisma.kycVerification.findUnique({
+      where: {
+        user_id_type: {
+          user_id: userId,
+          type: 'EMAIL'
+        }
+      }
+    });
+
+    if (!emailVerification) {
+      throw new Error('No verification code found. Please request a new code.');
+    }
+
+    const verificationData = emailVerification.data as any;
+    const storedCode = verificationData?.verificationCode;
+    const codeExpiry = verificationData?.expiresAt;
 
     if (!storedCode) {
       throw new Error('No verification code found. Please request a new code.');
@@ -333,14 +402,17 @@ export class KycService {
 
     // Check if code has expired
     if (new Date(codeExpiry) < new Date()) {
-      // Clear expired code
-      const updatedKycStatus = { ...kycStatus };
-      delete updatedKycStatus.emailCode;
-      delete updatedKycStatus.emailCodeExpiry;
-
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { kyc_status: updatedKycStatus },
+      // Update verification record to mark as expired
+      await this.prisma.kycVerification.update({
+        where: {
+          user_id_type: {
+            user_id: userId,
+            type: 'EMAIL'
+          }
+        },
+        data: {
+          status: 'EXPIRED',
+        }
       });
 
       throw new Error('Verification code has expired. Please request a new code.');
@@ -350,22 +422,25 @@ export class KycService {
     if (storedCode !== code) {
       throw new Error('Invalid verification code. Please try again.');
     }
+    // Update verification record to approved
+    await this.prisma.kycVerification.update({
+      where: {
+        user_id_type: {
+          user_id: userId,
+          type: 'EMAIL'
+        }
+      },
+      data: {
+        status: 'APPROVED',
+        verified_at: new Date(),
+      }
+    });
 
-    // Update user - mark email as verified and update KYC status
-    const currentStatus = user.kyc_status as any || {};
-    const updatedStatus = {
-      ...currentStatus,
-      email: true,
-      // Clear verification code after successful verification
-    };
-    delete updatedStatus.emailCode;
-    delete updatedStatus.emailCodeExpiry;
-
+    // Update user email verification
     await this.prisma.user.update({
       where: { id: userId },
       data: {
         email_verified_at: new Date(),
-        kyc_status: updatedStatus,
       },
     });
 
