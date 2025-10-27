@@ -6,10 +6,10 @@ export declare class CategoriesController {
     constructor(categoriesService: CategoriesService);
     create(createCategoryDto: CreateCategoryDto): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -18,10 +18,10 @@ export declare class CategoriesController {
     }>;
     findAll(): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -30,10 +30,10 @@ export declare class CategoriesController {
     }[]>;
     findOne(id: string): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -42,10 +42,10 @@ export declare class CategoriesController {
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -54,10 +54,10 @@ export declare class CategoriesController {
     }>;
     remove(id: string): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;

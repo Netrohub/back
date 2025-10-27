@@ -16,11 +16,11 @@ export declare class SellerController {
             items: ({
                 product: {
                     description: string | null;
-                    name: string;
                     id: number;
                     status: import(".prisma/client").$Enums.ProductStatus;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     slug: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                     discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -81,8 +81,8 @@ export declare class SellerController {
     }>;
     getSellerProducts(user: any): Promise<({
         seller: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
         _count: {
@@ -91,11 +91,11 @@ export declare class SellerController {
         };
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -125,11 +125,11 @@ export declare class SellerController {
         items: ({
             product: {
                 description: string | null;
-                name: string;
                 id: number;
                 status: import(".prisma/client").$Enums.ProductStatus;
                 created_at: Date;
                 updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;

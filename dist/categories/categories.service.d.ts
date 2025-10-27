@@ -6,10 +6,10 @@ export declare class CategoriesService {
     constructor(prisma: PrismaService);
     create(createCategoryDto: CreateCategoryDto): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -18,10 +18,10 @@ export declare class CategoriesService {
     }>;
     findAll(): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -30,10 +30,10 @@ export declare class CategoriesService {
     }[]>;
     findOne(id: string): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -42,10 +42,10 @@ export declare class CategoriesService {
     }>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;
@@ -54,10 +54,10 @@ export declare class CategoriesService {
     }>;
     remove(id: string): Promise<{
         description: string | null;
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
+        name: string;
         is_active: boolean;
         slug: string;
         image: string | null;

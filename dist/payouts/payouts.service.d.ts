@@ -7,7 +7,6 @@ export declare class PayoutsService {
     constructor(prisma: PrismaService);
     create(createPayoutDto: CreatePayoutDto): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -16,6 +15,7 @@ export declare class PayoutsService {
         completed_at: Date | null;
         notes: string | null;
         amount: Decimal;
+        method: string | null;
         reference: string | null;
         fee_amount: Decimal;
         net_amount: Decimal;
@@ -29,13 +29,12 @@ export declare class PayoutsService {
         status?: string;
     }): Promise<({
         seller: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -44,6 +43,7 @@ export declare class PayoutsService {
         completed_at: Date | null;
         notes: string | null;
         amount: Decimal;
+        method: string | null;
         reference: string | null;
         fee_amount: Decimal;
         net_amount: Decimal;
@@ -54,13 +54,12 @@ export declare class PayoutsService {
     })[]>;
     findOne(id: string): Promise<{
         seller: {
-            name: string;
             id: number;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -69,6 +68,7 @@ export declare class PayoutsService {
         completed_at: Date | null;
         notes: string | null;
         amount: Decimal;
+        method: string | null;
         reference: string | null;
         fee_amount: Decimal;
         net_amount: Decimal;
@@ -79,7 +79,6 @@ export declare class PayoutsService {
     }>;
     update(id: string, updatePayoutDto: UpdatePayoutDto): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -88,6 +87,7 @@ export declare class PayoutsService {
         completed_at: Date | null;
         notes: string | null;
         amount: Decimal;
+        method: string | null;
         reference: string | null;
         fee_amount: Decimal;
         net_amount: Decimal;
@@ -98,7 +98,6 @@ export declare class PayoutsService {
     }>;
     remove(id: string): Promise<{
         description: string | null;
-        method: string | null;
         id: number;
         status: import(".prisma/client").$Enums.PayoutStatus;
         created_at: Date;
@@ -107,6 +106,7 @@ export declare class PayoutsService {
         completed_at: Date | null;
         notes: string | null;
         amount: Decimal;
+        method: string | null;
         reference: string | null;
         fee_amount: Decimal;
         net_amount: Decimal;

@@ -50,7 +50,7 @@ export class OrdersService {
       data: {
         order_number: orderNumber,
         buyer_id: userId,
-        seller_id: items[0]?.seller_id || userId, // Use first item's seller or fallback
+        seller_id: userId, // Will be updated with actual seller when processing items
         subtotal: totalAmount,
         service_fee: serviceFee,
         total_amount: finalTotal,

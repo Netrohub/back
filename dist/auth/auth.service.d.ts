@@ -26,10 +26,10 @@ export declare class AuthService {
                 user_roles: ({
                     role: {
                         description: string | null;
-                        name: string;
                         id: number;
                         created_at: Date;
                         updated_at: Date;
+                        name: string;
                         is_active: boolean;
                         slug: string;
                         permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -43,11 +43,11 @@ export declare class AuthService {
                     granted_at: Date;
                     expires_at: Date | null;
                 })[];
-                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
                 username: string;
+                name: string;
                 email: string;
                 phone: string | null;
                 avatar: string | null;

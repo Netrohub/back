@@ -6,18 +6,18 @@ export declare class ProductsService {
     findAll(filters?: ProductFiltersDto): Promise<{
         data: ({
             seller: {
-                name: string;
                 id: number;
                 username: string;
+                name: string;
                 avatar: string;
             };
         } & {
             description: string | null;
-            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
+            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -51,18 +51,18 @@ export declare class ProductsService {
     getTrending(limit?: number): Promise<{
         data: ({
             seller: {
-                name: string;
                 id: number;
                 username: string;
+                name: string;
                 avatar: string;
             };
         } & {
             description: string | null;
-            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
+            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -90,18 +90,18 @@ export declare class ProductsService {
     getByCategory(categorySlug: string, filters?: ProductFiltersDto): Promise<{
         data: ({
             seller: {
-                name: string;
                 id: number;
                 username: string;
+                name: string;
                 avatar: string;
             };
         } & {
             description: string | null;
-            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
+            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -135,18 +135,18 @@ export declare class ProductsService {
     }>;
     findById(id: number): Promise<{
         seller: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             avatar: string;
         };
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -170,17 +170,17 @@ export declare class ProductsService {
     }>;
     create(createProductDto: CreateProductDto, sellerId: number): Promise<{
         seller: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             avatar: string;
         };
         category: {
             description: string | null;
-            name: string;
             id: number;
             created_at: Date;
             updated_at: Date;
+            name: string;
             is_active: boolean;
             slug: string;
             image: string | null;
@@ -198,11 +198,11 @@ export declare class ProductsService {
         }[];
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -226,17 +226,17 @@ export declare class ProductsService {
     }>;
     update(id: number, updateProductDto: UpdateProductDto, sellerId: number): Promise<{
         seller: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             avatar: string;
         };
         category: {
             description: string | null;
-            name: string;
             id: number;
             created_at: Date;
             updated_at: Date;
+            name: string;
             is_active: boolean;
             slug: string;
             image: string | null;
@@ -254,11 +254,11 @@ export declare class ProductsService {
         }[];
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -282,11 +282,11 @@ export declare class ProductsService {
     }>;
     remove(id: number, sellerId: number): Promise<{
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -310,18 +310,18 @@ export declare class ProductsService {
     }>;
     findBySeller(sellerId: number): Promise<({
         seller: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             avatar: string;
         };
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;

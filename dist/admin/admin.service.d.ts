@@ -4,10 +4,10 @@ export declare class AdminService {
     constructor(prisma: PrismaService);
     getUsers(page?: number, perPage?: number, search?: string, role?: string, status?: string): Promise<{
         data: {
-            name: string;
             id: number;
             created_at: Date;
             username: string;
+            name: string;
             email: string;
             phone: string;
             is_active: boolean;
@@ -15,10 +15,10 @@ export declare class AdminService {
             user_roles: ({
                 role: {
                     description: string | null;
-                    name: string;
                     id: number;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     is_active: boolean;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -41,11 +41,11 @@ export declare class AdminService {
         };
     }>;
     getUser(id: number): Promise<{
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
+        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -54,10 +54,10 @@ export declare class AdminService {
         user_roles: ({
             role: {
                 description: string | null;
-                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
+                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -73,11 +73,11 @@ export declare class AdminService {
         })[];
     }>;
     updateUser(id: number, updateData: any): Promise<{
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
+        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -93,11 +93,11 @@ export declare class AdminService {
         locked_until: Date | null;
     }>;
     deleteUser(id: number): Promise<{
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
+        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -115,15 +115,15 @@ export declare class AdminService {
     getOrders(page?: number, perPage?: number, status?: string, dateFrom?: string, dateTo?: string): Promise<{
         data: ({
             buyer: {
-                name: string;
                 id: number;
                 username: string;
+                name: string;
                 email: string;
             };
             items: ({
                 product: {
-                    name: string;
                     id: number;
+                    name: string;
                     price: import("@prisma/client/runtime/library").Decimal;
                 };
             } & {
@@ -171,15 +171,15 @@ export declare class AdminService {
     }>;
     getOrder(id: number): Promise<{
         buyer: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             email: string;
         };
         items: ({
             product: {
-                name: string;
                 id: number;
+                name: string;
                 price: import("@prisma/client/runtime/library").Decimal;
             };
         } & {
@@ -245,10 +245,10 @@ export declare class AdminService {
     }>;
     getVendors(page?: number, perPage?: number, search?: string, status?: string): Promise<{
         data: {
-            name: string;
             id: number;
             created_at: Date;
             username: string;
+            name: string;
             email: string;
             phone: string;
             is_active: boolean;
@@ -256,10 +256,10 @@ export declare class AdminService {
             user_roles: ({
                 role: {
                     description: string | null;
-                    name: string;
                     id: number;
                     created_at: Date;
                     updated_at: Date;
+                    name: string;
                     is_active: boolean;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -274,9 +274,9 @@ export declare class AdminService {
                 expires_at: Date | null;
             })[];
             products: {
-                name: string;
                 id: number;
                 status: import(".prisma/client").$Enums.ProductStatus;
+                name: string;
                 price: import("@prisma/client/runtime/library").Decimal;
             }[];
         }[];
@@ -288,11 +288,11 @@ export declare class AdminService {
         };
     }>;
     getVendor(id: number): Promise<{
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
+        name: string;
         email: string;
         phone: string;
         avatar: string;
@@ -301,10 +301,10 @@ export declare class AdminService {
         user_roles: ({
             role: {
                 description: string | null;
-                name: string;
                 id: number;
                 created_at: Date;
                 updated_at: Date;
+                name: string;
                 is_active: boolean;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
@@ -319,19 +319,19 @@ export declare class AdminService {
             expires_at: Date | null;
         })[];
         products: {
-            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
+            name: string;
             price: import("@prisma/client/runtime/library").Decimal;
         }[];
     }>;
     updateVendorStatus(id: number, status: string): Promise<{
-        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
+        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -349,18 +349,18 @@ export declare class AdminService {
     getListings(page?: number, perPage?: number, status?: string, category?: string): Promise<{
         data: ({
             seller: {
-                name: string;
                 id: number;
                 username: string;
+                name: string;
                 email: string;
             };
         } & {
             description: string | null;
-            name: string;
             id: number;
             status: import(".prisma/client").$Enums.ProductStatus;
             created_at: Date;
             updated_at: Date;
+            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -391,18 +391,18 @@ export declare class AdminService {
     }>;
     getListing(id: number): Promise<{
         seller: {
-            name: string;
             id: number;
             username: string;
+            name: string;
             email: string;
         };
     } & {
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -426,11 +426,11 @@ export declare class AdminService {
     }>;
     updateListingStatus(id: number, status: string): Promise<{
         description: string | null;
-        name: string;
         id: number;
         status: import(".prisma/client").$Enums.ProductStatus;
         created_at: Date;
         updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;

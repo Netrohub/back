@@ -2922,7 +2922,7 @@ let OrdersService = class OrdersService {
             data: {
                 order_number: orderNumber,
                 buyer_id: userId,
-                seller_id: items[0]?.seller_id || userId,
+                seller_id: userId,
                 subtotal: totalAmount,
                 service_fee: serviceFee,
                 total_amount: finalTotal,
@@ -5486,7 +5486,7 @@ let AdminService = class AdminService {
     async updateListingStatus(id, status) {
         return this.prisma.product.update({
             where: { id },
-            data: { status },
+            data: { status: status },
         });
     }
     async getPayouts(page = 1, perPage = 10, status, dateFrom, dateTo) {
@@ -6100,7 +6100,6 @@ let CouponsService = class CouponsService {
                 ...(updateCouponDto.minAmount !== undefined && { min_amount: updateCouponDto.minAmount }),
                 ...(updateCouponDto.maxDiscount !== undefined && { max_discount: updateCouponDto.maxDiscount }),
                 ...(updateCouponDto.usageLimit !== undefined && { usage_limit: updateCouponDto.usageLimit }),
-                ...(updateCouponDto.status && { status: updateCouponDto.status }),
                 ...(expiresAt !== undefined && { expires_at: expiresAt }),
             },
         });

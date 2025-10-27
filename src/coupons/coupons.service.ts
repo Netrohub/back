@@ -91,9 +91,9 @@ export class CouponsService {
         ...(updateCouponDto.minAmount !== undefined && { min_amount: updateCouponDto.minAmount }),
         ...(updateCouponDto.maxDiscount !== undefined && { max_discount: updateCouponDto.maxDiscount }),
         ...(updateCouponDto.usageLimit !== undefined && { usage_limit: updateCouponDto.usageLimit }),
-        ...(updateCouponDto.status && { status: updateCouponDto.status }),
+        // ...(updateCouponDto.status && { status: updateCouponDto.status }), // Field not in v2.0 schema
         ...(expiresAt !== undefined && { expires_at: expiresAt }),
-      },
+      } as any,
     });
   }
 

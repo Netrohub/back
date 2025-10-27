@@ -384,7 +384,7 @@ export class AdminService {
   async updateListingStatus(id: number, status: string) {
     return this.prisma.product.update({
       where: { id },
-      data: { status },
+      data: { status: status as any },
     });
   }
 
