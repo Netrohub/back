@@ -250,4 +250,67 @@ export class UsersService {
       },
     };
   }
+
+  async getUserListings(username: string) {
+    // First verify user exists
+    const user = await this.findByUsername(username);
+    
+    // Get user's products/listings
+    const products = await this.prisma.product.findMany({
+      where: {
+        seller_id: user.id,
+        status: {
+          in: ['active', 'pending'] // Only show active and pending products
+        }
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        discount_price: true,
+        category: true,
+        subcategory: true,
+        platform: true,
+        level: true,
+        type: true,
+        images: true,
+        tags: true,
+        status: true,
+        created_at: true,
+        updated_at: true,
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    });
+
+    return {
+      data: products,
+      meta: {
+        total: products.length,
+        user_id: user.id,
+        username: user.username
+      }
+    };
+  }
+
+  async getUserReviews(username: string) {
+    // First verify user exists
+    const user = await this.findByUsername(username);
+    
+    // Get reviews for this user (as a seller)
+    // This would typically join with orders/reviews table
+    // For now, return empty array as reviews system may not be implemented yet
+    
+    return {
+      data: [],
+      meta: {
+        total: 0,
+        user_id: user.id,
+        username: user.username,
+        message: 'Reviews system not implemented yet'
+      }
+    };
+  }
 }

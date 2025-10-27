@@ -73,4 +73,21 @@ export class UsersController {
     return this.usersService.findByUsername(username);
   }
 
+  @Get(':username/listings')
+  @Public()
+  @ApiOperation({ summary: 'Get user listings/products by username (public)' })
+  @ApiResponse({ status: 200, description: 'User listings retrieved' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserListings(@Param('username') username: string) {
+    return this.usersService.getUserListings(username);
+  }
+
+  @Get(':username/reviews')
+  @Public()
+  @ApiOperation({ summary: 'Get user reviews by username (public)' })
+  @ApiResponse({ status: 200, description: 'User reviews retrieved' })
+  async getUserReviews(@Param('username') username: string) {
+    return this.usersService.getUserReviews(username);
+  }
+
 }

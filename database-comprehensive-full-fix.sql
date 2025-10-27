@@ -218,3 +218,184 @@ SELECT
 
 -- Success message
 SELECT '✅ ALL DATABASE ISSUES FIXED! Ready for restart and testing!' as final_status;
+
+-- ========================================
+-- USER PROFILE ENHANCEMENTS (@username routing)
+-- ========================================
+
+-- Add bio and location columns for user profiles if they don't exist
+DO $$
+BEGIN
+    -- Add bio column
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'users' AND column_name = 'bio') THEN
+        ALTER TABLE users ADD COLUMN bio TEXT;
+        RAISE NOTICE '✅ Added bio column to users table';
+    ELSE
+        RAISE NOTICE '✅ Bio column already exists';
+    END IF;
+    
+    -- Add location column
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'users' AND column_name = 'location') THEN
+        ALTER TABLE users ADD COLUMN location VARCHAR(100);
+        RAISE NOTICE '✅ Added location column to users table';
+    ELSE
+        RAISE NOTICE '✅ Location column already exists';
+    END IF;
+END $$;
+
+-- Create case-insensitive unique index on usernames
+DROP INDEX IF EXISTS idx_users_username_unique_ci;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_unique_ci 
+ON users (LOWER(username));
+
+-- Create reserved usernames table and constraints
+CREATE TABLE IF NOT EXISTS reserved_usernames (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(32) NOT NULL UNIQUE,
+    reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert reserved usernames
+INSERT INTO reserved_usernames (username, reason) VALUES 
+    ('admin', 'System administration'),
+    ('administrator', 'System administration'),
+    ('support', 'Customer support'),
+    ('help', 'Help system'),
+    ('api', 'API endpoints'),
+    ('www', 'Web subdomain'),
+    ('mail', 'Email subdomain'),
+    ('email', 'Email system'),
+    ('assets', 'Static assets'),
+    ('static', 'Static files'),
+    ('cdn', 'Content delivery'),
+    ('login', 'Authentication'),
+    ('register', 'Registration'),
+    ('signup', 'Registration'),
+    ('signin', 'Authentication'),
+    ('logout', 'Authentication'),
+    ('auth', 'Authentication'),
+    ('dashboard', 'Dashboard route'),
+    ('account', 'Account management'),
+    ('profile', 'Profile pages'),
+    ('settings', 'Settings pages'),
+    ('user', 'User system'),
+    ('users', 'User system'),
+    ('seller', 'Seller system'),
+    ('sellers', 'Seller system'),
+    ('buyer', 'Buyer system'),
+    ('buyers', 'Buyer system'),
+    ('product', 'Product system'),
+    ('products', 'Product system'),
+    ('order', 'Order system'),
+    ('orders', 'Order system'),
+    ('payment', 'Payment system'),
+    ('payments', 'Payment system'),
+    ('cart', 'Shopping cart'),
+    ('checkout', 'Checkout process'),
+    ('search', 'Search functionality'),
+    ('about', 'About page'),
+    ('contact', 'Contact page'),
+    ('terms', 'Terms of service'),
+    ('privacy', 'Privacy policy'),
+    ('legal', 'Legal pages'),
+    ('blog', 'Blog system'),
+    ('news', 'News system'),
+    ('faq', 'FAQ system'),
+    ('root', 'Root user'),
+    ('system', 'System user'),
+    ('test', 'Test user'),
+    ('demo', 'Demo user'),
+    ('null', 'Reserved keyword'),
+    ('undefined', 'Reserved keyword'),
+    ('nxoland', 'Brand name'),
+    ('nexo', 'Brand name')
+ON CONFLICT (username) DO NOTHING;
+
+-- Create function to check reserved usernames
+CREATE OR REPLACE FUNCTION check_reserved_username()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM reserved_usernames WHERE LOWER(username) = LOWER(NEW.username)) THEN
+        RAISE EXCEPTION 'Username "%" is reserved and cannot be used', NEW.username;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger to prevent reserved usernames
+DROP TRIGGER IF EXISTS trigger_check_reserved_username ON users;
+CREATE TRIGGER trigger_check_reserved_username
+    BEFORE INSERT OR UPDATE OF username ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION check_reserved_username();
+
+-- Create function for case-insensitive username lookup
+CREATE OR REPLACE FUNCTION get_user_by_username(input_username VARCHAR)
+RETURNS TABLE(
+    id INTEGER,
+    username VARCHAR,
+    name VARCHAR,
+    email VARCHAR,
+    avatar TEXT,
+    bio TEXT,
+    location VARCHAR,
+    email_verified_at TIMESTAMP,
+    phone_verified_at TIMESTAMP,
+    created_at TIMESTAMP,
+    roles JSONB
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        u.id,
+        u.username,
+        u.name,
+        u.email,
+        u.avatar,
+        u.bio,
+        u.location,
+        u.email_verified_at,
+        u.phone_verified_at,
+        u.created_at,
+        COALESCE(
+            (SELECT jsonb_agg(r.name) 
+             FROM user_roles ur 
+             JOIN roles r ON ur.role_id = r.id 
+             WHERE ur.user_id = u.id),
+            '[]'::jsonb
+        ) as roles
+    FROM users u
+    WHERE LOWER(u.username) = LOWER(input_username);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Add user profile endpoints route patterns
+CREATE TABLE IF NOT EXISTS user_listings (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, product_id)
+);
+
+-- Create indexes for user profile performance
+CREATE INDEX IF NOT EXISTS idx_user_listings_user_id ON user_listings(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_listings_product_id ON user_listings(product_id);
+CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_bio_gin ON users USING gin(to_tsvector('english', bio)) WHERE bio IS NOT NULL;
+
+-- Verify user profile setup
+SELECT 
+    'USER PROFILE SETUP VERIFICATION' as check_type,
+    (SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'bio') as has_bio_column,
+    (SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'location') as has_location_column,
+    (SELECT COUNT(*) FROM pg_indexes WHERE indexname = 'idx_users_username_unique_ci') as has_username_index,
+    (SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'reserved_usernames') as has_reserved_table,
+    (SELECT COUNT(*) FROM reserved_usernames) as reserved_count,
+    (SELECT COUNT(*) FROM information_schema.routines WHERE routine_name = 'get_user_by_username') as has_lookup_function;
+
+-- Final success message for user profiles
+SELECT '✅ USER PROFILE DATABASE SETUP COMPLETE! @username routing ready!' as profile_status;
