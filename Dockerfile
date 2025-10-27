@@ -28,16 +28,20 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache openssl dumb-init
+# Install system dependencies and build tools for native dependencies
+RUN apk add --no-cache openssl dumb-init python3 make g++
 
 # Create app user
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001
 
+# Copy package files first
+COPY --from=builder /app/package*.json ./
+
+# Install only production dependencies and rebuild native modules
+RUN npm ci --only=production && npm rebuild
+
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 
 # Create logs directory
