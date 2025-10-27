@@ -57,7 +57,6 @@ export class AdminService {
             }
           },
           is_active: true,
-          kyc_verifications: true,
           created_at: true,
           last_login_at: true,
         },
@@ -89,8 +88,6 @@ export class AdminService {
         avatar: true,
             user_roles: { include: { role: true } },
         is_active: true,
-        kyc_verifications: true,
-        kyc_verifications: true,
         created_at: true,
         updated_at: true,
         last_login_at: true,
@@ -254,7 +251,6 @@ export class AdminService {
             }
           },
           is_active: true,
-          kyc_verifications: true,
           created_at: true,
           last_login_at: true,
           products: {
@@ -294,8 +290,6 @@ export class AdminService {
         avatar: true,
             user_roles: { include: { role: true } },
         is_active: true,
-        kyc_verifications: true,
-        kyc_verifications: true,
         created_at: true,
         updated_at: true,
         last_login_at: true,

@@ -63,18 +63,46 @@ export declare class AdminService {
         username: string;
         name: string;
         email: string;
-        password: string;
-        phone: string | null;
-        avatar: string | null;
-        email_verified_at: Date | null;
-        phone_verified_at: Date | null;
+        phone: string;
+        avatar: string;
         is_active: boolean;
-        is_banned: boolean;
-        banned_until: Date | null;
-        ban_reason: string | null;
-        last_login_at: Date | null;
-        login_attempts: number;
-        locked_until: Date | null;
+        last_login_at: Date;
+        user_roles: ({
+            role: {
+                description: string | null;
+                id: number;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
+                is_active: boolean;
+                slug: string;
+                permissions: import("@prisma/client/runtime/library").JsonValue | null;
+            };
+        } & {
+            id: number;
+            user_id: number;
+            created_at: Date;
+            role_id: number;
+            granted_by: number | null;
+            granted_at: Date;
+            expires_at: Date | null;
+        })[];
+        kyc_verifications: {
+            type: import(".prisma/client").$Enums.KycType;
+            id: number;
+            user_id: number;
+            status: import(".prisma/client").$Enums.KycStatus;
+            created_at: Date;
+            updated_at: Date;
+            notes: string | null;
+            expires_at: Date | null;
+            provider: string | null;
+            external_id: string | null;
+            data: import("@prisma/client/runtime/library").JsonValue | null;
+            documents: import("@prisma/client/runtime/library").JsonValue | null;
+            verified_at: Date | null;
+            rejected_at: Date | null;
+        }[];
     }>;
     updateUser(id: number, updateData: any): Promise<{
         id: number;
@@ -174,6 +202,30 @@ export declare class AdminService {
         };
     }>;
     getOrder(id: number): Promise<{
+        buyer: {
+            id: number;
+            username: string;
+            name: string;
+            email: string;
+        };
+        items: ({
+            product: {
+                id: number;
+                name: string;
+                price: import("@prisma/client/runtime/library").Decimal;
+            };
+        } & {
+            id: number;
+            product_id: number;
+            quantity: number;
+            created_at: Date;
+            metadata: import("@prisma/client/runtime/library").JsonValue | null;
+            order_id: number;
+            product_name: string;
+            unit_price: import("@prisma/client/runtime/library").Decimal;
+            total_price: import("@prisma/client/runtime/library").Decimal;
+        })[];
+    } & {
         id: number;
         status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
@@ -290,18 +342,53 @@ export declare class AdminService {
         username: string;
         name: string;
         email: string;
-        password: string;
-        phone: string | null;
-        avatar: string | null;
-        email_verified_at: Date | null;
-        phone_verified_at: Date | null;
+        phone: string;
+        avatar: string;
         is_active: boolean;
-        is_banned: boolean;
-        banned_until: Date | null;
-        ban_reason: string | null;
-        last_login_at: Date | null;
-        login_attempts: number;
-        locked_until: Date | null;
+        last_login_at: Date;
+        user_roles: ({
+            role: {
+                description: string | null;
+                id: number;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
+                is_active: boolean;
+                slug: string;
+                permissions: import("@prisma/client/runtime/library").JsonValue | null;
+            };
+        } & {
+            id: number;
+            user_id: number;
+            created_at: Date;
+            role_id: number;
+            granted_by: number | null;
+            granted_at: Date;
+            expires_at: Date | null;
+        })[];
+        products: {
+            id: number;
+            status: import(".prisma/client").$Enums.ProductStatus;
+            created_at: Date;
+            name: string;
+            price: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        kyc_verifications: {
+            type: import(".prisma/client").$Enums.KycType;
+            id: number;
+            user_id: number;
+            status: import(".prisma/client").$Enums.KycStatus;
+            created_at: Date;
+            updated_at: Date;
+            notes: string | null;
+            expires_at: Date | null;
+            provider: string | null;
+            external_id: string | null;
+            data: import("@prisma/client/runtime/library").JsonValue | null;
+            documents: import("@prisma/client/runtime/library").JsonValue | null;
+            verified_at: Date | null;
+            rejected_at: Date | null;
+        }[];
     }>;
     updateVendorStatus(id: number, status: string): Promise<{
         id: number;

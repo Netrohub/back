@@ -1163,7 +1163,7 @@ let UsersService = class UsersService {
                     }
                 },
                 phone_verified_at: true,
-                identity_verified_at: true,
+                kyc_verifications: true,
                 created_at: true,
             },
         });
@@ -3986,9 +3986,7 @@ let KycService = class KycService {
                 });
                 await this.prisma.user.update({
                     where: { id: user.id },
-                    data: {
-                        identity_verified_at: new Date(),
-                    },
+                    data: {},
                 });
                 console.log(`✅ User ${user.id} KYC verified via Persona`);
             }
@@ -4081,9 +4079,7 @@ let KycService = class KycService {
         }
         return this.prisma.user.update({
             where: { id: userId },
-            data: {
-                kyc_completed_at: new Date(),
-            },
+            data: {},
         });
     }
     async verifyPhone(userId, phone, code) {
@@ -4993,7 +4989,7 @@ __decorate([
     (0, common_1.Get)('orders/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Get order by ID (Admin only)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Order retrieved successfully' }),
-    openapi.ApiResponse({ status: 200 }),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -5229,7 +5225,7 @@ let AdminService = class AdminService {
                 user_roles: { include: { role: true } },
                 is_active: true,
                 kyc_verifications: true,
-                kyc_status: true,
+                kyc_verifications: true,
                 created_at: true,
                 updated_at: true,
                 last_login_at: true,
@@ -5308,7 +5304,7 @@ let AdminService = class AdminService {
         return this.prisma.order.findUnique({
             where: { id },
             include: {
-                user: {
+                buyer: {
                     select: {
                         id: true,
                         name: true,
@@ -5411,7 +5407,7 @@ let AdminService = class AdminService {
                 user_roles: { include: { role: true } },
                 is_active: true,
                 kyc_verifications: true,
-                kyc_status: true,
+                kyc_verifications: true,
                 created_at: true,
                 updated_at: true,
                 last_login_at: true,

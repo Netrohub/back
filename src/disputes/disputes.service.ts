@@ -92,7 +92,7 @@ export class DisputesService {
     return this.prisma.dispute.update({
       where: { id },
       data: {
-        status: status.toUpperCase(),
+        status: status.toUpperCase() as any,
         resolved_by: adminId,
         resolved_at: new Date(),
       },

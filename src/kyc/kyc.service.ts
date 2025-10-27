@@ -71,7 +71,7 @@ export class KycService {
         await this.prisma.user.update({
           where: { id: user.id },
           data: {
-            identity_verified_at: new Date(),
+            // KYC verification now handled in kyc_verifications table
           },
         });
         
@@ -190,7 +190,7 @@ export class KycService {
     return this.prisma.user.update({
       where: { id: userId },
       data: {
-        kyc_completed_at: new Date(),
+          // KYC completion now handled in kyc_verifications table
       },
     });
   }
