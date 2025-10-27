@@ -6,20 +6,20 @@ export declare class TicketsService {
     constructor(prisma: PrismaService);
     create(createTicketDto: CreateTicketDto, userId: number): Promise<{
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {
+        subject: string;
+        priority: import(".prisma/client").$Enums.TicketPriority;
         id: number;
         user_id: number;
         status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        subject: string;
         message: string;
-        priority: import(".prisma/client").$Enums.TicketPriority;
         assigned_to: number | null;
         resolved_at: Date | null;
         ticket_number: string;
@@ -32,25 +32,25 @@ export declare class TicketsService {
         assigned_to?: number;
     }): Promise<({
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
         assigned_admin: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {
+        subject: string;
+        priority: import(".prisma/client").$Enums.TicketPriority;
         id: number;
         user_id: number;
         status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        subject: string;
         message: string;
-        priority: import(".prisma/client").$Enums.TicketPriority;
         assigned_to: number | null;
         resolved_at: Date | null;
         ticket_number: string;
@@ -58,25 +58,25 @@ export declare class TicketsService {
     })[]>;
     findOne(id: string): Promise<{
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
         assigned_admin: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {
+        subject: string;
+        priority: import(".prisma/client").$Enums.TicketPriority;
         id: number;
         user_id: number;
         status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        subject: string;
         message: string;
-        priority: import(".prisma/client").$Enums.TicketPriority;
         assigned_to: number | null;
         resolved_at: Date | null;
         ticket_number: string;
@@ -84,40 +84,40 @@ export declare class TicketsService {
     }>;
     update(id: string, updateTicketDto: UpdateTicketDto): Promise<{
         user: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
         assigned_admin: {
-            id: number;
             name: string;
+            id: number;
             email: string;
         };
     } & {
+        subject: string;
+        priority: import(".prisma/client").$Enums.TicketPriority;
         id: number;
         user_id: number;
         status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        subject: string;
         message: string;
-        priority: import(".prisma/client").$Enums.TicketPriority;
         assigned_to: number | null;
         resolved_at: Date | null;
         ticket_number: string;
         first_response_at: Date | null;
     }>;
     remove(id: string): Promise<{
+        subject: string;
+        priority: import(".prisma/client").$Enums.TicketPriority;
         id: number;
         user_id: number;
         status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
         category: string | null;
-        subject: string;
         message: string;
-        priority: import(".prisma/client").$Enums.TicketPriority;
         assigned_to: number | null;
         resolved_at: Date | null;
         ticket_number: string;

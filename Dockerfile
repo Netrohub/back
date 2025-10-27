@@ -37,12 +37,17 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001
 # Copy package files first
 COPY --from=builder /app/package*.json ./
 
+# Copy Prisma schema
+COPY --from=builder /app/prisma ./prisma
+
 # Install only production dependencies and rebuild native modules
 RUN npm ci --only=production && npm rebuild
 
+# Generate Prisma client in production environment
+RUN npx prisma generate
+
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
 
 # Create logs directory
 RUN mkdir -p logs && chown -R nestjs:nodejs logs

@@ -52,11 +52,11 @@ export declare class KycService {
         rejected_at: Date | null;
     }>;
     completeKyc(userId: number): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
@@ -72,11 +72,11 @@ export declare class KycService {
         locked_until: Date | null;
     }>;
     verifyPhone(userId: number, phone: string, code: string): Promise<{
+        name: string;
         id: number;
         created_at: Date;
         updated_at: Date;
         username: string;
-        name: string;
         email: string;
         password: string;
         phone: string | null;
