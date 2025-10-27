@@ -24,10 +24,10 @@ export declare class KycService {
             created_at: Date;
             updated_at: Date;
             notes: string | null;
-            data: import("@prisma/client/runtime/library").JsonValue | null;
             expires_at: Date | null;
             provider: string | null;
             external_id: string | null;
+            data: import("@prisma/client/runtime/library").JsonValue | null;
             documents: import("@prisma/client/runtime/library").JsonValue | null;
             verified_at: Date | null;
             rejected_at: Date | null;
@@ -43,10 +43,10 @@ export declare class KycService {
         created_at: Date;
         updated_at: Date;
         notes: string | null;
-        data: import("@prisma/client/runtime/library").JsonValue | null;
         expires_at: Date | null;
         provider: string | null;
         external_id: string | null;
+        data: import("@prisma/client/runtime/library").JsonValue | null;
         documents: import("@prisma/client/runtime/library").JsonValue | null;
         verified_at: Date | null;
         rejected_at: Date | null;

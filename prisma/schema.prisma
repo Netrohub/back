@@ -4,11 +4,10 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextIndex"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -189,7 +188,7 @@ model Product {
   @@index([sales_count])
   @@index([created_at])
   @@index([platform])
-  @@fulltext([name, description])
+  // Full-text search available via PostgreSQL native search or extension
 }
 
 model ProductImage {

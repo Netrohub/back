@@ -31,10 +31,10 @@ export declare class UsersService {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }>;
     findByUsername(username: string): Promise<{
@@ -82,10 +82,10 @@ export declare class UsersService {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }>;
     updatePassword(id: number, updatePasswordDto: UpdatePasswordDto): Promise<{
@@ -116,10 +116,10 @@ export declare class UsersService {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }[]>;
     findAllPublic(page?: number, perPage?: number, search?: string, role?: string): Promise<{
@@ -144,10 +144,10 @@ export declare class UsersService {
                 id: number;
                 user_id: number;
                 created_at: Date;
+                role_id: number;
                 granted_by: number | null;
                 granted_at: Date;
                 expires_at: Date | null;
-                role_id: number;
             })[];
         }[];
         meta: {

@@ -34,7 +34,7 @@ export class CouponsService {
         min_amount: createCouponDto.minAmount || null,
         max_discount: createCouponDto.maxDiscount || null,
         usage_limit: createCouponDto.usageLimit || null,
-        status: createCouponDto.status || 'active',
+        status: createCouponDto.status || 'ACTIVE',
         expires_at: expiresAt,
       },
     });

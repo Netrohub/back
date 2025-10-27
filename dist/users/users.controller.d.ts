@@ -29,10 +29,10 @@ export declare class UsersController {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }>;
     updateProfile(user: any, updateUserDto: UpdateUserDto): Promise<{
@@ -60,10 +60,10 @@ export declare class UsersController {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }>;
     updatePassword(user: any, updatePasswordDto: UpdatePasswordDto): Promise<{
@@ -91,10 +91,10 @@ export declare class UsersController {
                 id: number;
                 user_id: number;
                 created_at: Date;
+                role_id: number;
                 granted_by: number | null;
                 granted_at: Date;
                 expires_at: Date | null;
-                role_id: number;
             })[];
         }[];
         meta: {
@@ -131,10 +131,10 @@ export declare class UsersController {
             id: number;
             user_id: number;
             created_at: Date;
+            role_id: number;
             granted_by: number | null;
             granted_at: Date;
             expires_at: Date | null;
-            role_id: number;
         })[];
     }[]>;
     getUserByUsername(username: string): Promise<{

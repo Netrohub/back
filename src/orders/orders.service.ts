@@ -112,7 +112,7 @@ export class OrdersService {
             },
           },
         },
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,
@@ -143,7 +143,7 @@ export class OrdersService {
             },
           },
         },
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,
@@ -159,7 +159,7 @@ export class OrdersService {
     }
 
     // Check if user has permission to view this order
-    if (userRole !== 'admin' && order.user_id !== userId) {
+    if (userRole !== 'admin' && order.buyer_id !== userId) {
       throw new ForbiddenException('You do not have permission to view this order');
     }
 
@@ -190,7 +190,7 @@ export class OrdersService {
             product: true,
           },
         },
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,
@@ -211,7 +211,7 @@ export class OrdersService {
     }
 
     // Only the owner can cancel their order
-    if (order.user_id !== userId) {
+    if (order.buyer_id !== userId) {
       throw new ForbiddenException('You can only cancel your own orders');
     }
 
@@ -223,7 +223,7 @@ export class OrdersService {
     return this.prisma.order.update({
       where: { id },
       data: {
-        status: 'cancelled',
+        status: 'CANCELLED',
       },
       include: {
         items: {

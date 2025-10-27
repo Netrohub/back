@@ -57,7 +57,7 @@ export class AdminService {
             }
           },
           is_active: true,
-          kyc_verified: true,
+          kyc_verifications: true,
           created_at: true,
           last_login_at: true,
         },
@@ -87,10 +87,10 @@ export class AdminService {
         email: true,
         phone: true,
         avatar: true,
-        roles: true,
+            user_roles: { include: { role: true } },
         is_active: true,
-        kyc_verified: true,
-        kyc_status: true,
+        kyc_verifications: true,
+        kyc_verifications: true,
         created_at: true,
         updated_at: true,
         last_login_at: true,
@@ -180,7 +180,7 @@ export class AdminService {
     return this.prisma.order.findUnique({
       where: { id },
       include: {
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,
@@ -254,7 +254,7 @@ export class AdminService {
             }
           },
           is_active: true,
-          kyc_verified: true,
+          kyc_verifications: true,
           created_at: true,
           last_login_at: true,
           products: {
@@ -292,10 +292,10 @@ export class AdminService {
         email: true,
         phone: true,
         avatar: true,
-        roles: true,
+            user_roles: { include: { role: true } },
         is_active: true,
-        kyc_verified: true,
-        kyc_status: true,
+        kyc_verifications: true,
+        kyc_verifications: true,
         created_at: true,
         updated_at: true,
         last_login_at: true,

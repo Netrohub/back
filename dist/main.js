@@ -2449,13 +2449,13 @@ let CartService = class CartService {
     async removeFromCart(userId, itemId) {
         return this.prisma.cartItem.updateMany({
             where: { id: itemId, user_id: userId },
-            data: { status: 'removed' },
+            data: { status: 'REMOVED' },
         });
     }
     async clearCart(userId) {
         return this.prisma.cartItem.updateMany({
-            where: { user_id: userId, status: 'active' },
-            data: { status: 'removed' },
+            where: { user_id: userId, status: 'ACTIVE' },
+            data: { status: 'REMOVED' },
         });
     }
 };
@@ -2796,7 +2796,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get all orders (user sees own, admin sees all)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Orders retrieved successfully' }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
-    openapi.ApiResponse({ status: 200 }),
+    openapi.ApiResponse({ status: 200, type: [Object] }),
     __param(0, (0, decorators_2.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -2811,7 +2811,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Order not found' }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden' }),
-    openapi.ApiResponse({ status: 200 }),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, decorators_2.CurrentUser)()),
     __metadata("design:type", Function),
@@ -2843,7 +2843,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Order cancelled successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Order not found' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Cannot cancel order' }),
-    openapi.ApiResponse({ status: 201 }),
+    openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, decorators_2.CurrentUser)()),
     __metadata("design:type", Function),
@@ -2980,7 +2980,7 @@ let OrdersService = class OrdersService {
                         },
                     },
                 },
-                user: {
+                buyer: {
                     select: {
                         id: true,
                         name: true,
@@ -3010,7 +3010,7 @@ let OrdersService = class OrdersService {
                         },
                     },
                 },
-                user: {
+                buyer: {
                     select: {
                         id: true,
                         name: true,
@@ -3023,7 +3023,7 @@ let OrdersService = class OrdersService {
         if (!order) {
             throw new common_1.NotFoundException(`Order with ID ${id} not found`);
         }
-        if (userRole !== 'admin' && order.user_id !== userId) {
+        if (userRole !== 'admin' && order.buyer_id !== userId) {
             throw new common_1.ForbiddenException('You do not have permission to view this order');
         }
         return order;
@@ -3047,7 +3047,7 @@ let OrdersService = class OrdersService {
                         product: true,
                     },
                 },
-                user: {
+                buyer: {
                     select: {
                         id: true,
                         name: true,
@@ -3064,7 +3064,7 @@ let OrdersService = class OrdersService {
         if (!order) {
             throw new common_1.NotFoundException(`Order with ID ${id} not found`);
         }
-        if (order.user_id !== userId) {
+        if (order.buyer_id !== userId) {
             throw new common_1.ForbiddenException('You can only cancel your own orders');
         }
         if (!['pending', 'processing'].includes(order.status)) {
@@ -3073,7 +3073,7 @@ let OrdersService = class OrdersService {
         return this.prisma.order.update({
             where: { id },
             data: {
-                status: 'cancelled',
+                status: 'CANCELLED',
             },
             include: {
                 items: {
@@ -5198,7 +5198,7 @@ let AdminService = class AdminService {
                         }
                     },
                     is_active: true,
-                    kyc_verified: true,
+                    kyc_verifications: true,
                     created_at: true,
                     last_login_at: true,
                 },
@@ -5226,9 +5226,9 @@ let AdminService = class AdminService {
                 email: true,
                 phone: true,
                 avatar: true,
-                roles: true,
+                user_roles: { include: { role: true } },
                 is_active: true,
-                kyc_verified: true,
+                kyc_verifications: true,
                 kyc_status: true,
                 created_at: true,
                 updated_at: true,
@@ -5372,7 +5372,7 @@ let AdminService = class AdminService {
                         }
                     },
                     is_active: true,
-                    kyc_verified: true,
+                    kyc_verifications: true,
                     created_at: true,
                     last_login_at: true,
                     products: {
@@ -5408,9 +5408,9 @@ let AdminService = class AdminService {
                 email: true,
                 phone: true,
                 avatar: true,
-                roles: true,
+                user_roles: { include: { role: true } },
                 is_active: true,
-                kyc_verified: true,
+                kyc_verifications: true,
                 kyc_status: true,
                 created_at: true,
                 updated_at: true,
@@ -6064,7 +6064,7 @@ let CouponsService = class CouponsService {
                 min_amount: createCouponDto.minAmount || null,
                 max_discount: createCouponDto.maxDiscount || null,
                 usage_limit: createCouponDto.usageLimit || null,
-                status: createCouponDto.status || 'active',
+                status: createCouponDto.status || 'ACTIVE',
                 expires_at: expiresAt,
             },
         });

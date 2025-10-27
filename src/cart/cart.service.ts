@@ -78,14 +78,14 @@ export class CartService {
   async removeFromCart(userId: number, itemId: number) {
     return this.prisma.cartItem.updateMany({
       where: { id: itemId, user_id: userId },
-      data: { status: 'removed' },
+      data: { status: 'REMOVED' },
     });
   }
 
   async clearCart(userId: number) {
     return this.prisma.cartItem.updateMany({
-      where: { user_id: userId, status: 'active' },
-      data: { status: 'removed' },
+      where: { user_id: userId, status: 'ACTIVE' },
+      data: { status: 'REMOVED' },
     });
   }
 }

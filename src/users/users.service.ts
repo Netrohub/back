@@ -54,7 +54,7 @@ export class UsersService {
           }
         },
         phone_verified_at: true,
-        identity_verified_at: true,
+        kyc_verifications: true,
         created_at: true,
       },
     });

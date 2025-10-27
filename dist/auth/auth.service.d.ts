@@ -38,10 +38,10 @@ export declare class AuthService {
                     id: number;
                     user_id: number;
                     created_at: Date;
+                    role_id: number;
                     granted_by: number | null;
                     granted_at: Date;
                     expires_at: Date | null;
-                    role_id: number;
                 })[];
                 id: number;
                 created_at: Date;
