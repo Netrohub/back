@@ -18,7 +18,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install dependencies
-RUN npm install --omit=dev && npm cache clean --force
+RUN npm install && npm cache clean --force
 
 # Copy source code
 COPY . .
