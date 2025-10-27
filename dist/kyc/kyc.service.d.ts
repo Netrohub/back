@@ -20,9 +20,9 @@ export declare class KycService {
             type: import(".prisma/client").$Enums.KycType;
             id: number;
             user_id: number;
+            status: import(".prisma/client").$Enums.KycStatus;
             created_at: Date;
             updated_at: Date;
-            status: import(".prisma/client").$Enums.KycStatus;
             notes: string | null;
             expires_at: Date | null;
             data: import("@prisma/client/runtime/library").JsonValue | null;
@@ -39,9 +39,9 @@ export declare class KycService {
         type: import(".prisma/client").$Enums.KycType;
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.KycStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.KycStatus;
         notes: string | null;
         expires_at: Date | null;
         data: import("@prisma/client/runtime/library").JsonValue | null;
@@ -54,6 +54,7 @@ export declare class KycService {
     completeKyc(userId: number): Promise<{
         id: number;
         created_at: Date;
+        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -69,11 +70,11 @@ export declare class KycService {
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
-        updated_at: Date;
     }>;
     verifyPhone(userId: number, phone: string, code: string): Promise<{
         id: number;
         created_at: Date;
+        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -89,7 +90,6 @@ export declare class KycService {
         last_login_at: Date | null;
         login_attempts: number;
         locked_until: Date | null;
-        updated_at: Date;
     }>;
     createPersonaInquiry(userId: number): Promise<{
         inquiryId: any;

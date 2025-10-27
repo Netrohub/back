@@ -13,9 +13,9 @@ export declare class TicketsController {
     } & {
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.TicketStatus;
         category: string | null;
         subject: string;
         message: string;
@@ -39,9 +39,9 @@ export declare class TicketsController {
     } & {
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.TicketStatus;
         category: string | null;
         subject: string;
         message: string;
@@ -65,9 +65,9 @@ export declare class TicketsController {
     } & {
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.TicketStatus;
         category: string | null;
         subject: string;
         message: string;
@@ -91,9 +91,9 @@ export declare class TicketsController {
     } & {
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.TicketStatus;
         category: string | null;
         subject: string;
         message: string;
@@ -106,9 +106,9 @@ export declare class TicketsController {
     remove(id: string): Promise<{
         id: number;
         user_id: number;
+        status: import(".prisma/client").$Enums.TicketStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.TicketStatus;
         category: string | null;
         subject: string;
         message: string;

@@ -5,10 +5,10 @@ export declare class WishlistService {
     getWishlist(userId: number): Promise<{
         description: string | null;
         id: number;
-        created_at: Date;
-        name: string;
-        updated_at: Date;
         status: import(".prisma/client").$Enums.ProductStatus;
+        created_at: Date;
+        updated_at: Date;
+        name: string;
         slug: string;
         price: import("@prisma/client/runtime/library").Decimal;
         discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -34,10 +34,10 @@ export declare class WishlistService {
         product: {
             description: string | null;
             id: number;
-            created_at: Date;
-            name: string;
-            updated_at: Date;
             status: import(".prisma/client").$Enums.ProductStatus;
+            created_at: Date;
+            updated_at: Date;
+            name: string;
             slug: string;
             price: import("@prisma/client/runtime/library").Decimal;
             discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -62,8 +62,8 @@ export declare class WishlistService {
     } & {
         id: number;
         user_id: number;
-        created_at: Date;
         product_id: number;
+        created_at: Date;
     }) | {
         message: string;
     }>;

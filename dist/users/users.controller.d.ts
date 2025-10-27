@@ -6,6 +6,7 @@ export declare class UsersController {
     getProfile(user: any): Promise<{
         id: number;
         created_at: Date;
+        updated_at: Date;
         username: string;
         name: string;
         email: string;
@@ -13,15 +14,14 @@ export declare class UsersController {
         avatar: string;
         email_verified_at: Date;
         phone_verified_at: Date;
-        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
+                updated_at: Date;
                 name: string;
                 is_active: boolean;
-                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -38,21 +38,21 @@ export declare class UsersController {
     updateProfile(user: any, updateUserDto: UpdateUserDto): Promise<{
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         email: string;
         phone: string;
         avatar: string;
         email_verified_at: Date;
         phone_verified_at: Date;
-        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
+                updated_at: Date;
                 name: string;
                 is_active: boolean;
-                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -81,9 +81,9 @@ export declare class UsersController {
                     description: string | null;
                     id: number;
                     created_at: Date;
+                    updated_at: Date;
                     name: string;
                     is_active: boolean;
-                    updated_at: Date;
                     slug: string;
                     permissions: import("@prisma/client/runtime/library").JsonValue | null;
                 };
@@ -109,21 +109,21 @@ export declare class UsersController {
     getMembers(): Promise<{
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         email: string;
         phone: string;
         avatar: string;
         email_verified_at: Date;
         phone_verified_at: Date;
-        updated_at: Date;
         user_roles: ({
             role: {
                 description: string | null;
                 id: number;
                 created_at: Date;
+                updated_at: Date;
                 name: string;
                 is_active: boolean;
-                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -150,9 +150,9 @@ export declare class UsersController {
                 description: string | null;
                 id: number;
                 created_at: Date;
+                updated_at: Date;
                 name: string;
                 is_active: boolean;
-                updated_at: Date;
                 slug: string;
                 permissions: import("@prisma/client/runtime/library").JsonValue | null;
             };
@@ -169,9 +169,9 @@ export declare class UsersController {
             type: import(".prisma/client").$Enums.KycType;
             id: number;
             user_id: number;
+            status: import(".prisma/client").$Enums.KycStatus;
             created_at: Date;
             updated_at: Date;
-            status: import(".prisma/client").$Enums.KycStatus;
             notes: string | null;
             expires_at: Date | null;
             data: import("@prisma/client/runtime/library").JsonValue | null;

@@ -9,9 +9,9 @@ export declare class CouponsController {
         type: import(".prisma/client").$Enums.CouponType;
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         is_active: boolean;
-        updated_at: Date;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
         expires_at: Date | null;
@@ -27,9 +27,9 @@ export declare class CouponsController {
         type: import(".prisma/client").$Enums.CouponType;
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         is_active: boolean;
-        updated_at: Date;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
         expires_at: Date | null;
@@ -45,9 +45,9 @@ export declare class CouponsController {
         type: import(".prisma/client").$Enums.CouponType;
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         is_active: boolean;
-        updated_at: Date;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
         expires_at: Date | null;
@@ -63,9 +63,9 @@ export declare class CouponsController {
         type: import(".prisma/client").$Enums.CouponType;
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         is_active: boolean;
-        updated_at: Date;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
         expires_at: Date | null;
@@ -81,9 +81,9 @@ export declare class CouponsController {
         type: import(".prisma/client").$Enums.CouponType;
         id: number;
         created_at: Date;
+        updated_at: Date;
         name: string;
         is_active: boolean;
-        updated_at: Date;
         code: string;
         value: import("@prisma/client/runtime/library").Decimal;
         expires_at: Date | null;

@@ -19,10 +19,10 @@ export declare class OrdersService {
             product: {
                 description: string | null;
                 id: number;
-                created_at: Date;
-                name: string;
-                updated_at: Date;
                 status: import(".prisma/client").$Enums.ProductStatus;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -46,9 +46,9 @@ export declare class OrdersService {
             };
         } & {
             id: number;
-            created_at: Date;
             product_id: number;
             quantity: number;
+            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -57,9 +57,9 @@ export declare class OrdersService {
         })[];
     } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -93,8 +93,8 @@ export declare class OrdersService {
                 price: import("@prisma/client/runtime/library").Decimal;
                 images: {
                     id: number;
-                    created_at: Date;
                     product_id: number;
+                    created_at: Date;
                     sort_order: number;
                     image_url: string;
                     alt_text: string | null;
@@ -103,9 +103,9 @@ export declare class OrdersService {
             };
         } & {
             id: number;
-            created_at: Date;
             product_id: number;
             quantity: number;
+            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -114,9 +114,9 @@ export declare class OrdersService {
         })[];
     } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -152,8 +152,8 @@ export declare class OrdersService {
                 price: import("@prisma/client/runtime/library").Decimal;
                 images: {
                     id: number;
-                    created_at: Date;
                     product_id: number;
+                    created_at: Date;
                     sort_order: number;
                     image_url: string;
                     alt_text: string | null;
@@ -162,9 +162,9 @@ export declare class OrdersService {
             };
         } & {
             id: number;
-            created_at: Date;
             product_id: number;
             quantity: number;
+            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -173,9 +173,9 @@ export declare class OrdersService {
         })[];
     } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -206,10 +206,10 @@ export declare class OrdersService {
             product: {
                 description: string | null;
                 id: number;
-                created_at: Date;
-                name: string;
-                updated_at: Date;
                 status: import(".prisma/client").$Enums.ProductStatus;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -233,9 +233,9 @@ export declare class OrdersService {
             };
         } & {
             id: number;
-            created_at: Date;
             product_id: number;
             quantity: number;
+            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -244,9 +244,9 @@ export declare class OrdersService {
         })[];
     } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;
@@ -272,10 +272,10 @@ export declare class OrdersService {
             product: {
                 description: string | null;
                 id: number;
-                created_at: Date;
-                name: string;
-                updated_at: Date;
                 status: import(".prisma/client").$Enums.ProductStatus;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -299,9 +299,9 @@ export declare class OrdersService {
             };
         } & {
             id: number;
-            created_at: Date;
             product_id: number;
             quantity: number;
+            created_at: Date;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             order_id: number;
             product_name: string;
@@ -310,9 +310,9 @@ export declare class OrdersService {
         })[];
     } & {
         id: number;
+        status: import(".prisma/client").$Enums.OrderStatus;
         created_at: Date;
         updated_at: Date;
-        status: import(".prisma/client").$Enums.OrderStatus;
         seller_id: number;
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
         order_number: string;

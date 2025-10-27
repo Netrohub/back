@@ -16,10 +16,10 @@ export declare class CartService {
             product: {
                 description: string | null;
                 id: number;
-                created_at: Date;
-                name: string;
-                updated_at: Date;
                 status: import(".prisma/client").$Enums.ProductStatus;
+                created_at: Date;
+                updated_at: Date;
+                name: string;
                 slug: string;
                 price: import("@prisma/client/runtime/library").Decimal;
                 discount_price: import("@prisma/client/runtime/library").Decimal | null;
@@ -44,11 +44,11 @@ export declare class CartService {
         } & {
             id: number;
             user_id: number;
-            created_at: Date;
-            updated_at: Date;
             product_id: number;
             quantity: number;
             status: import(".prisma/client").$Enums.CartStatus;
+            created_at: Date;
+            updated_at: Date;
         })[];
         subtotal: number;
         service_fee: number;
@@ -58,11 +58,11 @@ export declare class CartService {
     addToCart(userId: number, addToCartDto: AddToCartDto): Promise<{
         id: number;
         user_id: number;
-        created_at: Date;
-        updated_at: Date;
         product_id: number;
         quantity: number;
         status: import(".prisma/client").$Enums.CartStatus;
+        created_at: Date;
+        updated_at: Date;
     }>;
     updateCartItem(userId: number, itemId: number, updateCartItemDto: UpdateCartItemDto): Promise<import(".prisma/client").Prisma.BatchPayload>;
     removeFromCart(userId: number, itemId: number): Promise<import(".prisma/client").Prisma.BatchPayload>;
