@@ -127,37 +127,66 @@ export class SellerService {
   }
 
   async getSellerPayouts(sellerId: number) {
-    // In a real implementation, you would have a payouts table
-    // For now, we'll return mock data
-    return [
-      {
-        id: 1,
-        amount: 1500.00,
-        status: 'completed',
-        created_at: new Date(),
-        description: 'Monthly payout',
+    // ✅ FIXED: Fetch real payouts from database
+    return this.prisma.payout.findMany({
+      where: {
+        seller_id: sellerId,
       },
-    ];
+      orderBy: {
+        created_at: 'desc',
+      },
+      select: {
+        id: true,
+        amount: true,
+        status: true,
+        payout_method: true,
+        transaction_id: true,
+        notes: true,
+        created_at: true,
+        processed_at: true,
+      },
+    });
   }
 
   async getSellerNotifications(sellerId: number) {
-    // In a real implementation, you would have a notifications table
-    // For now, we'll return mock data
-    return [
-      {
-        id: 1,
-        type: 'order',
-        message: 'New order received',
-        read: false,
-        created_at: new Date(),
+    // ✅ FIXED: Return order-related notifications from actual orders
+    // Get recent orders for this seller
+    const recentOrders = await this.prisma.order.findMany({
+      where: {
+        seller_id: sellerId,
+        created_at: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+        },
       },
-      {
-        id: 2,
-        type: 'payment',
-        message: 'Payment received',
-        read: true,
-        created_at: new Date(),
+      orderBy: {
+        created_at: 'desc',
       },
-    ];
+      take: 20,
+      select: {
+        id: true,
+        order_number: true,
+        status: true,
+        payment_status: true,
+        total_amount: true,
+        created_at: true,
+        buyer: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Transform orders into notification format
+    return recentOrders.map((order) => ({
+      id: order.id,
+      type: 'order',
+      message: `${order.status === 'PENDING' ? 'New order' : `Order ${order.status.toLowerCase()}`} #${order.order_number} from ${order.buyer.name} - $${order.total_amount}`,
+      read: order.status !== 'PENDING', // Mark pending orders as unread
+      created_at: order.created_at,
+      order_id: order.id,
+      order_status: order.status,
+      payment_status: order.payment_status,
+    }));
   }
 }
