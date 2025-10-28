@@ -2,14 +2,23 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import * as compression from 'compression';
+import * as path from 'path';
 import { AppModule } from './app.module';
 import { PrismaSerializeInterceptor } from './common/interceptors/prisma-serialize.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+
+  // Serve static files from uploads directory
+  const uploadsPath = path.join(process.cwd(), 'uploads');
+  app.useStaticAssets(uploadsPath, {
+    prefix: '/uploads/',
+  });
+  console.log(`📁 Serving static files from: ${uploadsPath}`);
 
   // CORS configuration (before helmet to avoid conflicts)
   app.enableCors({
