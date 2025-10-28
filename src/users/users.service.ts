@@ -174,10 +174,13 @@ export class UsersService {
     return this.prisma.user.findMany({
       select: {
         id: true,
+        username: true, // ✅ FIXED: Added username
         name: true,
         email: true,
         phone: true,
         avatar: true,
+        bio: true, // ✅ FIXED: Added bio for member cards
+        location: true, // ✅ FIXED: Added location
         email_verified_at: true,
         phone_verified_at: true,
         created_at: true,
