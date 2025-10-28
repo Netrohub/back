@@ -8,6 +8,30 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { User } from '@prisma/client';
 
+// ✅ FIX #1: Hardcoded list of reserved usernames
+const RESERVED_USERNAMES = [
+  'admin', 'administrator', 'moderator', 'mod', 'support', 'help',
+  'root', 'system', 'api', 'nxoland', 'nexo', 'staff', 'team',
+  'official', 'verified', 'bot', 'service', 'info', 'contact',
+  'sales', 'billing', 'abuse', 'security', 'privacy', 'legal',
+  'terms', 'tos', 'dmca', 'copyright', 'trademark', 'about',
+  'careers', 'jobs', 'press', 'media', 'blog', 'news', 'newsletter',
+  'account', 'accounts', 'settings', 'profile', 'dashboard',
+  'login', 'logout', 'register', 'signup', 'signin', 'signout',
+  'auth', 'oauth', 'sso', 'password', 'reset', 'verify', 'confirm',
+  'user', 'users', 'member', 'members', 'seller', 'sellers',
+  'buyer', 'buyers', 'vendor', 'vendors', 'guest', 'anonymous',
+  'products', 'shop', 'store', 'cart', 'checkout', 'orders',
+  'payment', 'payments', 'invoice', 'invoices', 'refund', 'refunds',
+  'dispute', 'disputes', 'ticket', 'tickets', 'message', 'messages',
+  'notification', 'notifications', 'alert', 'alerts', 'feed',
+  'search', 'explore', 'discover', 'trending', 'popular', 'new',
+  'admin-panel', 'adminpanel', 'cpanel', 'control-panel',
+  'www', 'ftp', 'mail', 'smtp', 'pop', 'imap', 'webmail',
+  'test', 'testing', 'demo', 'staging', 'dev', 'development',
+  'production', 'prod', 'beta', 'alpha', 'preview', 'localhost'
+];
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -15,6 +39,12 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
+
+  // ✅ Helper method to check if username is reserved
+  private isUsernameReserved(username: string): boolean {
+    const normalizedUsername = username.toLowerCase().trim();
+    return RESERVED_USERNAMES.includes(normalizedUsername);
+  }
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
@@ -74,11 +104,12 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, ipAddress?: string, userAgent?: string) {
     const user = await this.validateUser(loginDto.email, loginDto.password);
     
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      // ✅ FIX #3: Generic error message to prevent user enumeration
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const payload = {
@@ -89,10 +120,29 @@ export class AuthService {
       roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
     };
 
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '30d' });
+
+    // ✅ FIX #5: Create user session
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days
+
+    await this.prisma.userSession.create({
+      data: {
+        user_id: user.id,
+        device_type: this.getDeviceType(userAgent),
+        ip_address: ipAddress || 'unknown',
+        user_agent: userAgent,
+        expires_at: expiresAt,
+        is_active: true,
+      },
+    });
+
     return {
       data: {
         user,
-        access_token: this.jwtService.sign(payload),
+        access_token: accessToken,
+        refresh_token: refreshToken,
         token_type: 'Bearer',
         expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
       },
@@ -101,32 +151,24 @@ export class AuthService {
     };
   }
 
-  async register(registerDto: RegisterDto) {
-    // Check if username is reserved (if reserved_usernames table exists)
-    try {
-      const reservedUsername = await this.prisma.$queryRaw`
-        SELECT username FROM reserved_usernames 
-        WHERE LOWER(username) = LOWER(${registerDto.username})
-      `;
+  // ✅ Helper method to extract device type from user agent
+  private getDeviceType(userAgent?: string): string {
+    if (!userAgent) return 'unknown';
+    
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('mobile')) return 'mobile';
+    if (ua.includes('tablet') || ua.includes('ipad')) return 'tablet';
+    return 'desktop';
+  }
 
-      if (Array.isArray(reservedUsername) && reservedUsername.length > 0) {
-        throw new ConflictException({
-          message: 'Username is reserved and cannot be used',
-          status: 'error',
-          errors: { username: ['This username is reserved and cannot be used'] }
-        });
-      }
-    } catch (error) {
-      // If it's a ConflictException (username is reserved), re-throw it
-      if (error instanceof ConflictException) {
-        throw error;
-      }
-      // If reserved_usernames table doesn't exist or query fails, skip this check
-      // Only log in development
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Reserved usernames check skipped:', error.message);
-      }
-      // Don't throw database errors, continue with registration
+  async register(registerDto: RegisterDto) {
+    // ✅ FIX #1: Check if username is reserved using hardcoded list
+    if (this.isUsernameReserved(registerDto.username)) {
+      throw new ConflictException({
+        message: 'This username is not available',
+        status: 'error',
+        errors: { username: ['This username is reserved and cannot be used'] }
+      });
     }
 
     // Check if user already exists by email
@@ -135,10 +177,11 @@ export class AuthService {
     });
 
     if (existingUserByEmail) {
+      // ✅ FIX #3: More generic error message
       throw new ConflictException({
-        message: 'User with this email already exists',
+        message: 'Registration failed',
         status: 'error',
-        errors: { email: ['Email is already registered'] }
+        errors: { email: ['This email is already in use'] }
       });
     }
 
@@ -153,10 +196,11 @@ export class AuthService {
     });
 
     if (existingUserByUsername) {
+      // ✅ FIX #3: More generic error message
       throw new ConflictException({
-        message: 'Username already taken',
+        message: 'Registration failed',
         status: 'error',
-        errors: { username: ['Username is already taken'] }
+        errors: { username: ['This username is not available'] }
       });
     }
 
@@ -276,34 +320,43 @@ export class AuthService {
     return { message: 'Phone verified successfully' };
   }
 
-  async requestPasswordReset(email: string) {
+  async requestPasswordReset(email: string, ipAddress?: string, userAgent?: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
 
+    // ✅ FIX #3: Don't reveal if user exists or not
+    // Always return success message to prevent user enumeration
     if (!user) {
-      throw new NotFoundException('User not found');
+      // Return success even if user doesn't exist
+      return {
+        message: 'If an account exists with this email, a password reset link has been sent',
+        status: 'success'
+      };
     }
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = await bcrypt.hash(resetToken, 10);
     const resetTokenExpires = new Date(Date.now() + 3600000); // 1 hour from now
 
-    // Store reset token in user record (you might want to create a separate table for this)
-    // Note: You'll need to add these fields to your Prisma schema
-    // await this.prisma.user.update({
-    //   where: { id: user.id },
-    //   data: {
-    //     reset_password_token: resetToken,
-    //     reset_password_expires: resetTokenExpires,
-    //   },
-    // });
+    // ✅ Store reset token in password_resets table
+    await this.prisma.passwordReset.create({
+      data: {
+        user_id: user.id,
+        token: hashedToken,
+        expires_at: resetTokenExpires,
+        ip_address: ipAddress,
+        user_agent: userAgent,
+      },
+    });
 
     // TODO: Send email with reset link
+    // The actual token (resetToken) should be sent to the user's email
     // await this.emailService.sendPasswordResetEmail(user.email, resetToken);
 
     return {
-      message: 'Password reset email sent successfully',
+      message: 'If an account exists with this email, a password reset link has been sent',
       status: 'success'
     };
   }
@@ -313,36 +366,189 @@ export class AuthService {
       throw new BadRequestException('Passwords do not match');
     }
 
-    // Find user by reset token (you'll need to add this field to your schema)
-    // const user = await this.prisma.user.findFirst({
-    //   where: {
-    //     reset_password_token: token,
-    //     reset_password_expires: { gte: new Date() },
-    //   },
-    // });
+    // ✅ Find all non-expired, unused password reset tokens
+    const resetRequests = await this.prisma.passwordReset.findMany({
+      where: {
+        expires_at: { gte: new Date() },
+        used_at: null,
+      },
+      include: {
+        user: true,
+      },
+    });
 
-    // For now, return a placeholder response
-    // if (!user) {
-    //   throw new BadRequestException('Invalid or expired reset token');
-    // }
+    // Find the matching token by comparing hashes
+    let matchingReset = null;
+    for (const reset of resetRequests) {
+      const isMatch = await bcrypt.compare(token, reset.token);
+      if (isMatch) {
+        matchingReset = reset;
+        break;
+      }
+    }
+
+    if (!matchingReset) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
 
     // Hash new password
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    // TODO: Update password and clear reset token when schema is updated
-    // await this.prisma.user.update({
-    //   where: { id: user.id },
-    //   data: {
-    //     password: hashedPassword,
-    //     reset_password_token: null,
-    //     reset_password_expires: null,
-    //   },
-    // });
+    // ✅ Update password and mark token as used
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: matchingReset.user_id },
+        data: {
+          password: hashedPassword,
+          login_attempts: 0,
+          locked_until: null,
+        },
+      }),
+      this.prisma.passwordReset.update({
+        where: { id: matchingReset.id },
+        data: {
+          used_at: new Date(),
+        },
+      }),
+    ]);
 
     return {
       message: 'Password reset successful',
       status: 'success'
     };
+  }
+
+  // ✅ FIX #5: Logout - Revoke user session
+  async logout(userId: number, sessionId?: string) {
+    if (sessionId) {
+      // Revoke specific session
+      await this.prisma.userSession.updateMany({
+        where: {
+          id: sessionId,
+          user_id: userId,
+        },
+        data: {
+          is_active: false,
+        },
+      });
+    } else {
+      // Revoke all sessions for this user
+      await this.prisma.userSession.updateMany({
+        where: {
+          user_id: userId,
+        },
+        data: {
+          is_active: false,
+        },
+      });
+    }
+
+    return {
+      message: 'Logged out successfully',
+      status: 'success'
+    };
+  }
+
+  // ✅ FIX #5: Get all active sessions for a user
+  async getUserSessions(userId: number) {
+    const sessions = await this.prisma.userSession.findMany({
+      where: {
+        user_id: userId,
+        is_active: true,
+        expires_at: {
+          gte: new Date(),
+        },
+      },
+      orderBy: {
+        last_activity_at: 'desc',
+      },
+      select: {
+        id: true,
+        device_name: true,
+        device_type: true,
+        ip_address: true,
+        location: true,
+        last_activity_at: true,
+        created_at: true,
+      },
+    });
+
+    return {
+      data: sessions,
+      status: 'success'
+    };
+  }
+
+  // ✅ FIX #5: Revoke specific session
+  async revokeSession(userId: number, sessionId: string) {
+    const session = await this.prisma.userSession.findFirst({
+      where: {
+        id: sessionId,
+        user_id: userId,
+      },
+    });
+
+    if (!session) {
+      throw new NotFoundException('Session not found');
+    }
+
+    await this.prisma.userSession.update({
+      where: {
+        id: sessionId,
+      },
+      data: {
+        is_active: false,
+      },
+    });
+
+    return {
+      message: 'Session revoked successfully',
+      status: 'success'
+    };
+  }
+
+  // ✅ FIX #6: Refresh access token
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken);
+      
+      // Verify user still exists and is active
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+        include: {
+          user_roles: {
+            include: {
+              role: true
+            }
+          }
+        }
+      });
+
+      if (!user || !user.is_active) {
+        throw new UnauthorizedException('User not found or inactive');
+      }
+
+      // Generate new access token
+      const newPayload = {
+        sub: user.id,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        roles: user.user_roles?.map(ur => ur.role.slug) || ['user'],
+      };
+
+      const newAccessToken = this.jwtService.sign(newPayload);
+
+      return {
+        data: {
+          access_token: newAccessToken,
+          token_type: 'Bearer',
+          expires_in: this.configService.get('JWT_EXPIRES_IN', '7d'),
+        },
+        status: 'success'
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 }
