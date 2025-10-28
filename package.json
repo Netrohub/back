@@ -20,13 +20,15 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed:admin": "ts-node scripts/seed-admin.ts",
+    "make-admin": "ts-node scripts/make-user-admin.ts",
     "db:migrate": "mysql -u $DB_USER -p$DB_PASSWORD $DB_NAME < migrations/001_enhance_database.sql",
     "db:health": "curl http://localhost:3000/health/database",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "ts-node prisma/seed.ts"
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:push": "prisma db push"
   },
   "dependencies": {
     "@nestjs/bull": "^10.0.1",
