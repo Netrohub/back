@@ -112,12 +112,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    // ✅ FIX: Extract role slugs from user_roles relation
+    const roleSlugs = user.user_roles?.map((ur: any) => ur.role.slug) || [];
+    
     const payload = {
       sub: user.id,
       email: user.email,
       username: user.username,
       name: user.name,
-      roles: typeof user.roles === 'string' ? JSON.parse(user.roles) : user.roles,
+      roles: roleSlugs,
     };
 
     const accessToken = this.jwtService.sign(payload);
@@ -138,9 +141,15 @@ export class AuthService {
       },
     });
 
+    // ✅ FIX: Add roles array to user object in response
+    const userWithRoles = {
+      ...user,
+      roles: roleSlugs,
+    };
+
     return {
       data: {
-        user,
+        user: userWithRoles,
         access_token: accessToken,
         refresh_token: refreshToken,
         token_type: 'Bearer',
