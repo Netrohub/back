@@ -103,18 +103,16 @@ async function bootstrap() {
     document,
   );
 
-  // Log all registered routes
-  const routes = app.getHttpServer()._events.request;
-  const registeredRoutes = [];
-  app.getHttpAdapter().getInstance()._router?.stack?.forEach((middleware) => {
-    if (middleware.route) {
-      const methods = Object.keys(middleware.route.methods).join(',').toUpperCase();
-      registeredRoutes.push(`${methods} ${middleware.route.path}`);
-    }
-  });
-  
-  console.log('📋 Registered Routes:');
-  registeredRoutes.forEach(route => console.log(`  ${route}`));
+  // Log all registered routes (commented out due to TypeScript issues)
+  // const registeredRoutes = [];
+  // app.getHttpAdapter().getInstance()._router?.stack?.forEach((middleware) => {
+  //   if (middleware.route) {
+  //     const methods = Object.keys(middleware.route.methods).join(',').toUpperCase();
+  //     registeredRoutes.push(`${methods} ${middleware.route.path}`);
+  //   }
+  // });
+  // console.log('📋 Registered Routes:');
+  // registeredRoutes.forEach(route => console.log(`  ${route}`));
 
   const port = configService.get('PORT', 3000);
   await app.listen(port);

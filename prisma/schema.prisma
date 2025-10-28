@@ -59,6 +59,7 @@ model User {
   audit_logs            AuditLog[]
   payouts               Payout[]
   transactions          Transaction[]
+  notifications         Notification[]
 
   @@map("users")
   @@index([email])
@@ -188,6 +189,8 @@ model Product {
   @@index([rating_avg])
   @@index([views_count])
   @@index([sales_count])
+  @@index([status, created_at]) // Composite for active listings
+  @@index([seller_id, status]) // Composite for seller products
   @@index([created_at])
   @@index([platform])
   // Full-text search available via PostgreSQL native search or extension
@@ -289,6 +292,9 @@ model Order {
   @@index([status])
   @@index([payment_status])
   @@index([created_at])
+  @@index([buyer_id, status]) // Composite for user orders query
+  @@index([seller_id, status]) // Composite for seller dashboard
+  @@index([status, created_at]) // Composite for admin queries
 }
 
 model OrderItem {
@@ -360,8 +366,9 @@ model CartItem {
 
   @@unique([user_id, product_id, status])
   @@map("cart_items")
-  @@index([user_id])
+  @@index([user_id]) // Critical for cart queries
   @@index([product_id])
+  @@index([status])
 }
 
 model WishlistItem {
@@ -378,6 +385,7 @@ model WishlistItem {
   @@map("wishlist_items")
   @@index([user_id])
   @@index([product_id])
+  @@index([user_id, created_at]) // Composite for user wishlist sorting
 }
 
 model Coupon {
@@ -603,6 +611,28 @@ model UserSession {
   @@index([user_id])
   @@index([is_active])
   @@index([last_activity_at])
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  type        String    @db.VarChar(50)
+  title       String    @db.VarChar(255)
+  message     String    @db.Text
+  data        Json?
+  action_url  String?   @db.Text
+  is_read     Boolean   @default(false)
+  read_at     DateTime?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  // Relations
+  user        User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([user_id])
+  @@index([is_read])
+  @@index([created_at])
 }
 
 // ========================================

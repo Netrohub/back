@@ -135,16 +135,16 @@ export class SellerService {
       orderBy: {
         created_at: 'desc',
       },
-      select: {
-        id: true,
-        amount: true,
-        status: true,
-        payout_method: true,
-        transaction_id: true,
-        notes: true,
-        created_at: true,
-        processed_at: true,
-      },
+        select: {
+            id: true,
+            amount: true,
+            status: true,
+            method: true,
+            reference: true,
+            notes: true,
+            created_at: true,
+            processed_at: true,
+          },
     });
   }
 
