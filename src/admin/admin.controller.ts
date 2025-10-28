@@ -168,6 +168,79 @@ export class AdminController {
     return this.adminService.updatePayoutStatus(id, statusData.status);
   }
 
+  // Products Management
+  @Get('products')
+  @ApiOperation({ summary: 'Get all products (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Products retrieved successfully' })
+  async getProducts(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '25',
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('category') category?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 25;
+    return this.adminService.getProducts(pageNum, limitNum, search, status, category);
+  }
+
+  @Get('products/:id')
+  @ApiOperation({ summary: 'Get product by ID (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Product retrieved successfully' })
+  async getProduct(@Param('id') id: number) {
+    return this.adminService.getProduct(id);
+  }
+
+  @Put('products/:id/status')
+  @ApiOperation({ summary: 'Update product status (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Product status updated successfully' })
+  async updateProductStatus(@Param('id') id: number, @Body() statusData: { status: string }) {
+    return this.adminService.updateProductStatus(id, statusData.status);
+  }
+
+  @Delete('products/:id')
+  @ApiOperation({ summary: 'Delete product (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Product deleted successfully' })
+  async deleteProduct(@Param('id') id: number) {
+    return this.adminService.deleteProduct(id);
+  }
+
+  // Disputes Management
+  @Get('disputes')
+  @ApiOperation({ summary: 'Get all disputes (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Disputes retrieved successfully' })
+  async getDisputes(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '25',
+    @Query('status') status?: string,
+    @Query('priority') priority?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 25;
+    return this.adminService.getDisputes(pageNum, limitNum, status, priority);
+  }
+
+  @Get('disputes/:id')
+  @ApiOperation({ summary: 'Get dispute by ID (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Dispute retrieved successfully' })
+  async getDispute(@Param('id') id: number) {
+    return this.adminService.getDispute(id);
+  }
+
+  @Put('disputes/:id/status')
+  @ApiOperation({ summary: 'Update dispute status (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Dispute status updated successfully' })
+  async updateDisputeStatus(@Param('id') id: number, @Body() statusData: { status: string; resolution?: string }) {
+    return this.adminService.updateDisputeStatus(id, statusData.status, statusData.resolution);
+  }
+
+  @Post('disputes/:id/assign')
+  @ApiOperation({ summary: 'Assign dispute to admin (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Dispute assigned successfully' })
+  async assignDispute(@Param('id') id: number, @Body() assignData: { admin_id: number }) {
+    return this.adminService.assignDispute(id, assignData.admin_id);
+  }
+
   // Dashboard Stats
   @Get('dashboard/stats')
   @ApiOperation({ summary: 'Get admin dashboard statistics' })

@@ -504,6 +504,303 @@ export class AdminService {
     return updatedPayout;
   }
 
+  // Products Management
+  async getProducts(page: number = 1, limit: number = 25, search?: string, status?: string, category?: string) {
+    const skip = (page - 1) * limit;
+    
+    const where: any = {};
+    
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+    
+    if (category) {
+      where.category_id = parseInt(category);
+    }
+    
+    const [products, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              email: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+    
+    return {
+      data: products,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getProduct(id: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+          },
+        },
+        category: true,
+        reviews: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+              },
+            },
+          },
+          orderBy: { created_at: 'desc' },
+          take: 10,
+        },
+      },
+    });
+    
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    
+    return product;
+  }
+
+  async updateProductStatus(id: number, status: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+    
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    
+    return this.prisma.product.update({
+      where: { id },
+      data: { status: status.toUpperCase() as any },
+    });
+  }
+
+  async deleteProduct(id: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+    
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    
+    await this.prisma.product.delete({
+      where: { id },
+    });
+    
+    return { message: 'Product deleted successfully' };
+  }
+
+  // Disputes Management
+  async getDisputes(page: number = 1, limit: number = 25, status?: string, priority?: string) {
+    const skip = (page - 1) * limit;
+    
+    const where: any = {};
+    
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+    
+    if (priority) {
+      where.priority = priority.toUpperCase();
+    }
+    
+    const [disputes, total] = await Promise.all([
+      this.prisma.dispute.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          buyer: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              email: true,
+            },
+          },
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              email: true,
+            },
+          },
+          order: {
+            select: {
+              id: true,
+              order_number: true,
+              total_amount: true,
+            },
+          },
+          assigned_admin: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+            },
+          },
+        },
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.dispute.count({ where }),
+    ]);
+    
+    return {
+      data: disputes,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getDispute(id: number) {
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id },
+      include: {
+        buyer: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+          },
+        },
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+          },
+        },
+        order: {
+          select: {
+            id: true,
+            order_number: true,
+            total_amount: true,
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+        assigned_admin: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
+        messages: {
+          include: {
+            sender: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+              },
+            },
+          },
+          orderBy: { created_at: 'asc' },
+        },
+      },
+    });
+    
+    if (!dispute) {
+      throw new NotFoundException(`Dispute with ID ${id} not found`);
+    }
+    
+    return dispute;
+  }
+
+  async updateDisputeStatus(id: number, status: string, resolution?: string) {
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id },
+    });
+    
+    if (!dispute) {
+      throw new NotFoundException(`Dispute with ID ${id} not found`);
+    }
+    
+    const updateData: any = {
+      status: status.toUpperCase(),
+      updated_at: new Date(),
+    };
+    
+    if (status.toUpperCase() === 'RESOLVED' && resolution) {
+      updateData.resolution_details = resolution;
+      updateData.resolved_at = new Date();
+    }
+    
+    return this.prisma.dispute.update({
+      where: { id },
+      data: updateData,
+    });
+  }
+
+  async assignDispute(id: number, adminId: number) {
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id },
+    });
+    
+    if (!dispute) {
+      throw new NotFoundException(`Dispute with ID ${id} not found`);
+    }
+    
+    return this.prisma.dispute.update({
+      where: { id },
+      data: {
+        assigned_admin_id: adminId,
+        status: 'INVESTIGATING',
+        updated_at: new Date(),
+      },
+    });
+  }
+
   // Dashboard Stats
   async getDashboardStats() {
     const [
