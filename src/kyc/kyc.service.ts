@@ -4,13 +4,26 @@ import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class KycService {
-  private readonly PERSONA_API_KEY = process.env.PERSONA_API_KEY || 'sk_test_3ef3be12-87af-444f-9c71-c7546ee971a5';
-  private readonly PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || 'itmpl_1bNZnx9mrbHZKKJsvJiN9BDDTuD6';
+  // ✅ SECURITY FIX: Removed hardcoded API keys
+  private readonly PERSONA_API_KEY: string;
+  private readonly PERSONA_TEMPLATE_ID: string;
 
   constructor(
     private prisma: PrismaService,
     private emailService: EmailService,
-  ) {}
+  ) {
+    // ✅ Validate required environment variables
+    this.PERSONA_API_KEY = process.env.PERSONA_API_KEY || '';
+    this.PERSONA_TEMPLATE_ID = process.env.PERSONA_TEMPLATE_ID || '';
+    
+    if (!this.PERSONA_API_KEY) {
+      console.error('⚠️ PERSONA_API_KEY not configured. KYC verification will not function.');
+    }
+    
+    if (!this.PERSONA_TEMPLATE_ID) {
+      console.error('⚠️ PERSONA_TEMPLATE_ID not configured. KYC verification will not function.');
+    }
+  }
 
   async handlePersonaCallback(data: any) {
     console.log('🔍 Processing Persona callback:', data);
@@ -238,12 +251,13 @@ export class KycService {
   }
 
   async createPersonaInquiry(userId: number) {
+    // ✅ SECURITY FIX: Check if credentials are configured
+    if (!this.PERSONA_API_KEY || !this.PERSONA_TEMPLATE_ID) {
+      throw new Error('Persona API credentials not configured. Please set PERSONA_API_KEY and PERSONA_TEMPLATE_ID environment variables.');
+    }
+
     try {
-      console.log('🔍 Creating Persona inquiry for user:', userId);
-      console.log('🔑 API Key full length:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.length : 0);
-      console.log('🔑 API Key first 50 chars:', this.PERSONA_API_KEY ? this.PERSONA_API_KEY.substring(0, 50) : 'NOT SET');
-      console.log('🔑 API Key last 10 chars:', this.PERSONA_API_KEY ? `...${this.PERSONA_API_KEY.substring(this.PERSONA_API_KEY.length - 10)}` : 'NOT SET');
-      console.log('📋 Template ID:', this.PERSONA_TEMPLATE_ID);
+      // ✅ SECURITY FIX: Removed sensitive console logging
       
       // Create Persona inquiry via API
       const response = await fetch('https://api.withpersona.com/api/v1/inquiries', {

@@ -388,7 +388,7 @@ export class AdminService {
     });
   }
 
-  // Payouts Management (placeholder - would need actual payout system)
+  // ✅ FIXED: Payouts Management - Real implementation
   async getPayouts(page: number = 1, perPage: number = 10, status?: string, dateFrom?: string, dateTo?: string) {
     // Ensure page and perPage are valid numbers
     const pageNum = Number(page) || 1;
@@ -398,27 +398,110 @@ export class AdminService {
     const validPage = Math.max(1, pageNum);
     const validPerPage = Math.min(Math.max(1, perPageNum), 100); // Max 100 items per page
     
-    // This is a placeholder implementation
-    // In a real system, you'd have a payouts table
+    // Build where clause
+    const where: any = {};
+    
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+    
+    if (dateFrom || dateTo) {
+      where.created_at = {};
+      if (dateFrom) {
+        where.created_at.gte = new Date(dateFrom);
+      }
+      if (dateTo) {
+        where.created_at.lte = new Date(dateTo);
+      }
+    }
+    
+    // Fetch payouts with pagination
+    const [payouts, total] = await Promise.all([
+      this.prisma.payout.findMany({
+        where,
+        take: validPerPage,
+        skip: (validPage - 1) * validPerPage,
+        orderBy: {
+          created_at: 'desc',
+        },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.prisma.payout.count({ where }),
+    ]);
+    
     return {
-      data: [],
+      data: payouts,
       pagination: {
         page: validPage,
         per_page: validPerPage,
-        total: 0,
-        total_pages: 0,
+        total,
+        total_pages: Math.ceil(total / validPerPage),
       },
     };
   }
 
   async getPayout(id: number) {
-    // Placeholder implementation
-    return null;
+    // ✅ FIXED: Fetch real payout from database
+    const payout = await this.prisma.payout.findUnique({
+      where: { id },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+    
+    if (!payout) {
+      throw new NotFoundException(`Payout with ID ${id} not found`);
+    }
+    
+    return payout;
   }
 
   async updatePayoutStatus(id: number, status: string) {
-    // Placeholder implementation
-    return null;
+    // ✅ FIXED: Update payout status
+    const payout = await this.prisma.payout.findUnique({
+      where: { id },
+    });
+    
+    if (!payout) {
+      throw new NotFoundException(`Payout with ID ${id} not found`);
+    }
+    
+    // Update payout status
+    const updatedPayout = await this.prisma.payout.update({
+      where: { id },
+      data: {
+        status: status.toUpperCase() as any,
+        processed_at: status.toUpperCase() === 'COMPLETED' ? new Date() : null,
+      },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+    
+    return updatedPayout;
   }
 
   // Dashboard Stats
