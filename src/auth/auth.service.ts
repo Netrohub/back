@@ -117,8 +117,16 @@ export class AuthService {
         });
       }
     } catch (error) {
-      // If reserved_usernames table doesn't exist, skip this check
-      console.log('Reserved usernames table not found, skipping check');
+      // If it's a ConflictException (username is reserved), re-throw it
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      // If reserved_usernames table doesn't exist or query fails, skip this check
+      // Only log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Reserved usernames check skipped:', error.message);
+      }
+      // Don't throw database errors, continue with registration
     }
 
     // Check if user already exists by email
