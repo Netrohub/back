@@ -1,6 +1,6 @@
 # NXOLand Backend API
 
-A robust NestJS API built with TypeScript, Prisma ORM, and MySQL for the NXOLand marketplace platform.
+A robust NestJS API built with TypeScript, Prisma ORM, and PostgreSQL for the NXOLand marketplace platform.
 
 ## 🚀 Technology Stack
 
@@ -8,7 +8,7 @@ A robust NestJS API built with TypeScript, Prisma ORM, and MySQL for the NXOLand
 - **Node.js 20** - JavaScript runtime
 - **TypeScript** - Type-safe JavaScript
 - **Prisma ORM** - Modern database toolkit
-- **MySQL** - Relational database
+- **PostgreSQL** - Relational database
 - **JWT** - JSON Web Token authentication
 - **Swagger** - API documentation
 - **Helmet** - Security middleware
@@ -40,7 +40,7 @@ nxoland-backend/
 
 ### Prerequisites
 - Node.js 20+
-- MySQL 8.0+
+- PostgreSQL 14+ (or use Render's managed PostgreSQL)
 - npm or yarn
 
 ### Installation
@@ -63,7 +63,7 @@ npm run start:dev
 
 Create `.env` file:
 ```env
-DATABASE_URL="mysql://username:password@localhost:3306/nxoland"
+DATABASE_URL="postgresql://username:password@localhost:5432/nxoland?schema=public"
 JWT_SECRET="your-super-secret-jwt-key"
 PORT=3000
 CORS_ORIGIN=https://nxoland.com
@@ -71,7 +71,7 @@ CORS_ORIGIN=https://nxoland.com
 
 ## 🗄️ Database Setup
 
-### MySQL Configuration
+### PostgreSQL Configuration
 
 1. **Create database:**
    ```sql

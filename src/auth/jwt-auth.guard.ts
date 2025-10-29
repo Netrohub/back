@@ -2,9 +2,12 @@ import { Injectable, ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './decorators';
+import { LoggerService } from '../common/logger.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
+  private readonly logger = new LoggerService();
+
   constructor(private reflector: Reflector) {
     super();
   }
@@ -13,13 +16,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = request?.headers?.authorization;
     
-    console.log('🔐 JWT AuthGuard triggered:', {
+    // Log without exposing token (logger redacts it automatically)
+    this.logger.debug('JWT AuthGuard triggered', 'JwtAuthGuard', {
       url: request?.url,
       method: request?.method,
       hasToken: !!token,
-      tokenPreview: token ? token.substring(0, 30) + '...' : 'none',
-      allHeaders: request?.headers,
-      rawHeaders: request?.rawHeaders
     });
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -36,14 +37,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   handleRequest(err: any, user: any, info: any) {
     if (err || !user) {
-      console.error('❌ JWT AuthGuard: Authentication failed', {
-        error: err,
-        info: info?.message || info?.name || info
+      this.logger.warn('JWT AuthGuard: Authentication failed', 'JwtAuthGuard', {
+        error: err?.message,
+        info: info?.message || info?.name || 'Unknown error',
       });
       throw err || new Error(info?.message || 'Authentication failed');
     }
     
-    console.log('✅ JWT AuthGuard: Authentication successful for user:', user.id);
+    this.logger.debug('JWT AuthGuard: Authentication successful', 'JwtAuthGuard', {
+      userId: user.id,
+    });
     return user;
   }
 }

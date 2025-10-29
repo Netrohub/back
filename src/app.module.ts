@@ -22,9 +22,13 @@ import { UploadModule } from './upload/upload.module';
 import { EmailModule } from './email/email.module';
 import { NotificationModule } from './notification/notification.module';
 import { HealthModule } from './health/health.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    // Common utilities (logger, etc.)
+    CommonModule,
+
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,

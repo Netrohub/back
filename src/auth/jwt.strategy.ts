@@ -3,9 +3,12 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
+import { LoggerService } from '../common/logger.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new LoggerService();
+
   constructor(
     private configService: ConfigService,
     private authService: AuthService,
@@ -18,21 +21,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('🔐 JWT Strategy validate called with payload:', {
-      sub: payload.sub,
+    this.logger.debug('JWT Strategy validate called', 'JwtStrategy', {
+      userId: payload.sub,
       email: payload.email,
-      iat: payload.iat,
-      exp: payload.exp
     });
     
     const user = await this.authService.getCurrentUser(payload.sub);
     
     if (!user) {
-      console.error('❌ JWT Strategy: User not found for id:', payload.sub);
+      this.logger.warn('JWT Strategy: User not found', 'JwtStrategy', {
+        userId: payload.sub,
+      });
       throw new UnauthorizedException('User not found');
     }
     
-    console.log('✅ JWT Strategy: User validated successfully:', user.id, user.email);
+    this.logger.debug('JWT Strategy: User validated successfully', 'JwtStrategy', {
+      userId: user.id,
+    });
     return user;
   }
 }

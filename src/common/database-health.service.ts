@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class DatabaseHealthService {
+  private readonly logger = new LoggerService();
+
   constructor(private prisma: PrismaService) {}
 
   // Check database connection
@@ -11,7 +14,7 @@ export class DatabaseHealthService {
       await this.prisma.$queryRaw`SELECT 1`;
       return true;
     } catch (error) {
-      console.error('Database connection failed:', error);
+      this.logger.error('Database connection failed', error.message, 'DatabaseHealth');
       return false;
     }
   }
@@ -58,7 +61,7 @@ export class DatabaseHealthService {
         },
       };
     } catch (error) {
-      console.error('Error getting database stats:', error);
+      this.logger.error('Error getting database stats', error.message, 'DatabaseHealth');
       throw error;
     }
   }
@@ -124,7 +127,7 @@ export class DatabaseHealthService {
         checkedAt: new Date(),
       };
     } catch (error) {
-      console.error('Error checking data integrity:', error);
+      this.logger.error('Error checking data integrity', error.message, 'DatabaseHealth');
       return {
         healthy: false,
         issues: [`Database integrity check failed: ${error.message}`],
@@ -201,25 +204,25 @@ export class DatabaseHealthService {
 
       return results;
     } catch (error) {
-      console.error('Error cleaning up orphaned data:', error);
+      this.logger.error('Error cleaning up orphaned data', error.message, 'DatabaseHealth');
       throw error;
     }
   }
 
-  // Optimize database
+  // Optimize database (PostgreSQL)
   async optimizeDatabase() {
     try {
-      // Analyze tables for better query performance
-      await this.prisma.$executeRaw`ANALYZE TABLE users`;
-      await this.prisma.$executeRaw`ANALYZE TABLE products`;
-      await this.prisma.$executeRaw`ANALYZE TABLE orders`;
-      await this.prisma.$executeRaw`ANALYZE TABLE disputes`;
-      await this.prisma.$executeRaw`ANALYZE TABLE cart`;
-      await this.prisma.$executeRaw`ANALYZE TABLE wishlist`;
+      // PostgreSQL ANALYZE syntax (without TABLE keyword)
+      await this.prisma.$executeRaw`ANALYZE users`;
+      await this.prisma.$executeRaw`ANALYZE products`;
+      await this.prisma.$executeRaw`ANALYZE orders`;
+      await this.prisma.$executeRaw`ANALYZE disputes`;
+      await this.prisma.$executeRaw`ANALYZE cart_items`;
+      await this.prisma.$executeRaw`ANALYZE wishlist_items`;
 
       return { message: 'Database optimization completed' };
     } catch (error) {
-      console.error('Error optimizing database:', error);
+      this.logger.error('Error optimizing database', error.message, 'DatabaseHealth');
       throw error;
     }
   }
@@ -231,7 +234,7 @@ export class DatabaseHealthService {
       // For MySQL, you might query the slow query log
       return { message: 'Slow query analysis not implemented for this database type' };
     } catch (error) {
-      console.error('Error getting slow queries:', error);
+      this.logger.error('Error getting slow queries', error.message, 'DatabaseHealth');
       throw error;
     }
   }

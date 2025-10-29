@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, ConflictException, NotFoundException
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { LoginDto } from './dto/login.dto';
@@ -38,6 +39,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private emailService: EmailService,
   ) {}
 
   // ✅ Helper method to check if username is reserved
@@ -366,9 +368,15 @@ export class AuthService {
       },
     });
 
-    // TODO: Send email with reset link
-    // The actual token (resetToken) should be sent to the user's email
-    // await this.emailService.sendPasswordResetEmail(user.email, resetToken);
+    // Send email with reset link
+    try {
+      const frontendUrl = this.configService.get('FRONTEND_URL');
+      await this.emailService.sendPasswordResetEmail(user.email, resetToken, frontendUrl);
+    } catch (error) {
+      // Log error but don't fail the request - token is already saved
+      // User can request another reset if email delivery fails
+      // In production, you might want to log this to a monitoring service
+    }
 
     return {
       message: 'If an account exists with this email, a password reset link has been sent',

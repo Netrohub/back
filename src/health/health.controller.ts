@@ -13,12 +13,16 @@ export class HealthController {
   @Get()
   @ApiOperation({ summary: 'Health check endpoint' })
   @ApiResponse({ status: 200, description: 'Service is healthy' })
-  check() {
+  async check() {
+    // Check database connectivity
+    const dbConnected = await this.databaseHealthService.checkConnection();
+    
     return {
-      status: 'ok',
+      status: dbConnected ? 'ok' : 'degraded',
       timestamp: new Date().toISOString(),
       service: 'nxoland-backend',
       version: '1.0.0',
+      database: dbConnected ? 'connected' : 'disconnected',
     };
   }
 

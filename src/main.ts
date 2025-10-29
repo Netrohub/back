@@ -8,29 +8,44 @@ import * as compression from 'compression';
 import * as path from 'path';
 import { AppModule } from './app.module';
 import { PrismaSerializeInterceptor } from './common/interceptors/prisma-serialize.interceptor';
+import { RequestIdInterceptor } from './common/interceptors/request-id.interceptor';
+import { LoggerService } from './common/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['error', 'warn'], // NestJS internal logging (minimal)
+  });
   const configService = app.get(ConfigService);
+  const logger = app.get(LoggerService);
 
   // Serve static files from uploads directory
   const uploadsPath = path.join(process.cwd(), 'uploads');
   app.useStaticAssets(uploadsPath, {
     prefix: '/uploads/',
   });
-  console.log(`📁 Serving static files from: ${uploadsPath}`);
+  logger.log(`Serving static files from: ${uploadsPath}`, 'Bootstrap');
 
   // CORS configuration (before helmet to avoid conflicts)
+  // Environment-based CORS origins
+  const isProduction = configService.get('NODE_ENV') === 'production';
+  const allowedOrigins = isProduction
+    ? [
+        'https://nxoland.com',
+        'https://www.nxoland.com',
+        configService.get('CORS_ORIGIN'),
+      ].filter(Boolean) // Remove undefined values
+    : [
+        'https://nxoland.com',
+        'https://www.nxoland.com',
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
+        configService.get('CORS_ORIGIN'),
+      ].filter(Boolean);
+
   app.enableCors({
-    origin: [
-      'https://nxoland.com',
-      'https://www.nxoland.com',
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:5173',
-      configService.get('CORS_ORIGIN', 'https://www.nxoland.com')
-    ],
+    origin: allowedOrigins.length > 0 ? allowedOrigins : ['https://www.nxoland.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
     allowedHeaders: [
@@ -55,9 +70,20 @@ async function bootstrap() {
   }));
   app.use(compression());
 
-  // Request logging middleware
+  // Request logging middleware (exclude sensitive paths)
   app.use((req, res, next) => {
-    console.log(`🔍 ${req.method} ${req.url}`);
+    const sensitivePaths = ['/api/auth/login', '/api/auth/register', '/api/health'];
+    const shouldLog = !sensitivePaths.some(path => req.url.includes(path));
+    
+    if (shouldLog) {
+      const requestId = (req as any).requestId || req.headers['x-request-id'] || 'unknown';
+      logger.debug(`${req.method} ${req.url}`, 'HTTP', {
+        method: req.method,
+        path: req.url,
+        ip: req.ip,
+        requestId,
+      });
+    }
     next();
   });
 
@@ -73,8 +99,11 @@ async function bootstrap() {
     }),
   );
 
-  // Global interceptor to transform Prisma Decimal to Number
-  app.useGlobalInterceptors(new PrismaSerializeInterceptor());
+  // Global interceptors
+  app.useGlobalInterceptors(
+    new RequestIdInterceptor(),
+    new PrismaSerializeInterceptor(),
+  );
 
   // API prefix
   app.setGlobalPrefix('api');
@@ -117,8 +146,8 @@ async function bootstrap() {
   const port = configService.get('PORT', 3000);
   await app.listen(port);
   
-  console.log(`🚀 NXOLand API is running on: https://api.nxoland.com/api`);
-  console.log(`📚 API Documentation: https://api.nxoland.com/api/${configService.get('SWAGGER_PATH', 'api/docs')}`);
+  logger.log(`NXOLand API is running on port ${port}`, 'Bootstrap');
+  logger.log(`API Documentation: /${configService.get('SWAGGER_PATH', 'api/docs')}`, 'Bootstrap');
 }
 
 bootstrap();

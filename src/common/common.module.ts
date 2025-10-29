@@ -1,11 +1,22 @@
-import { Module } from '@nestjs/common';
-import { ValidationService } from './validation.service';
+import { Module, Global } from '@nestjs/common';
 import { DatabaseHealthService } from './database-health.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaSerializeInterceptor } from './interceptors/prisma-serialize.interceptor';
+import { RequestIdInterceptor } from './interceptors/request-id.interceptor';
+import { LoggerService } from './logger.service';
 
+@Global()
 @Module({
-  imports: [PrismaModule],
-  providers: [ValidationService, DatabaseHealthService],
-  exports: [ValidationService, DatabaseHealthService],
+  providers: [
+    LoggerService,
+    DatabaseHealthService,
+    PrismaSerializeInterceptor,
+    RequestIdInterceptor,
+  ],
+  exports: [
+    LoggerService,
+    DatabaseHealthService,
+    PrismaSerializeInterceptor,
+    RequestIdInterceptor,
+  ],
 })
 export class CommonModule {}
