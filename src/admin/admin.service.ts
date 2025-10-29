@@ -794,9 +794,7 @@ export class AdminService {
     return this.prisma.dispute.update({
       where: { id },
       data: {
-        assigned_admin: {
-          connect: { id: adminId },
-        },
+        assigned_to: adminId,
         status: 'INVESTIGATING',
         updated_at: new Date(),
       },
