@@ -38,6 +38,22 @@ export class PrismaSerializeInterceptor implements NestInterceptor {
           transformed[key] = this.transform(value[key]);
         }
       }
+
+      // ✅ Transform Product field: name -> title (for frontend compatibility)
+      if ('name' in transformed && !('title' in transformed)) {
+        transformed.title = transformed.name;
+      }
+
+      // ✅ Transform Order field: payment_status -> paymentStatus (camelCase for frontend)
+      if ('payment_status' in transformed && !('paymentStatus' in transformed)) {
+        transformed.paymentStatus = transformed.payment_status;
+      }
+
+      // ✅ Transform Category field: category_id -> categoryId (for frontend)
+      if ('category_id' in transformed && typeof transformed.category_id === 'number') {
+        transformed.categoryId = transformed.category_id;
+      }
+
       return transformed;
     }
 

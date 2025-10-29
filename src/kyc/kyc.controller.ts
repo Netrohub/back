@@ -113,16 +113,20 @@ export class KycController {
     return this.kycService.completeKyc(user.id);
   }
 
+  // ✅ Route must come after 'complete' to avoid route conflicts
+  // Supports: /kyc/email, /kyc/phone, /kyc/identity
   @Post(':step')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Submit KYC document for specific step' })
+  @ApiOperation({ summary: 'Submit KYC document for specific step (email, phone, identity)' })
   @ApiResponse({ status: 200, description: 'Document submitted successfully' })
-  async submitKycDocument(
+  async submitKycStep(
     @CurrentUser() user: any,
     @Param('step') step: string,
-    @Body() documentData: any,
+    @Body() stepData: any,
   ) {
-    return this.kycService.submitKycDocument(user.id, step, documentData);
+    // Map frontend step to backend format
+    // Frontend might send { verified: boolean } or document data
+    return this.kycService.submitKycDocument(user.id, step, stepData);
   }
 }

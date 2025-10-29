@@ -197,10 +197,16 @@ export class ProductsService {
   }
 
   async create(createProductDto: CreateProductDto, sellerId: number) {
+    // ✅ Fix: Use name if provided, otherwise use title (frontend sends title)
+    const productName = createProductDto.name || createProductDto.title;
+    if (!productName) {
+      throw new Error('Product name or title is required');
+    }
+
     return this.prisma.product.create({
       data: {
-        name: createProductDto.name,
-        slug: createProductDto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        name: productName,
+        slug: productName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         description: createProductDto.description,
         price: createProductDto.price,
         category_id: parseInt(createProductDto.categoryId),

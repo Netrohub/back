@@ -65,4 +65,36 @@ export class DisputesController {
   ) {
     return this.disputesService.updateDisputeStatus(+id, updateStatusDto.status, user.id);
   }
+
+  @Get(':id/messages')
+  @ApiOperation({ summary: 'Get dispute messages' })
+  @ApiResponse({ status: 200, description: 'Messages retrieved successfully' })
+  async getDisputeMessages(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+  ) {
+    return this.disputesService.getDisputeMessages(+id, user.id, user.roles?.[0] || 'user');
+  }
+
+  @Post(':id/messages')
+  @ApiOperation({ summary: 'Send message in dispute' })
+  @ApiResponse({ status: 201, description: 'Message sent successfully' })
+  async addDisputeMessage(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+    @Body() messageDto: { message: string; is_internal?: boolean },
+  ) {
+    return this.disputesService.addDisputeMessage(+id, user.id, messageDto.message, messageDto.is_internal || false);
+  }
+
+  @Post(':id/evidence')
+  @ApiOperation({ summary: 'Upload dispute evidence' })
+  @ApiResponse({ status: 201, description: 'Evidence uploaded successfully' })
+  async uploadDisputeEvidence(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+    @Body() evidenceDto: { file_url: string; file_name: string; file_type: string; file_size: number; description?: string },
+  ) {
+    return this.disputesService.uploadDisputeEvidence(+id, user.id, evidenceDto);
+  }
 }

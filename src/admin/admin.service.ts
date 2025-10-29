@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { createPaginatedResponse } from '../common/utils/response.util';
 
 @Injectable()
 export class AdminService {
@@ -66,15 +67,8 @@ export class AdminService {
       this.prisma.user.count({ where }),
     ]);
 
-    return {
-      data: users,
-      pagination: {
-        page: validPage,
-        per_page: validPerPage,
-        total,
-        total_pages: Math.ceil(total / validPerPage),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(users, validPage, validPerPage, total);
   }
 
   async getUser(id: number) {
@@ -274,15 +268,8 @@ export class AdminService {
       this.prisma.order.count({ where }),
     ]);
 
-    return {
-      data: orders,
-      pagination: {
-        page: validPage,
-        per_page: validPerPage,
-        total,
-        total_pages: Math.ceil(total / validPerPage),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(orders, validPage, validPerPage, total);
   }
 
   async getOrder(id: number) {
@@ -379,15 +366,8 @@ export class AdminService {
       this.prisma.user.count({ where }),
     ]);
 
-    return {
-      data: vendors,
-      pagination: {
-        page: validPage,
-        per_page: validPerPage,
-        total,
-        total_pages: Math.ceil(total / validPerPage),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(vendors, validPage, validPerPage, total);
   }
 
   async getVendor(id: number) {
@@ -466,15 +446,8 @@ export class AdminService {
       this.prisma.product.count({ where }),
     ]);
 
-    return {
-      data: listings,
-      pagination: {
-        page: validPage,
-        per_page: validPerPage,
-        total,
-        total_pages: Math.ceil(total / validPerPage),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(listings, validPage, validPerPage, total);
   }
 
   async getListing(id: number) {
@@ -550,15 +523,8 @@ export class AdminService {
       this.prisma.payout.count({ where }),
     ]);
     
-    return {
-      data: payouts,
-      pagination: {
-        page: validPage,
-        per_page: validPerPage,
-        total,
-        total_pages: Math.ceil(total / validPerPage),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(payouts, validPage, validPerPage, total);
   }
 
   async getPayout(id: number) {
@@ -663,15 +629,8 @@ export class AdminService {
       this.prisma.product.count({ where }),
     ]);
     
-    return {
-      data: products,
-      pagination: {
-        page,
-        limit,
-        total,
-        total_pages: Math.ceil(total / limit),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(products, page, limit, total);
   }
 
   async getProduct(id: number) {
@@ -797,15 +756,8 @@ export class AdminService {
       this.prisma.dispute.count({ where }),
     ]);
     
-    return {
-      data: disputes,
-      pagination: {
-        page,
-        limit,
-        total,
-        total_pages: Math.ceil(total / limit),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(disputes, page, limit, total);
   }
 
   async getDispute(id: number) {
@@ -965,15 +917,8 @@ export class AdminService {
       this.prisma.ticket.count({ where }),
     ]);
 
-    return {
-      data: tickets,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        total_pages: Math.ceil(total / limitNum),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(tickets, pageNum, limitNum, total);
   }
 
   async getTicket(id: number) {
@@ -1148,15 +1093,8 @@ export class AdminService {
       this.prisma.auditLog.count({ where }),
     ]);
 
-    return {
-      data: logs,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        total_pages: Math.ceil(total / limitNum),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(logs, pageNum, limitNum, total);
   }
 
   async exportAuditLogs(startDate?: string, endDate?: string) {
@@ -1214,15 +1152,8 @@ export class AdminService {
       this.prisma.coupon.count({ where }),
     ]);
 
-    return {
-      data: coupons,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        total_pages: Math.ceil(total / limitNum),
-      },
-    };
+    // ✅ Standardize pagination response format
+    return createPaginatedResponse(coupons, pageNum, limitNum, total);
   }
 
   async getCoupon(id: number) {

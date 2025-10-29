@@ -120,4 +120,161 @@ export class DisputesService {
       orderBy: { created_at: 'desc' },
     });
   }
+
+  async getDisputeMessages(disputeId: number, userId: number, userRole: string) {
+    // Verify dispute exists and user has access
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id: disputeId },
+      select: {
+        buyer_id: true,
+        seller_id: true,
+        assigned_to: true,
+      },
+    });
+
+    if (!dispute) {
+      throw new NotFoundException('Dispute not found');
+    }
+
+    // Check if user has access (buyer, seller, assigned admin, or any admin)
+    const hasAccess = 
+      dispute.buyer_id === userId ||
+      dispute.seller_id === userId ||
+      dispute.assigned_to === userId ||
+      userRole === 'admin';
+
+    if (!hasAccess) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    // Get messages (filter internal messages for non-admins)
+    const where: any = { dispute_id: disputeId };
+    if (userRole !== 'admin') {
+      where.is_internal = false;
+    }
+
+    return this.prisma.disputeMessage.findMany({
+      where,
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { created_at: 'asc' },
+    });
+  }
+
+  async addDisputeMessage(disputeId: number, userId: number, message: string, isInternal: boolean = false) {
+    // Verify dispute exists and user has access
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id: disputeId },
+      select: {
+        buyer_id: true,
+        seller_id: true,
+        assigned_to: true,
+      },
+    });
+
+    if (!dispute) {
+      throw new NotFoundException('Dispute not found');
+    }
+
+    // Only admins can send internal messages
+    if (isInternal) {
+      // For now, check if user is admin - in production, use RolesGuard
+      // This is a simplified check
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          user_roles: {
+            include: { role: true },
+          },
+        },
+      });
+
+      const isAdmin = user?.user_roles?.some(ur => ur.role.slug === 'admin') || false;
+      if (!isAdmin) {
+        throw new ForbiddenException('Only admins can send internal messages');
+      }
+    }
+
+    // Check if user is buyer, seller, assigned admin, or admin
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        user_roles: {
+          include: { role: true },
+        },
+      },
+    });
+
+    const isAdmin = user?.user_roles?.some(ur => ur.role.slug === 'admin') || false;
+    const hasAccess =
+      dispute.buyer_id === userId ||
+      dispute.seller_id === userId ||
+      dispute.assigned_to === userId ||
+      isAdmin;
+
+    if (!hasAccess) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return this.prisma.disputeMessage.create({
+      data: {
+        dispute_id: disputeId,
+        sender_id: userId,
+        message,
+        is_internal: isInternal,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async uploadDisputeEvidence(
+    disputeId: number,
+    userId: number,
+    evidenceData: { file_url: string; file_name: string; file_type: string; file_size: number; description?: string },
+  ) {
+    // Verify dispute exists and user has access
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id: disputeId },
+      select: {
+        buyer_id: true,
+        seller_id: true,
+      },
+    });
+
+    if (!dispute) {
+      throw new NotFoundException('Dispute not found');
+    }
+
+    // Only buyer or seller can upload evidence
+    if (dispute.buyer_id !== userId && dispute.seller_id !== userId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return this.prisma.disputeEvidence.create({
+      data: {
+        dispute_id: disputeId,
+        uploaded_by: userId,
+        file_url: evidenceData.file_url,
+        file_name: evidenceData.file_name,
+        file_type: evidenceData.file_type,
+        file_size: evidenceData.file_size,
+        description: evidenceData.description,
+      },
+    });
+  }
 }

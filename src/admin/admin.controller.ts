@@ -4,6 +4,12 @@ import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/decorators';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateTicketDto } from '../tickets/dto/create-ticket.dto';
+import { UpdateTicketDto } from '../tickets/dto/update-ticket.dto';
+import { CreateCouponDto } from './dto/create-coupon.dto';
+import { UpdateCouponDto } from './dto/update-coupon.dto';
 
 @ApiTags('admin')
 @Controller('admin')
@@ -19,14 +25,16 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   async getUsers(
     @Query('page') page: string = '1',
-    @Query('per_page') perPage: string = '10',
+    @Query('limit') limit?: string,
+    @Query('per_page') perPage?: string, // Backward compatibility
     @Query('search') search?: string,
     @Query('role') role?: string,
     @Query('status') status?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
-    const perPageNum = parseInt(perPage, 10) || 10;
-    return this.adminService.getUsers(pageNum, perPageNum, search, role, status);
+    // ✅ Standardize: prefer 'limit', fallback to 'per_page' for backward compatibility
+    const limitNum = limit ? parseInt(limit, 10) : (perPage ? parseInt(perPage, 10) : 25);
+    return this.adminService.getUsers(pageNum, limitNum, search, role, status);
   }
 
   @Post('users')
@@ -34,7 +42,7 @@ export class AdminController {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'Email or username already exists' })
-  async createUser(@Body() createUserDto: any) {
+  async createUser(@Body() createUserDto: CreateUserDto) {
     return this.adminService.createUser(createUserDto);
   }
 
@@ -48,7 +56,7 @@ export class AdminController {
   @Put('users/:id')
   @ApiOperation({ summary: 'Update user (Admin only)' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
-  async updateUser(@Param('id') id: number, @Body() updateData: any) {
+  async updateUser(@Param('id') id: number, @Body() updateData: UpdateUserDto) {
     return this.adminService.updateUser(id, updateData);
   }
 
@@ -65,14 +73,15 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Orders retrieved successfully' })
   async getOrders(
     @Query('page') page: string = '1',
-    @Query('per_page') perPage: string = '10',
+    @Query('limit') limit?: string,
+    @Query('per_page') perPage?: string, // Backward compatibility
     @Query('status') status?: string,
     @Query('date_from') dateFrom?: string,
     @Query('date_to') dateTo?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
-    const perPageNum = parseInt(perPage, 10) || 10;
-    return this.adminService.getOrders(pageNum, perPageNum, status, dateFrom, dateTo);
+    const limitNum = limit ? parseInt(limit, 10) : (perPage ? parseInt(perPage, 10) : 25);
+    return this.adminService.getOrders(pageNum, limitNum, status, dateFrom, dateTo);
   }
 
   @Get('orders/:id')
@@ -95,13 +104,14 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Vendors retrieved successfully' })
   async getVendors(
     @Query('page') page: string = '1',
-    @Query('per_page') perPage: string = '10',
+    @Query('limit') limit?: string,
+    @Query('per_page') perPage?: string, // Backward compatibility
     @Query('search') search?: string,
     @Query('status') status?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
-    const perPageNum = parseInt(perPage, 10) || 10;
-    return this.adminService.getVendors(pageNum, perPageNum, search, status);
+    const limitNum = limit ? parseInt(limit, 10) : (perPage ? parseInt(perPage, 10) : 25);
+    return this.adminService.getVendors(pageNum, limitNum, search, status);
   }
 
   @Get('vendors/:id')
@@ -124,13 +134,14 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Listings retrieved successfully' })
   async getListings(
     @Query('page') page: string = '1',
-    @Query('per_page') perPage: string = '10',
+    @Query('limit') limit?: string,
+    @Query('per_page') perPage?: string, // Backward compatibility
     @Query('status') status?: string,
     @Query('category') category?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
-    const perPageNum = parseInt(perPage, 10) || 10;
-    return this.adminService.getListings(pageNum, perPageNum, status, category);
+    const limitNum = limit ? parseInt(limit, 10) : (perPage ? parseInt(perPage, 10) : 25);
+    return this.adminService.getListings(pageNum, limitNum, status, category);
   }
 
   @Get('listings/:id')
@@ -153,14 +164,15 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Payouts retrieved successfully' })
   async getPayouts(
     @Query('page') page: string = '1',
-    @Query('per_page') perPage: string = '10',
+    @Query('limit') limit?: string,
+    @Query('per_page') perPage?: string, // Backward compatibility
     @Query('status') status?: string,
     @Query('date_from') dateFrom?: string,
     @Query('date_to') dateTo?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
-    const perPageNum = parseInt(perPage, 10) || 10;
-    return this.adminService.getPayouts(pageNum, perPageNum, status, dateFrom, dateTo);
+    const limitNum = limit ? parseInt(limit, 10) : (perPage ? parseInt(perPage, 10) : 25);
+    return this.adminService.getPayouts(pageNum, limitNum, status, dateFrom, dateTo);
   }
 
   @Get('payouts/:id')
@@ -276,14 +288,14 @@ export class AdminController {
   @Post('tickets')
   @ApiOperation({ summary: 'Create new ticket (Admin only)' })
   @ApiResponse({ status: 201, description: 'Ticket created successfully' })
-  async createTicket(@Body() createTicketDto: any) {
+  async createTicket(@Body() createTicketDto: CreateTicketDto) {
     return this.adminService.createTicket(createTicketDto);
   }
 
   @Patch('tickets/:id')
   @ApiOperation({ summary: 'Update ticket (Admin only)' })
   @ApiResponse({ status: 200, description: 'Ticket updated successfully' })
-  async updateTicket(@Param('id') id: number, @Body() updateData: any) {
+  async updateTicket(@Param('id') id: number, @Body() updateData: UpdateTicketDto) {
     return this.adminService.updateTicket(id, updateData);
   }
 
@@ -345,14 +357,14 @@ export class AdminController {
   @Post('coupons')
   @ApiOperation({ summary: 'Create new coupon (Admin only)' })
   @ApiResponse({ status: 201, description: 'Coupon created successfully' })
-  async createCoupon(@Body() createCouponDto: any) {
+  async createCoupon(@Body() createCouponDto: CreateCouponDto) {
     return this.adminService.createCoupon(createCouponDto);
   }
 
   @Patch('coupons/:id')
   @ApiOperation({ summary: 'Update coupon (Admin only)' })
   @ApiResponse({ status: 200, description: 'Coupon updated successfully' })
-  async updateCoupon(@Param('id') id: number, @Body() updateData: any) {
+  async updateCoupon(@Param('id') id: number, @Body() updateData: UpdateCouponDto) {
     return this.adminService.updateCoupon(id, updateData);
   }
 

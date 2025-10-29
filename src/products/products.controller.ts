@@ -57,6 +57,10 @@ export class ProductsController {
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden - seller role required' })
   async create(@Body() createProductDto: CreateProductDto, @Request() req: any) {
+    // ✅ Fix: Map frontend 'title' to backend 'name' if provided
+    if (createProductDto.title && !createProductDto.name) {
+      createProductDto.name = createProductDto.title;
+    }
     return this.productsService.create(createProductDto, req.user.id);
   }
 

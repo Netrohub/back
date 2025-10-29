@@ -41,7 +41,8 @@ export interface UpdateCartItemDto {
 
 // Product DTOs
 export interface CreateProductDto {
-  name: string;
+  name?: string; // Backend uses 'name'
+  title?: string; // Frontend sends 'title' - will be mapped to 'name'
   description: string;
   price: number;
   categoryId: string;
