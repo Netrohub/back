@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,6 +27,15 @@ export class AdminController {
     const pageNum = parseInt(page, 10) || 1;
     const perPageNum = parseInt(perPage, 10) || 10;
     return this.adminService.getUsers(pageNum, perPageNum, search, role, status);
+  }
+
+  @Post('users')
+  @ApiOperation({ summary: 'Create new user (Admin only)' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiResponse({ status: 409, description: 'Email or username already exists' })
+  async createUser(@Body() createUserDto: any) {
+    return this.adminService.createUser(createUserDto);
   }
 
   @Get('users/:id')
@@ -239,6 +248,119 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Dispute assigned successfully' })
   async assignDispute(@Param('id') id: number, @Body() assignData: { admin_id: number }) {
     return this.adminService.assignDispute(id, assignData.admin_id);
+  }
+
+  // Tickets Management
+  @Get('tickets')
+  @ApiOperation({ summary: 'Get all tickets (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Tickets retrieved successfully' })
+  async getTickets(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '25',
+    @Query('status') status?: string,
+    @Query('priority') priority?: string,
+    @Query('search') search?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 25;
+    return this.adminService.getTickets(pageNum, limitNum, status, priority, search);
+  }
+
+  @Get('tickets/:id')
+  @ApiOperation({ summary: 'Get ticket by ID (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Ticket retrieved successfully' })
+  async getTicket(@Param('id') id: number) {
+    return this.adminService.getTicket(id);
+  }
+
+  @Post('tickets')
+  @ApiOperation({ summary: 'Create new ticket (Admin only)' })
+  @ApiResponse({ status: 201, description: 'Ticket created successfully' })
+  async createTicket(@Body() createTicketDto: any) {
+    return this.adminService.createTicket(createTicketDto);
+  }
+
+  @Patch('tickets/:id')
+  @ApiOperation({ summary: 'Update ticket (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Ticket updated successfully' })
+  async updateTicket(@Param('id') id: number, @Body() updateData: any) {
+    return this.adminService.updateTicket(id, updateData);
+  }
+
+  @Delete('tickets/:id')
+  @ApiOperation({ summary: 'Delete ticket (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Ticket deleted successfully' })
+  async deleteTicket(@Param('id') id: number) {
+    return this.adminService.deleteTicket(id);
+  }
+
+  // Audit Logs Management
+  @Get('audit-logs')
+  @ApiOperation({ summary: 'Get all audit logs (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Audit logs retrieved successfully' })
+  async getAuditLogs(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '50',
+    @Query('search') search?: string,
+    @Query('action') action?: string,
+    @Query('entity_type') entityType?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 50;
+    return this.adminService.getAuditLogs(pageNum, limitNum, search, action, entityType);
+  }
+
+  @Get('audit-logs/export')
+  @ApiOperation({ summary: 'Export audit logs (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Audit logs exported successfully' })
+  async exportAuditLogs(
+    @Query('start_date') startDate?: string,
+    @Query('end_date') endDate?: string,
+  ) {
+    return this.adminService.exportAuditLogs(startDate, endDate);
+  }
+
+  // Coupons Management
+  @Get('coupons')
+  @ApiOperation({ summary: 'Get all coupons (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Coupons retrieved successfully' })
+  async getCoupons(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '25',
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+  ) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 25;
+    return this.adminService.getCoupons(pageNum, limitNum, search, status);
+  }
+
+  @Get('coupons/:id')
+  @ApiOperation({ summary: 'Get coupon by ID (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Coupon retrieved successfully' })
+  async getCoupon(@Param('id') id: number) {
+    return this.adminService.getCoupon(id);
+  }
+
+  @Post('coupons')
+  @ApiOperation({ summary: 'Create new coupon (Admin only)' })
+  @ApiResponse({ status: 201, description: 'Coupon created successfully' })
+  async createCoupon(@Body() createCouponDto: any) {
+    return this.adminService.createCoupon(createCouponDto);
+  }
+
+  @Patch('coupons/:id')
+  @ApiOperation({ summary: 'Update coupon (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Coupon updated successfully' })
+  async updateCoupon(@Param('id') id: number, @Body() updateData: any) {
+    return this.adminService.updateCoupon(id, updateData);
+  }
+
+  @Delete('coupons/:id')
+  @ApiOperation({ summary: 'Delete coupon (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Coupon deleted successfully' })
+  async deleteCoupon(@Param('id') id: number) {
+    return this.adminService.deleteCoupon(id);
   }
 
   // Dashboard Stats
