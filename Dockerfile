@@ -37,14 +37,12 @@ COPY --from=builder /app/package*.json ./
 # Copy Prisma schema
 COPY --from=builder /app/prisma ./prisma
 
-# Install ONLY production dependencies (faster than copying all node_modules)
-# Native modules like bcrypt are already compiled in builder, so we can reuse them
-RUN npm ci --omit=dev --prefer-offline --no-audit && \
-    rm -rf /tmp/* /var/cache/apk/*
+# Copy ALL node_modules from builder (already installed with all deps)
+# This avoids npm ci sync issues and recompilation of native modules
+COPY --from=builder /app/node_modules ./node_modules
 
-# Copy generated Prisma client from builder (avoids regenerating)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Prune dev dependencies to reduce size (optional, but keeps production clean)
+RUN npm prune --omit=dev --no-audit
 
 # Copy built application
 COPY --from=builder /app/dist ./dist
