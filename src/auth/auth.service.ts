@@ -47,8 +47,14 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    // Support login with email OR username
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: email },
+          { username: email }
+        ]
+      },
       include: {
         user_roles: {
           include: {

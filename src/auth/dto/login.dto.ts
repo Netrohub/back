@@ -1,11 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsBoolean, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
-  @ApiProperty({ description: 'User email', example: 'user@example.com' })
-  @IsEmail({}, { message: 'Please provide a valid email address' })
-  @IsNotEmpty({ message: 'Email is required' })
-  email: string;
+  @ApiProperty({ description: 'User email or username', example: 'user@example.com' })
+  @IsNotEmpty({ message: 'Email or username is required' })
+  @IsString()
+  email: string; // Backend accepts email or username, frontend passes identifier here
 
   @ApiProperty({ description: 'User password', example: 'password123' })
   @IsString()
