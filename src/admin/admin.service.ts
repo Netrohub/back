@@ -707,7 +707,24 @@ export class AdminService {
     const where: any = {};
     
     if (status) {
-      where.status = status.toUpperCase();
+      // Map common status values to Prisma enum values
+      const statusMap: { [key: string]: string } = {
+        'open': 'PENDING',
+        'pending': 'PENDING',
+        'investigating': 'INVESTIGATING',
+        'resolved': 'RESOLVED',
+        'closed': 'CLOSED',
+        'escalated': 'ESCALATED',
+      };
+      
+      const normalizedStatus = status.toLowerCase();
+      const mappedStatus = statusMap[normalizedStatus] || status.toUpperCase();
+      
+      // Only add to where clause if it's a valid enum value
+      const validStatuses = ['PENDING', 'INVESTIGATING', 'RESOLVED', 'CLOSED', 'ESCALATED'];
+      if (validStatuses.includes(mappedStatus)) {
+        where.status = mappedStatus;
+      }
     }
     
     if (priority) {
